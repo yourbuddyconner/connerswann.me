@@ -373,41 +373,119 @@ under the License.
 @end
 &lt;/code&gt;
 &lt;/pre&gt;</content></entry><entry><title>A Quick Script to Make Your SSH-ing Easier</title><link href="https://connerswann.me/2015/01/a-quick-script-to-make-your-ssh-ing-easier.html" rel="alternate"></link><published>2015-01-21T15:50:00-08:00</published><updated>2015-01-21T15:50:00-08:00</updated><author><name>Conner Swann</name></author><id>tag:connerswann.me,2015-01-21:/2015/01/a-quick-script-to-make-your-ssh-ing-easier.html</id><summary type="html">&lt;p&gt;At work, I find myself SSH-ing into at least five different machines a day. I use a password manager, so my workflow looks like this:&lt;/p&gt;
-&lt;/p&gt;
-
 &lt;blockquote&gt;
-&lt;/p&gt;
-
 &lt;ol&gt;
-&lt;li&gt;ssh conner\@myserver.com&lt;/li&gt;
+&lt;li&gt;ssh conner@myserver.com &lt;/li&gt;
 &lt;li&gt;Grab my password from password manager&lt;/li&gt;
 &lt;li&gt;paste password into terminal&lt;/li&gt;
 &lt;li&gt;if you messed up GOTO 1&lt;/li&gt;
 &lt;/ol&gt;
-&lt;/p&gt;
-
 &lt;/blockquote&gt;
-&lt;/p&gt;
-
 &lt;p&gt;This gets really tedious after …&lt;/p&gt;</summary><content type="html">&lt;p&gt;At work, I find myself SSH-ing into at least five different machines a day. I use a password manager, so my workflow looks like this:&lt;/p&gt;
-&lt;/p&gt;
-
 &lt;blockquote&gt;
-&lt;/p&gt;
-
 &lt;ol&gt;
-&lt;li&gt;ssh conner\@myserver.com&lt;/li&gt;
+&lt;li&gt;ssh conner@myserver.com &lt;/li&gt;
 &lt;li&gt;Grab my password from password manager&lt;/li&gt;
 &lt;li&gt;paste password into terminal&lt;/li&gt;
 &lt;li&gt;if you messed up GOTO 1&lt;/li&gt;
 &lt;/ol&gt;
-&lt;/p&gt;
-
 &lt;/blockquote&gt;
-&lt;/p&gt;
+&lt;p&gt;This gets really tedious after the 20th time, so I wrote a quick Bash script that leverages the handy &lt;a href="http://manpages.ubuntu.com/manpages/precise/man1/ssh-copy-id.1.html"&gt;ssh-copy-id&lt;/a&gt; command. &lt;/p&gt;
+&lt;pre class="line-numbers"&gt;
+&lt;code class="language-bash"&gt;
+##########################################
+# This script relies on the package "ssh-copy-id". It's on all your major package 
+# managers. This script was written for an OSX environment, but there's no reason 
+# why it wouldn't work on other unix-ey platforms. 
+#
+# WARNING: Use this at your own risk, I'm not responsible if you break something by running it.
+#
+#   The following happens when this script runs.
+#   .5. Data is gathered.
+#   1. Keys are generated and named based on the short name you supply in ~/.ssh/.
+#   2. The private key is sent to the server with ssh-copy-key using the port specified. 
+#   3. The pertinent information is added to your ssh-config (if you haven't made one, it'll make one for you).
+#   
+#   You can now ssh into your server using "ssh server_short_name"!
+#
+# 08/20/2014 http://connerswann.me
 
-&lt;p&gt;This gets really tedious after&lt;/p&gt;
-&lt;/p&gt;</content></entry><entry><title>Internet of Things: Connecting my WiFi Arduino and PHP</title><link href="https://connerswann.me/2015/01/internet-of-things-connecting-my-wifi-arduino-and-php.html" rel="alternate"></link><published>2015-01-01T21:04:00-08:00</published><updated>2015-01-01T21:04:00-08:00</updated><author><name>Conner Swann</name></author><id>tag:connerswann.me,2015-01-01:/2015/01/internet-of-things-connecting-my-wifi-arduino-and-php.html</id><summary type="html">&lt;h2&gt;Background&lt;/h2&gt;
+server_host_name=""
+server_short_name=""
+server_user=""
+server_port=""
+ssh_config=~/.ssh/config
+
+clear 
+
+if [ -z "$(which ssh-copy-id)" ]; then
+    echo "Dude, you need 'ssh-copy-id' installed. Dying..."
+    exit 1
+fi
+
+echo "Sup, let's save some SSH keys."
+
+while [[ ! $confirm =~ ^([yY][eE][sS]|[yY])$ || $confirm == "" ]]; do
+    echo 
+    echo "Enter the server host name: "
+    read server_host_name
+    echo "Enter a short name for the server: "
+    read server_short_name
+    echo "Enter your username on the external server: "
+    read server_user
+    echo "Which port should I connect to? (just hit ENTER for default port 22)"
+    read server_port
+    if [ -z "$server_port" ] ; then server_port=22; fi #map empty server_port -&gt; 22
+
+    echo "Please verify that this is correct."
+    echo "Short Name -&gt; $server_short_name"
+    echo "Host Name -&gt; $server_host_name"
+    echo "Server User -&gt; $server_user"
+    echo "Server Port -&gt; $server_port"
+    echo "Confirm? (Y/n)"
+    read confirm 
+    if [ -z "$confirm" ] ; then confirm="Y"; fi #map empty string to -&gt; "Y"
+done
+
+clear
+echo "Passing to ssh-keygen..."
+ssh-keygen -t rsa -f ~/.ssh/$server_short_name 
+
+echo "I hope that worked "
+echo "Press ENTER to continue."
+read confirm
+
+cd ~/.ssh/
+
+ssh-copy-id -p $server_port -i $server_short_name.pub $server_user@$server_host_name
+
+touch $ssh_config
+
+echo &gt;&gt;$ssh_config
+echo "Host $server_short_name" &gt;&gt;$ssh_config
+echo "Hostname $server_host_name" &gt;&gt;$ssh_config
+echo "User $server_user" &gt;&gt;$ssh_config
+echo "Port $server_port" &gt;&gt;$ssh_config
+echo "IdentityFile ~/.ssh/$server_short_name" &gt;&gt;$ssh_config
+
+echo "Contents of SSH Config File:"
+echo 
+cat $ssh_config
+echo 
+&lt;/code&gt;
+&lt;/pre&gt;
+
+&lt;p&gt;The comments really say it all, but here's the TL;DR:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;It collects information about the server you're configuring&lt;/li&gt;
+&lt;li&gt;It generates RSA keys for password-less identification with ssh-keygen&lt;/li&gt;
+&lt;li&gt;It sends those keys to the server using ssh-copy-id and saves all the information to your SSH profile&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Now, my workflow looks like this: &lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&gt; ssh myserver&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;There you have it! If you've got any questions as to how this works or implementing it, shoot me a &lt;a href="http://twitter.com/yourbuddyconner"&gt;tweet&lt;/a&gt;!&lt;/p&gt;</content></entry><entry><title>Internet of Things: Connecting my WiFi Arduino and PHP</title><link href="https://connerswann.me/2015/01/internet-of-things-connecting-my-wifi-arduino-and-php.html" rel="alternate"></link><published>2015-01-01T21:04:00-08:00</published><updated>2015-01-01T21:04:00-08:00</updated><author><name>Conner Swann</name></author><id>tag:connerswann.me,2015-01-01:/2015/01/internet-of-things-connecting-my-wifi-arduino-and-php.html</id><summary type="html">&lt;h2&gt;Background&lt;/h2&gt;
 &lt;p&gt;In a &lt;a href="http://connerswann.me/playing-with-the-adafruit-cc3000-wifi-shield/"&gt;previous post&lt;/a&gt; I discussed the Adafruit CC3000 WiFi shield and how I got the hardware and libraries installed. In this post I'm going to show you how I got my WiFi Arduino talking to a simple PHP script. &lt;/p&gt;
 &lt;p&gt;First, I think it's helpful to visualize exactly what's …&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Background&lt;/h2&gt;
 &lt;p&gt;In a &lt;a href="http://connerswann.me/playing-with-the-adafruit-cc3000-wifi-shield/"&gt;previous post&lt;/a&gt; I discussed the Adafruit CC3000 WiFi shield and how I got the hardware and libraries installed. In this post I'm going to show you how I got my WiFi Arduino talking to a simple PHP script. &lt;/p&gt;

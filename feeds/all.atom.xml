@@ -487,41 +487,119 @@ under the License.
 @end
 &lt;/code&gt;
 &lt;/pre&gt;</content></entry><entry><title>A Quick Script to Make Your SSH-ing Easier</title><link href="https://connerswann.me/2015/01/a-quick-script-to-make-your-ssh-ing-easier.html" rel="alternate"></link><published>2015-01-21T15:50:00-08:00</published><updated>2015-01-21T15:50:00-08:00</updated><author><name>Conner Swann</name></author><id>tag:connerswann.me,2015-01-21:/2015/01/a-quick-script-to-make-your-ssh-ing-easier.html</id><summary type="html">&lt;p&gt;At work, I find myself SSH-ing into at least five different machines a day. I use a password manager, so my workflow looks like this:&lt;/p&gt;
-&lt;/p&gt;
-
 &lt;blockquote&gt;
-&lt;/p&gt;
-
 &lt;ol&gt;
-&lt;li&gt;ssh conner\@myserver.com&lt;/li&gt;
+&lt;li&gt;ssh conner@myserver.com &lt;/li&gt;
 &lt;li&gt;Grab my password from password manager&lt;/li&gt;
 &lt;li&gt;paste password into terminal&lt;/li&gt;
 &lt;li&gt;if you messed up GOTO 1&lt;/li&gt;
 &lt;/ol&gt;
-&lt;/p&gt;
-
 &lt;/blockquote&gt;
-&lt;/p&gt;
-
 &lt;p&gt;This gets really tedious after …&lt;/p&gt;</summary><content type="html">&lt;p&gt;At work, I find myself SSH-ing into at least five different machines a day. I use a password manager, so my workflow looks like this:&lt;/p&gt;
-&lt;/p&gt;
-
 &lt;blockquote&gt;
-&lt;/p&gt;
-
 &lt;ol&gt;
-&lt;li&gt;ssh conner\@myserver.com&lt;/li&gt;
+&lt;li&gt;ssh conner@myserver.com &lt;/li&gt;
 &lt;li&gt;Grab my password from password manager&lt;/li&gt;
 &lt;li&gt;paste password into terminal&lt;/li&gt;
 &lt;li&gt;if you messed up GOTO 1&lt;/li&gt;
 &lt;/ol&gt;
-&lt;/p&gt;
-
 &lt;/blockquote&gt;
-&lt;/p&gt;
+&lt;p&gt;This gets really tedious after the 20th time, so I wrote a quick Bash script that leverages the handy &lt;a href="http://manpages.ubuntu.com/manpages/precise/man1/ssh-copy-id.1.html"&gt;ssh-copy-id&lt;/a&gt; command. &lt;/p&gt;
+&lt;pre class="line-numbers"&gt;
+&lt;code class="language-bash"&gt;
+##########################################
+# This script relies on the package "ssh-copy-id". It's on all your major package 
+# managers. This script was written for an OSX environment, but there's no reason 
+# why it wouldn't work on other unix-ey platforms. 
+#
+# WARNING: Use this at your own risk, I'm not responsible if you break something by running it.
+#
+#   The following happens when this script runs.
+#   .5. Data is gathered.
+#   1. Keys are generated and named based on the short name you supply in ~/.ssh/.
+#   2. The private key is sent to the server with ssh-copy-key using the port specified. 
+#   3. The pertinent information is added to your ssh-config (if you haven't made one, it'll make one for you).
+#   
+#   You can now ssh into your server using "ssh server_short_name"!
+#
+# 08/20/2014 http://connerswann.me
 
-&lt;p&gt;This gets really tedious after&lt;/p&gt;
-&lt;/p&gt;</content></entry><entry><title>Internet of Things: Connecting my WiFi Arduino and PHP</title><link href="https://connerswann.me/2015/01/internet-of-things-connecting-my-wifi-arduino-and-php.html" rel="alternate"></link><published>2015-01-01T21:04:00-08:00</published><updated>2015-01-01T21:04:00-08:00</updated><author><name>Conner Swann</name></author><id>tag:connerswann.me,2015-01-01:/2015/01/internet-of-things-connecting-my-wifi-arduino-and-php.html</id><summary type="html">&lt;h2&gt;Background&lt;/h2&gt;
+server_host_name=""
+server_short_name=""
+server_user=""
+server_port=""
+ssh_config=~/.ssh/config
+
+clear 
+
+if [ -z "$(which ssh-copy-id)" ]; then
+    echo "Dude, you need 'ssh-copy-id' installed. Dying..."
+    exit 1
+fi
+
+echo "Sup, let's save some SSH keys."
+
+while [[ ! $confirm =~ ^([yY][eE][sS]|[yY])$ || $confirm == "" ]]; do
+    echo 
+    echo "Enter the server host name: "
+    read server_host_name
+    echo "Enter a short name for the server: "
+    read server_short_name
+    echo "Enter your username on the external server: "
+    read server_user
+    echo "Which port should I connect to? (just hit ENTER for default port 22)"
+    read server_port
+    if [ -z "$server_port" ] ; then server_port=22; fi #map empty server_port -&gt; 22
+
+    echo "Please verify that this is correct."
+    echo "Short Name -&gt; $server_short_name"
+    echo "Host Name -&gt; $server_host_name"
+    echo "Server User -&gt; $server_user"
+    echo "Server Port -&gt; $server_port"
+    echo "Confirm? (Y/n)"
+    read confirm 
+    if [ -z "$confirm" ] ; then confirm="Y"; fi #map empty string to -&gt; "Y"
+done
+
+clear
+echo "Passing to ssh-keygen..."
+ssh-keygen -t rsa -f ~/.ssh/$server_short_name 
+
+echo "I hope that worked "
+echo "Press ENTER to continue."
+read confirm
+
+cd ~/.ssh/
+
+ssh-copy-id -p $server_port -i $server_short_name.pub $server_user@$server_host_name
+
+touch $ssh_config
+
+echo &gt;&gt;$ssh_config
+echo "Host $server_short_name" &gt;&gt;$ssh_config
+echo "Hostname $server_host_name" &gt;&gt;$ssh_config
+echo "User $server_user" &gt;&gt;$ssh_config
+echo "Port $server_port" &gt;&gt;$ssh_config
+echo "IdentityFile ~/.ssh/$server_short_name" &gt;&gt;$ssh_config
+
+echo "Contents of SSH Config File:"
+echo 
+cat $ssh_config
+echo 
+&lt;/code&gt;
+&lt;/pre&gt;
+
+&lt;p&gt;The comments really say it all, but here's the TL;DR:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;It collects information about the server you're configuring&lt;/li&gt;
+&lt;li&gt;It generates RSA keys for password-less identification with ssh-keygen&lt;/li&gt;
+&lt;li&gt;It sends those keys to the server using ssh-copy-id and saves all the information to your SSH profile&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Now, my workflow looks like this: &lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&gt; ssh myserver&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;There you have it! If you've got any questions as to how this works or implementing it, shoot me a &lt;a href="http://twitter.com/yourbuddyconner"&gt;tweet&lt;/a&gt;!&lt;/p&gt;</content></entry><entry><title>Internet of Things: Connecting my WiFi Arduino and PHP</title><link href="https://connerswann.me/2015/01/internet-of-things-connecting-my-wifi-arduino-and-php.html" rel="alternate"></link><published>2015-01-01T21:04:00-08:00</published><updated>2015-01-01T21:04:00-08:00</updated><author><name>Conner Swann</name></author><id>tag:connerswann.me,2015-01-01:/2015/01/internet-of-things-connecting-my-wifi-arduino-and-php.html</id><summary type="html">&lt;h2&gt;Background&lt;/h2&gt;
 &lt;p&gt;In a &lt;a href="http://connerswann.me/playing-with-the-adafruit-cc3000-wifi-shield/"&gt;previous post&lt;/a&gt; I discussed the Adafruit CC3000 WiFi shield and how I got the hardware and libraries installed. In this post I'm going to show you how I got my WiFi Arduino talking to a simple PHP script. &lt;/p&gt;
 &lt;p&gt;First, I think it's helpful to visualize exactly what's …&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Background&lt;/h2&gt;
 &lt;p&gt;In a &lt;a href="http://connerswann.me/playing-with-the-adafruit-cc3000-wifi-shield/"&gt;previous post&lt;/a&gt; I discussed the Adafruit CC3000 WiFi shield and how I got the hardware and libraries installed. In this post I'm going to show you how I got my WiFi Arduino talking to a simple PHP script. &lt;/p&gt;
@@ -725,27 +803,315 @@ $app-&gt;run();
 &lt;/code&gt;
 &lt;/pre&gt;
 
-&lt;p&gt;If you've got any questions or comments about how this works, feel free to shoot me an email or Tweet! Thanks for reading. &lt;/p&gt;</content></entry><entry><title>Arduino: Introducing The Adafruit CC3000 WiFi Shield</title><link href="https://connerswann.me/2014/12/arduino-introducing-the-adafruit-cc3000-wifi-shield.html" rel="alternate"></link><published>2014-12-29T00:45:00-08:00</published><updated>2014-12-29T00:45:00-08:00</updated><author><name>Conner Swann</name></author><id>tag:connerswann.me,2014-12-29:/2014/12/arduino-introducing-the-adafruit-cc3000-wifi-shield.html</id><summary type="html">&lt;p&gt;I recently got my hands on an &lt;a href="http://www.adafruit.com/product/1491"&gt;Adafruit CC3000 WiFi Shield&lt;/a&gt;. From the Adafruit product page:&lt;/p&gt;
-&lt;/p&gt;
-
+&lt;p&gt;If you've got any questions or comments about how this works, feel free to shoot me an email or Tweet! Thanks for reading. &lt;/p&gt;</content></entry><entry><title>Arduino: Introducing The Adafruit CC3000 WiFi Shield</title><link href="https://connerswann.me/2014/12/arduino-introducing-the-adafruit-cc3000-wifi-shield.html" rel="alternate"></link><published>2014-12-29T00:45:00-08:00</published><updated>2014-12-29T00:45:00-08:00</updated><author><name>Conner Swann</name></author><id>tag:connerswann.me,2014-12-29:/2014/12/arduino-introducing-the-adafruit-cc3000-wifi-shield.html</id><summary type="html">&lt;p&gt;I recently got my hands on an &lt;a href="http://www.adafruit.com/product/1491"&gt;Adafruit CC3000 WiFi Shield&lt;/a&gt;. From the Adafruit product page: &lt;/p&gt;
 &lt;blockquote&gt;
-&lt;/p&gt;
-
-&lt;p&gt;"The CC3000 hits that sweet spot of usability, price and capability. It uses SPI for communication (not UART!) so you can push data as fast as you want or as slow as you want …&lt;/p&gt;&lt;/blockquote&gt;</summary><content type="html">&lt;p&gt;I recently got my hands on an &lt;a href="http://www.adafruit.com/product/1491"&gt;Adafruit CC3000 WiFi Shield&lt;/a&gt;. From the Adafruit product page:&lt;/p&gt;
-&lt;/p&gt;
-
+&lt;p&gt;"The CC3000 hits that sweet spot of usability, price and capability. It uses SPI for communication (not UART!) so you can push data as fast as you want or as slow as you want …&lt;/p&gt;&lt;/blockquote&gt;</summary><content type="html">&lt;p&gt;I recently got my hands on an &lt;a href="http://www.adafruit.com/product/1491"&gt;Adafruit CC3000 WiFi Shield&lt;/a&gt;. From the Adafruit product page: &lt;/p&gt;
 &lt;blockquote&gt;
-&lt;/p&gt;
-
-&lt;p&gt;"The CC3000 hits that sweet spot of usability, price and capability. It uses SPI for communication (not UART!) so you can push data as fast as you want or as slow as you want.&lt;/p&gt;
+&lt;p&gt;"The CC3000 hits that sweet spot of usability, price and capability. It uses SPI for communication (not UART!) so you can push data as fast as you want or as slow as you want. It has a proper interrupt system with IRQ pin so you can have asynchronous connections. It supports 802.11b/g, open/WEP/WPA/WPA2 security, TKIP &amp;amp; AES. A built in TCP/IP stack with a "BSD socket" interface. TCP and UDP in both client and server mode, up to 4 concurrent sockets."&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;/p&gt;</content></entry><entry><title>Verve: Death-Drink and Money-Waster or Solid Gold Ambrosia of the Gods?</title><link href="https://connerswann.me/2014/07/verve-death-drink-and-money-waster-or-solid-gold-ambrosia-of-the-gods.html" rel="alternate"></link><published>2014-07-31T16:32:00-07:00</published><updated>2014-07-31T16:32:00-07:00</updated><author><name>Conner Swann</name></author><id>tag:connerswann.me,2014-07-31:/2014/07/verve-death-drink-and-money-waster-or-solid-gold-ambrosia-of-the-gods.html</id><summary type="html">&lt;p&gt;&lt;em&gt;This is a blog post which was originally published in 2012 on my old blog at condejo.org. I believe that the information within holds true to this day, but there is a posibility that my data is no longer correct. Please feel free to send me an email with …&lt;/em&gt;&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;em&gt;This is a blog post which was originally published in 2012 on my old blog at condejo.org. I believe that the information within holds true to this day, but there is a posibility that my data is no longer correct. Please feel free to send me an email with&lt;/em&gt;&lt;/p&gt;
-&lt;/p&gt;</content></entry><entry><title>An Internet of Things (Part 2): Calling Meteor.js Functions Externally</title><link href="https://connerswann.me/2014/06/an-internet-of-things-part-2-calling-meteorjs-functions-externally.html" rel="alternate"></link><published>2014-06-24T20:54:00-07:00</published><updated>2014-06-24T20:54:00-07:00</updated><author><name>Conner Swann</name></author><id>tag:connerswann.me,2014-06-24:/2014/06/an-internet-of-things-part-2-calling-meteorjs-functions-externally.html</id><summary type="html">&lt;p&gt;In a previous post I talked about my simple Arduino sketch that contacts a Meteor.js server and feeds it a value read from a Photoresistor. Now I'm going to detail how I hacked together the server. Just an advanced warning, I'm not an expert with Meteor and I'm going …&lt;/p&gt;</summary><content type="html">&lt;p&gt;In a previous post I talked about my simple Arduino sketch that contacts a Meteor.js server and feeds it a value read from a Photoresistor. Now I'm going to detail how I hacked together the server. Just an advanced warning, I'm not an expert with Meteor and I'm going&lt;/p&gt;
-&lt;/p&gt;</content></entry><entry><title>Arduino - An Internet of Things</title><link href="https://connerswann.me/2014/06/arduino-an-internet-of-things.html" rel="alternate"></link><published>2014-06-24T20:51:00-07:00</published><updated>2014-06-24T20:51:00-07:00</updated><author><name>Conner Swann</name></author><id>tag:connerswann.me,2014-06-24:/2014/06/arduino-an-internet-of-things.html</id><summary type="html">&lt;p&gt;Recently I got an Arduino Uno, a small, versatile microcontroller that has been adopted by the "Maker" community as the controller of choice for hobby electronics, and for good reason.&lt;/p&gt;
-&lt;/p&gt;
+&lt;p&gt;In not so many words, it's a piece of hardware that can be used to connect your Arduino to a WiFi access point to send and recieve data wirelessly. It's a pretty robust piece of hardware, and it's perfect to connect my "Internet of Things" projects to the internet. &lt;/p&gt;
+&lt;p&gt;To get my setup working, I stepped through the &lt;a href="https://learn.adafruit.com/adafruit-cc3000-wifi"&gt;Adafruit Documentation on the CC3000&lt;/a&gt; which is complete and very thorough. &lt;/p&gt;
+&lt;p&gt;Before you can start using this board, you have to solder on the headers so you can plug it directly into the Arduino. &lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Since I'm more of a software guy, I won't detail the actual process of soldering the headers, but if you're looking for instructions &lt;a href="https://learn.adafruit.com/adafruit-cc3000-wifi/assembly-and-wiring"&gt;Adafruit has you covered&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Arduino with WiFi Shield" src="https://connerswann.me/2014/12/arduino-wifi-shield-1.jpg"&gt;&lt;/p&gt;
+&lt;p&gt;To get it running, you have to add the shield's code libraries to your &lt;code&gt;arduino_sketch_location/libraries/&lt;/code&gt; folder, the library is available for download along with installation instructions &lt;a href="https://learn.adafruit.com/adafruit-cc3000-wifi/cc3000-library-software"&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;From there, all I did was pop the shield into place on top of the Arduino and load up the 'buildtest' example file [1]. &lt;/p&gt;
+&lt;p&gt;I got an output that looked like this: 
+&lt;pre&gt;
+&lt;code class="language-none"&gt;
+Hello, CC3000!&lt;/p&gt;
+&lt;p&gt;RX Buffer : 131 bytes
+TX Buffer : 131 bytes
+Free RAM: 1221&lt;/p&gt;
+&lt;p&gt;Initialising the CC3000 ...
+Firmware V. : 1.24
+MAC Address : 0x08 0x00 0x28 0x57 0xA4 0xF5
+Networks found: 10
+================================================
+SSID Name    : AtlantisBack
+RSSI         : 63
+Security Mode: 1&lt;/p&gt;
+&lt;p&gt;SSID Name    : DIRECT-c0[BD]EM59
+RSSI         : 55
+Security Mode: 3&lt;/p&gt;
+&lt;p&gt;SSID Name    : Someone's Wi-Fi Network
+RSSI         : 37
+Security Mode: 3&lt;/p&gt;
+&lt;p&gt;SSID Name    : Atlantis
+RSSI         : 55
+Security Mode: 1&lt;/p&gt;
+&lt;p&gt;================================================&lt;/p&gt;
+&lt;p&gt;Deleting old connection profiles&lt;/p&gt;
+&lt;p&gt;Attempting to connect to Atlantis
+Connected!
+Request DHCP&lt;/p&gt;
+&lt;p&gt;IP Addr: 192.168.1.134
+Netmask: 255.255.255.0
+Gateway: 192.168.1.1
+DHCPsrv: 192.168.1.1
+DNSserv: 76.14.0.8
+www.adafruit.com -&amp;gt; 207.58.139.247&lt;/p&gt;
+&lt;p&gt;Pinging 207.58.139.247...5 replies
+Ping successful!&lt;/p&gt;
+&lt;p&gt;Closing the connection
+&lt;/code&gt;
+&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;This is just a really basic example so I could prove to myself that I could get the shield working. However, my end-goal is to get the board speaking to a server and reporting some values, similarly to what I did in a &lt;a href="http://connerswann.me/arduino-an-internet-of-things/"&gt;previous post with an Ethernet shield&lt;/a&gt;. &lt;/p&gt;
+&lt;p&gt;Stay tuned!&lt;/p&gt;
+&lt;div class="footnote"&gt;
+&lt;hr&gt;
+&lt;ol&gt;
+&lt;li id="fn:1"&gt;
+&lt;p&gt;The documentation actually says that you shouldn't be able to run the Arduino and the CC3000 shield off of your computer's USB port due to power consumption being too high, however I wasn't able to verify this. It might be a problem as you get into more advanced things and require more of the Arduino's pins to be powered.&amp;#160;&lt;a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;</content></entry><entry><title>Verve: Death-Drink and Money-Waster or Solid Gold Ambrosia of the Gods?</title><link href="https://connerswann.me/2014/07/verve-death-drink-and-money-waster-or-solid-gold-ambrosia-of-the-gods.html" rel="alternate"></link><published>2014-07-31T16:32:00-07:00</published><updated>2014-07-31T16:32:00-07:00</updated><author><name>Conner Swann</name></author><id>tag:connerswann.me,2014-07-31:/2014/07/verve-death-drink-and-money-waster-or-solid-gold-ambrosia-of-the-gods.html</id><summary type="html">&lt;p&gt;&lt;em&gt;This is a blog post which was originally published  in 2012 on my old blog at condejo.org. I believe that the information within holds true to this day, but there is a posibility that my data is no longer correct. Please feel free to send me an email with …&lt;/em&gt;&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;em&gt;This is a blog post which was originally published  in 2012 on my old blog at condejo.org. I believe that the information within holds true to this day, but there is a posibility that my data is no longer correct. Please feel free to send me an email with corrections if there are any glaring inaccuracies.&lt;/em&gt;&lt;/p&gt;
+&lt;p style="text-align: center;"&gt;&lt;img class="aligncenter  wp-image-307" title="vervearticle" src="http://condejo.org/wp-content/uploads/2012/09/vervearticle.png" alt="" width="736" height="160" /&gt;&lt;/p&gt;
 
+&lt;p&gt;&lt;em&gt;&lt;span style="font-size: large;"&gt;Disclaimer:All of the following non-publicly-available names are fictitious, but the words said are 100% accurate and true to form. Any webpages that I will refer to have been copied on Monday, September 17, 2012 and are locally hosted and are available as images.&lt;/span&gt;&lt;/em&gt;
+&lt;h4&gt;&lt;span style="font-size: medium;"&gt;[Quick Edit: This is in response to some linking of this post under the guise that it's a "false understanding on what they're doing as a &lt;em&gt;movement&lt;/em&gt;." While I respect almost any attempt to make some money by selling legal goods, calling Verve a social "movement" is just silly, unless you're referring to the imminent bowel movement you'll be partaking in after ingesting three cans of the highly caffeinated soft drink. It's a beverage manufacturer, not a political party...  I'll let you decide for yourself, but that's my take on it.]&lt;/span&gt;&lt;/h4&gt;
+Okay. Recently some former peers of mine as well as some sketchy people on campus  have been bellowing to the heavens about this "new" energy drink, catchily named "Verve!" There were some pretty unbelievable things being said about this miracle product that could allow you to take [sic] "a nap and waking up and seeing that I made money while I was sleeping." - Joey Jobmeister&lt;/p&gt;
+&lt;p&gt;Now, I'm not very old, but I know the mantra that states "If it's too good to be true, it usually is." I was naturally skeptical and did the due-diligence to glean more information, but what really made me giggle was the following statement about what Verve!'s affiliate program can do for you:
+&lt;blockquote&gt;What I also know is none of that shit matters because 15 year olds are making more than there damn principals and driving free cars before they even have their licenses. So idgaf who's the smartest or toughest it's pretty much who just wants to be in the right place in the right time and thanks to Holly Helpful you all have that opportunity now. Take it or leave it. - Joey Jobmeister&lt;/blockquote&gt;
+Okay. You've got my attention. Let's see what Verve! and it's manufacturer Vemma can do, and wether or not it's as true-to-form as Joey over here is saying it is.&lt;/p&gt;
+&lt;p&gt;First, a history lesson. What is Vemma and what's so amazing about their product(s)?
+&lt;p style="text-align: center;"&gt;&lt;span style="font-size: x-large;"&gt;&lt;strong&gt;Vemma - The Alleged Poor/Sick/Unhealthy/Unfit Man's Savior&lt;/strong&gt;&lt;/span&gt;&lt;/p&gt;
+First off, I'd like to mention that their company &lt;a title="Company Bio - Vemma" href="http://www.vemma.com/our-story/"&gt;bio&lt;/a&gt; reads like a self-help ad out of a cheap tabloid, but I'll ignore that for the sake of science or something.&lt;/p&gt;
+&lt;p&gt;Vemma is based in Scottsdale, Arizona and headed up by the founder and CEO BK Boreyko. From the get-go in their description, the company alleges that their core mission is to help consumers by "enhancing their well-being" and to offer "an income stream to people who introduce others to a product line they believe in." Those are some pretty genuine-sounding statements from a health-food company, but it doesn't make me want to buy their product. Not yet anyway.&lt;/p&gt;
+&lt;p&gt;I immediately changed my mind when they insinuated that Vemma products can indirectly cure bankruptcy  and divorce. I shit you not.
+&lt;blockquote&gt;Considering that the number-one reason for personal bankruptcy is illness, and the number-one reason for divorce is financial difficulties, the need Vemma can fill is incredibly important. It's really hard to feel like you're living the life you deserve when you're sick or unhappy.&lt;/blockquote&gt;
+If there's any other way to read that, please let me know, because that's a tall order for a dietary supplement manufacturer...&lt;/p&gt;
+&lt;p&gt;I'll spare you the rest of the masturbatory dialogue, but their basic claims are as follows:
+&lt;ul&gt;
+    &lt;li&gt;Their compensation plan for affiliates is "strong, generous and &lt;em&gt; charitable.&lt;/em&gt;"&lt;/li&gt;
+    &lt;li&gt;Their product is "ultra-premium"&lt;/li&gt;
+    &lt;li&gt;Their product will help you be healthier and happier.&lt;/li&gt;
+    &lt;li&gt;Their product is for people who like "helping others."&lt;/li&gt;
+&lt;/ul&gt;
+I only really want to address their "charitable" affiliate program for the time being, as that was the source of the argument which lead me to write this in the first place. I'll give them the benefit of the doubt that their absolutely ridiculous claims of "Ultra-Premium" product are true.
+&lt;p style="text-align: center;"&gt;&lt;span style="font-size: x-large;"&gt;&lt;strong&gt;Vemma and Verve! - Early Retirement For Teens and Infants or Something&lt;/strong&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;p style="text-align: left;"&gt;Vemma has an incredibly well-worded and enticing pitch to potential affiliates, I'll give them that. Just look at the friggin &lt;a title="Screenshot of &amp;quot;Opportunities&amp;quot;" href="http://condejo.org/images/Verve%20Article/Vemma%20Business%20Model%20-%20The%20Vemma%20Opportunity.png" target="_blank"&gt;landing page&lt;/a&gt; when you click on "Opportunity" on the official website. In case you don't want to go through the trouble of clicking on it, I'll describe it for you.&lt;/p&gt;
+&lt;p style="text-align: left;"&gt;An image dominates the page which depicts what appears to be a stock image of a male and a female in a convertible. Superimposed over the image in the Vemma trademark orange text are the words "If You Could Not Fail, How Big Would You Dream?" Underneath this admittedly heart-lifting image are the words, "Achieve Your Dreams with Our Rewarding Business Strategy."&lt;/p&gt;
+&lt;p style="text-align: left;"&gt;Now if that's not enough well-placed idealism, the entire "Opportunity" section of their site is filled with intentionally vague and cliche words of encouragement like,&lt;/p&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p style="text-align: left;"&gt;Unlimited possibilities! We don't place any barriers ahead of you; we let you determine your own success.&lt;/p&gt;
+&lt;p style="text-align: center;"&gt;or&lt;/p&gt;
+&lt;p style="text-align: left;"&gt;So if your dream is to run your own business, get out of debt, earn a secondary source of income, exchange the traditional 9 to 5  for your own schedule, or all of the above, Vemma's business opportunity can help you achieve it.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p style="text-align: left;"&gt; I'll move on from the obvious to the not-so-obvious forms of borderline misleading information. If you navigate to "How to Get Paid" you'll be confronted with a video that hypothetically describes how you can make money with Vemma. While I admit it does that, it also feeds information to the viewer that requires a disclaimer that reads "Results not Typical." Claims like, "We have a Game Plan to get you earning $500, $5,000, or even $50,000 per  month!**"&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="http://www.youtube.com/watch?v=yK7GbjDk0iE"&gt;Video&lt;/a&gt;
+&lt;p style="text-align: left;"&gt;Mr. Boreyko likes to use large fantastical language all throughout the video, while &lt;em&gt;almost never &lt;/em&gt;actually saying anything of real substance. The entire script is worded in such a way that it appears to insinuate a bunch of cool things that are available only if you work for Vemma. Allegations that the "Game Plan" can give the &lt;em&gt;&lt;span style="text-decoration: underline;"&gt;opportunity&lt;/span&gt;&lt;/em&gt; to be &lt;em&gt;&lt;span style="text-decoration: underline;"&gt;profitable&lt;/span&gt;&lt;/em&gt; fast and also be driving a new BMW in 90 days. Yes. All in the same sentence.&lt;/p&gt;
+&lt;p style="text-align: left;"&gt;Let's break that down really quick, it's important to see the wording here that is meant to be misinterpreted. This "Game Plan" will give you the opportunity to make at least one dollar more than you spent, and ALSO will give you the CHANCE to enter a CONTEST to win a new car.&lt;/p&gt;
+&lt;p style="text-align: left;"&gt;Now, being misleading to total strangers is something I definitely disagree with, however where I personally begin to have serious reservations about companies like Vemma is the point when they request you take advantage of the trust you've built and use the same almost misleading, superfluous language with your friends and family.&lt;/p&gt;
+&lt;p style="text-align: center;"&gt;&lt;strong&gt;&lt;span style="font-size: x-large;"&gt;The "Game Plan" Also Known As: "Rationale to Milk People That Trust You Out Of Their Money"&lt;/span&gt;&lt;/strong&gt;&lt;/p&gt;
+&lt;p style="text-align: left;"&gt;In the video cited above, it assumes you are starting your own pyramid from scratch, so step one is to get people to be beneath you.&lt;/p&gt;
+&lt;p style="text-align: left;"&gt;&lt;span style="font-size: medium;"&gt;&lt;strong&gt;Step 1: Convince Suckers to Sell Beneath You&lt;/strong&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;p style="text-align: left;"&gt;&lt;span style="font-size: medium;"&gt;First, you have to find people that "see what you see" and sign them up underneath you. The video suggests three, but their business model only requires two (I guess you have to just drop one, whoops!).  With those people, you then &lt;strong&gt;&lt;em&gt;buy&lt;/em&gt;&lt;/strong&gt; one or more "builder packs," please correct me if I'm wrong in the comments or via e-mail, but basically you're fronting about $500.00 or more for a couple of cases of their golden health nectar. Look here at the &lt;a title="Verve Builder Packs" href="http://condejo.org/images/Verve%20Article/Vemma%20Store%20-%20Verve%20Builder%20Packs.png"&gt;screenshot&lt;/a&gt; or even their &lt;a title="Verve Store" href="https://www.vemma.com/store/index.cfm?fuseAction=dspProductVerveStore"&gt;store&lt;/a&gt; which is rampant with unicode errors. Accordinng to the video at that point you should have made "about $700" yet he never clarified exactly what you'd have sold at that point. Is it one $500 set of Verve! Is it two? Seven? &lt;/span&gt;&lt;/p&gt;
+&lt;p style="text-align: left;"&gt;Okay, I apologize to those of you who didn't read this for the math, but I wanted to put numbers to the words.&lt;/p&gt;
+&lt;p style="text-align: left; padding-left: 30px;"&gt;In one $499.95 "Verve! Builder Pack" there are:&lt;/p&gt;&lt;/p&gt;
+&lt;ul&gt;
+    &lt;li&gt;72 cans of Verve Energy Drink (8.3-oz. can)&lt;/li&gt;
+    &lt;li&gt;48 cans of Verve Zero Sugar Energy Drink (8.3-oz. can)&lt;/li&gt;
+    &lt;li&gt;48 bottles of Verve Energy Shot (2-oz. bottles)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p style="padding-left: 30px;"&gt;That's a total of 120, 8.3-oz. cans which I would sell at the same price, and 48 2-oz. shots which obviously you'd sell for less than the cans.&lt;/p&gt;
+
+&lt;p style="padding-left: 30px;"&gt;The only way I thought to price it all out was to simply price it by the Fluid Ounce, because according to Vemma all their stuff if the same and it's being sold wholesale anyways.&lt;/p&gt;
+
+&lt;p style="padding-left: 30px;"&gt;That's 996 Fluid Ounces in the cans and 96 in the bottles. Divided, the liquid is distributed 91.2% to the cans and 7.8% to the bottles. The final cost coming to $455.95 of your investment going into the cans and $40 going into the little bottles. About $3.80 a can and $0.83 a bottle.&lt;/p&gt;
+
+&lt;p style="padding-left: 30px;"&gt;With a can of Red Bull, Verve!'s main competitor, costing about &lt;a title="Red Bull Data" href="http://energy-drinks.findthebest.com/l/156/Red-Bull-Energy-Drink" target="_blank"&gt;$2.99 a can&lt;/a&gt;, that doesn't leave a whole lot of room for competition.  Let's say that since Verve! is "Ultra-Premium" you're willing to pay at most 50% more for it, for a total of $4.50 a can. Assuming you are able to sell every single can, and don't drink any of them in the process, you'd net $540.00 from the cans, a profit of $84.05.&lt;/p&gt;
+
+&lt;p style="padding-left: 30px;"&gt;Moving onto the bottles. The average 5-Hour Energy shot costs about &lt;a title="5-Hour Energy Shots Info" href="http://energy-drinks.findthebest.com/l/6/5-Hour-Energy" target="_blank"&gt;$1.50 a bottle&lt;/a&gt;, and again, assuming Verve! has the ability to cure all the ills of the world like Divorce and Bankruptcy, you're willing to pay 50% more for a taste. That's $2.25 a bottle, but let's round down to $2.00 for simplicity's sake. Again, assuming you are able to sell all 48 bottles, you've just collected $96.00, a $56.00 profit.&lt;/p&gt;
+
+&lt;p style="padding-left: 30px;"&gt;Together, you've made a profit of $140.05, off of your original $500 investment, and if you're paying attention to their shipment schedule you only have a month before your next shipment comes.&lt;/p&gt;
+
+&lt;p style="padding-left: 30px;"&gt;To meet the original estimate of $700 of profit, you'd have to sell 5 full cases of the stuff with an initial investment of $2,500.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Step 2: Help Your Minions Out&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Yup, you guessed right, as the people underneath you sell stuff, you get a kickback from their profits. At this point, you probably don't have to do much selling anymore because if your minions are doing what they're supposed to be doing you can just coast along on the percentage of their profits. You're basically like a Meth lord with dealers peddling small amounts of crystal on the streets of New Mexico and instead of Vemma your supplier is a man known only as Heisenberg.
+&lt;p style="text-align: center;"&gt;&lt;span style="color: #000000; font-size: x-large;"&gt;&lt;span style="line-height: 36px;"&gt;&lt;strong&gt;So... Now What?&lt;/strong&gt;&lt;/span&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;p style="text-align: left;"&gt;To me, all this hardly sounds feasable, let alone sound judgement for someone who is   several steps down the "pyramid." Ah, you may be wondering, "What are you talking about? Pyramid? Like a Pyramid Scheme?" To that I answer, yes, exactly like a pyramid scheme. Refer to the following picture (click for a larger version):&lt;/p&gt;
+&lt;a href="http://condejo.org/images/Verve%20Article/mlm.gif"&gt;&lt;img class="aligncenter" style="line-height: 18px; font-size: 12px;" title="MLM" src="http://condejo.org/images/Verve%20Article/mlm.gif" alt="" width="196" height="265" /&gt;&lt;/a&gt;&lt;br&gt;This is an graphic representation of your basic Multi-Level-Marketing (or MLM from now onward) scheme. Assume for a moment that you are Tuco, the Verve! pusher at the top of the chart. You have your two lackies below you, Slim Jim and Gordo, and you give them strict instructions to recruit people beneath them to sell product with the condition that you get 10% of everybody's profits who sells beneath you.&lt;/p&gt;
+&lt;p&gt;You get rich once the people stream in to get a taste of the drink that can purportedly cure cancer or something, and even richer as more and more people want to sell it for you. However, it's a pyramid, and profits only go one direction. Up.&lt;/p&gt;
+&lt;p&gt;Eventually, the market becomes so inundated with people peddling Verve! and curing all the ills of humanity that nobody wants to buy it anymore, and the pyramid collapses. However you Mr. Tuco, are now fantastically rich and the people stuck with cases upon cases of Verve! are now stuck trying to figure out what the hell to do with all of their miracle water.&lt;/p&gt;
+&lt;p&gt;Now, there is a difference between this and the illegal "pyramid" schemes. The illegal variety specifically doesn't have a product to sell, making it fraud. Instead of a tangible product, the illegal kind asks for an initial investment and then gives payments for recruiting more people (in the same fashion as most MLM strategies I might add) until there are so many people that it's impossible to keep track of anything and it collapses.  Although different, the basic defining point of a "pyramid" scheme remains the same and that's the unstable pyramid structure it produces.
+&lt;p style="text-align: center;"&gt;&lt;strong&gt;&lt;span style="font-size: x-large;"&gt;The Bottom Line&lt;/span&gt;&lt;/strong&gt;&lt;/p&gt;
+&lt;p style="text-align: left;"&gt; Can you make a significant amount money with Vemma? Yes, most definitely. Will you? The answer might surprise you. It's statistically &lt;strong&gt;INCREDIBLY UNLIKELY&lt;/strong&gt; that you or anyone else will make any large amount of money, with about 84% of affiliates having an annual income of less than $3,071.51. Even more miraculous, 73% make less than $1,000 annually.&lt;/p&gt;
+&lt;p style="text-align: left;"&gt;For your information, if you were listening and thinking that the "opportunity" to make "$500, $5,000, 0r even $50,000 each month," was a easy-to-achieve goal, I hate to break it to you,  it's not. Less than 8% make the lowest of the list, $500 a month, about .2% make $5,000, and a grand total of zero makes $50,000.&lt;/p&gt;
+&lt;p style="text-align: left;"&gt;&lt;a title="Vemma Income Disclosure" href="http://www.vemma.com/backoffice/pdf/2011-income-disclosure.pdf" target="_blank"&gt;Sorry. Look for yourself.&lt;/a&gt;&lt;/p&gt;
+&lt;p style="text-align: center;"&gt;&lt;strong&gt;&lt;span style="font-size: x-large;"&gt;&lt;span style="line-height: 36px;"&gt;Any&lt;/span&gt;&lt;span style="line-height: 36px;"&gt; Questions?&lt;/span&gt;&lt;/span&gt;&lt;/strong&gt;&lt;/p&gt;
+So that's it. Now you have a  (hopefully) good, simple to understand layman's guide to Verve! and now you're able to make an informed decision about wether or not to get involved with this company.&lt;/p&gt;
+&lt;p&gt;If you have any questions, or suggestions for things to add to this I'd be happy to listen. There's a whole BUNCH of information, and I only touched a small part of it. For the interested, and also to stave off a wave of people saying "You didn't do any research!!1!11111" a categorized list of websites I used as sources can be found &lt;a title="Sources!" href="http://condejo.org/images/Verve%20Article/sources.txt" target="_blank"&gt;here&lt;/a&gt;.
+&lt;p style="text-align: center;"&gt;&lt;strong&gt;&lt;span style="font-size: x-large;"&gt;More Reading On the Subject&lt;/span&gt;&lt;/strong&gt;&lt;/p&gt;
+How to start your own MLM-Pyramid Scheme (sounds and smells like Verve!):&lt;/p&gt;
+&lt;p&gt;&lt;a href="http://mlm-thetruth.com/tools1/humor-satire/start-pyramid-scheme"&gt;http://mlm-thetruth.com/tools1/humor-satire/start-pyramid-scheme&lt;/a&gt;
+&lt;p style="text-align: center;"&gt;&lt;span style="font-size: x-large;"&gt;TL;DR&lt;/span&gt;&lt;/p&gt;
+For those that didn't want to read it all, I thank you for scrolling this far to find the TL;DR.&lt;/p&gt;
+&lt;p&gt;TL;DR: Vemma is a MLM (Multi-Level-Marketing) company. They insinuate that you're able to make a boatload of money by working part-time. That's basically false, to make any money in the MLM business you have to be there at the inception of the venture and work your ass off. MLM companies request that you use your social networks to sell goods, preying off of the trust you've created with those people to make a buck. They're marketing a product that's very similar to competitors by saying it's akin to Ambrosia and can solve Divorce and Bankruptcy. You can make money with this snakewater if you work your butt off, but the statistical likelihood is that you won't.&lt;/p&gt;
+&lt;p&gt;2/10 would not recommend.&lt;/p&gt;</content></entry><entry><title>An Internet of Things (Part 2): Calling Meteor.js Functions Externally</title><link href="https://connerswann.me/2014/06/an-internet-of-things-part-2-calling-meteorjs-functions-externally.html" rel="alternate"></link><published>2014-06-24T20:54:00-07:00</published><updated>2014-06-24T20:54:00-07:00</updated><author><name>Conner Swann</name></author><id>tag:connerswann.me,2014-06-24:/2014/06/an-internet-of-things-part-2-calling-meteorjs-functions-externally.html</id><summary type="html">&lt;p&gt;In a previous post I talked about my simple Arduino sketch that contacts a Meteor.js server and feeds it a value read from a Photoresistor. Now I'm going to detail how I hacked together the server. Just an advanced warning, I'm not an expert with Meteor and I'm going …&lt;/p&gt;</summary><content type="html">&lt;p&gt;In a previous post I talked about my simple Arduino sketch that contacts a Meteor.js server and feeds it a value read from a Photoresistor. Now I'm going to detail how I hacked together the server. Just an advanced warning, I'm not an expert with Meteor and I'm going to be refining this implementation as I go. With that said, it works, so I've got that going for me.&lt;/p&gt;
+&lt;p&gt;First, it's probably pertinent to go into a little detail as to what "Meteor.js" is. According to them:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Meteor is an open-source platform for building top-quality web apps in a fraction of the time, whether you're an expert developer or just getting started.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;In a nutshell, it's a javascript framework for writing web apps. One attribute that makes sets it apart is the ability to write both the client-side and server-side applications entirely in Javascript using the handy Meteor library. I think it adds an element of fun/coding/computer-science-ness to (what I consider to be) the drudgery of classic HTML and CSS.&lt;/p&gt;
+&lt;p&gt;I created a simple Meteor application to interface with my Arduino. The page is tracking a database table called "reads" and whenever another item is added it updates itself with the value from that item's "value" entry in the database. All of this logic happens on the client-side and is contained the following code.&lt;/p&gt;
+&lt;pre class="line-numbers"&gt;
+&lt;code class="language-javascript"&gt;
+Reads = new Meteor.Collection("reads");
+
+if (Meteor.isClient) {  
+    // Fills in Templates
+    Template.temperature.val = function () {
+        val = Reads.find({}, {sort:{timestamp: -1}}, {limit: 1}).fetch()[0];
+        if(val){
+            Session.set("currentValue", val.value);
+        }
+        return val;
+    };
+    Template.temperature.message = function(){
+        if(Session.get("currentValue") &lt; 200){
+            return "Hey, who turned out the lights?";
+        }
+      else{
+            return "It's totally bright enough to see..."
+        }
+    };
+}
+&lt;/code&gt;
+&lt;/pre&gt;
+
+&lt;p&gt;So far, this is all simple out-of-the-box meteor behavior, but since I wanted to play around with calling Meteor functions externally, I added Iron Router to my Meteor app. Iron Router is a "client and server-side router built for use with Meteor." It allows you to route traffic to URLs on your server (or client) to arbitrary templates or even trigger meteor functions.&lt;/p&gt;
+&lt;p&gt;The code is super uninvolved, simply create a new Iron Router route on the server have it store the URL parameters that have been passed in a database. Meteor handles the ordeal of shuttling that data down to the client, something I find to be very powerful.&lt;/p&gt;
+&lt;pre class="line-numbers"&gt;
+&lt;code class="language-javascript"&gt;
+if (Meteor.isServer) {  
+    Router.map(function () {
+        this.route('yolo', {
+            where: 'server',
+            action: function () {
+            time = new Date().getTime();
+            Reads.insert({value: this.request.query.v, timestamp: time})
+        }
+    });
+    });
+}
+&lt;/code&gt;
+&lt;/pre&gt;
+
+&lt;p&gt;I created a route at &lt;code&gt;http://arduinotest.meteor.com/yolo&lt;/code&gt;. You can see that it works for yourself, just copy this: &lt;code&gt;http://arduinotest.meteor.com/yolo?v=9001&lt;/code&gt; into your url bar and then visit &lt;code&gt;http://arduinotest.meteor.com&lt;/code&gt;. Assuming the previous value wasn't already "9001", the page should have updated to reflect the changes.&lt;/p&gt;
+&lt;p&gt;The page actually reacts to the values that are passed, but you'll have to play with it to figure out exactly what makes the text change!&lt;/p&gt;</content></entry><entry><title>Arduino - An Internet of Things</title><link href="https://connerswann.me/2014/06/arduino-an-internet-of-things.html" rel="alternate"></link><published>2014-06-24T20:51:00-07:00</published><updated>2014-06-24T20:51:00-07:00</updated><author><name>Conner Swann</name></author><id>tag:connerswann.me,2014-06-24:/2014/06/arduino-an-internet-of-things.html</id><summary type="html">&lt;p&gt;Recently I got an Arduino Uno, a small, versatile microcontroller that has been adopted by the "Maker" community as the controller of choice for hobby electronics, and for good reason.&lt;/p&gt;
 &lt;p&gt;In my limited experience so far, Arduino is a real joy to deal with, having a very simplistic interface while …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Recently I got an Arduino Uno, a small, versatile microcontroller that has been adopted by the "Maker" community as the controller of choice for hobby electronics, and for good reason.&lt;/p&gt;
-&lt;/p&gt;
+&lt;p&gt;In my limited experience so far, Arduino is a real joy to deal with, having a very simplistic interface while preserving a very robbust "skillset" if you will. The first thing I did was spend a day playing with a box of components, learning how to read sensors and analog components with the board and reacting to those readings, whether it be just reporting back to the computer via serial or prehaps turning on/off an LED.&lt;/p&gt;
+&lt;p&gt;I've heard the term "Internet of Things" thrown around a lot, but never really quite understood what all the hype was about. However, after screwing around with an internet-equipped Arduino for a day, I can finally appreciate the power of being able to take your physical sensors and hardware and grant them a voice on the great forum that is "The Internet".&lt;/p&gt;
+&lt;p&gt;To demonstrate this idea, I wired up a photoresistor to my Arduino to take readings of the ambient light, and had it report the values to a Meteor.js server every ten seconds. The code is below, if you get lost or confused, leave a comment, but it's pretty heavily commented and (hopefully) easy to follow.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Photo Of Project" src="https://connerswann.me/2014/06/arduino-1.jpg"&gt;&lt;/p&gt;
+&lt;p&gt;Disclaimer: This is super-hacked together, I'm not claiming to be a guru. With that said, it works, so I have that going for me.&lt;/p&gt;
+&lt;pre class="line-numbers"&gt;
+&lt;code class="language-c"&gt;
+#include &lt; SPI.h &gt;
+#include &lt; Ethernet.h &gt;
 
-&lt;p&gt;In my limited experience so far, Arduino is a real joy to deal with, having a very simplistic interface while&lt;/p&gt;
-&lt;/p&gt;</content></entry></feed>
+// For ethernet shield
+byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };// MAC Address  
+char server[] = "arduinotest.meteor.com";            // Server to connect to  
+// IP Address in case we don't get one from DCHP
+IPAddress ip(192,168,0,177);    
+
+EthernetClient client;
+
+// Last time we connected to the server, in milliseconds
+unsigned long lastConnectionTime = 0;  
+// State of the connection last time through the main loop                
+boolean lastConnected = false;  
+// Delay between updates, in milliseconds
+const unsigned long postingInterval = 5000;        
+
+void setup() {  
+    // Open the serial connection
+    Serial.begin(9600);
+    Serial.println("Initializing Ethernet Shield...");
+
+    if (Ethernet.begin(mac) == 0){
+        // DCHP config has failed
+        Serial.println("Failed to configure Ethernet using DHCP");
+        // Set it up manually
+        Ethernet.begin(mac, ip);  
+    }
+    // Give it a second
+    delay(1000);
+    Serial.print("IP: ");
+    Serial.println(Ethernet.localIP());
+}
+
+void loop() {  
+    // In case we ever get a response, log it to serial
+    // commented out because unnecessary
+    // if (client.available()) {
+    //  char c = client.read();
+    //  Serial.println("RESPONSE INCOMING CAPTAIN!");
+    //  Serial.println("==========================");
+    //  Serial.print(c);
+    //  Serial.println("==========================");
+    // }
+
+    // If it's not connected but we've connected recently
+    if (!client.connected() &amp;&amp; lastConnected) {
+        //Serial.println();
+        Serial.println("trouble in paradise... disconnecting.");
+        client.stop();
+    }
+    // if you're not connected, and ten seconds have passed since
+    // your last connection, then connect again and send data:
+    if(!client.connected() &amp;&amp; (millis() - lastConnectionTime &gt; postingInterval)) {
+        httpRequest();
+    }
+    // store the state of the connection for next time through
+    // the loop:
+    lastConnected = client.connected();
+}
+
+int httpRequest() {  
+    // if there's a successful connection:
+    // String postData = String("v=" + analogRead(0));
+    if (client.connect(server, 80)) {
+        Serial.println("connecting...");
+        // send the HTTP POST request:
+        client.println(constructRequest());
+        client.println("Host: arduinotest.meteor.com");
+        client.println("User-Agent: jetpack-rinocerous");
+        client.println("Connection: close");
+        client.println();
+
+
+        // let us know it sent
+        Serial.println("Sent!");
+        // note the time that the connection was made:
+        lastConnectionTime = millis();
+    } 
+    else {
+        // if you couldn't make a connection:
+        Serial.println("connection failed");
+        Serial.println("disconnecting.");
+        client.stop();
+    }
+    return 1;
+}
+
+String constructRequest(){  
+    String post = "POST ";
+    String location = "/yolo?v=";
+    int val = analogRead(0);
+    String type = " HTTP/1.1";
+
+    return post + location + val + type;
+}
+&lt;/code&gt;
+&lt;/pre&gt;
+
+&lt;p&gt;In english, the Arduino initializes the Ethernet shield and requests an IP address via DCHP. Assuming that's successful, it enters the loop and periodically tries to connect to my server at arduinotest.meteor.com.&lt;/p&gt;
+&lt;p&gt;Once connected, about every ten seconds (depending on if the last connection attempt was sucessful or not) it reads the photoresistor and sends a request to the server with the value as a url parameter. It then loops again. The algorithm's also got contingencies for what happens if it can't connect, if you're interested take a look at the code.&lt;/p&gt;
+&lt;p&gt;That's it for the Arduino code. Once I've added to the Meteor.js server-side code a little bit, I'll make a post about how I accomplished that.&lt;/p&gt;</content></entry></feed>
