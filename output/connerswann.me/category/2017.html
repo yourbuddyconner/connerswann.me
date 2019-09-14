@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8" />
+        <title>connerswann.me - 2017</title>
+        <link rel="stylesheet" href="connerswann.me/theme/css/main.css" />
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="connerswann.me/">connerswann.me </a></h1>
+                <nav><ul>
+                    <li><a href="connerswann.me/category/2014.html">2014</a></li>
+                    <li><a href="connerswann.me/category/2015.html">2015</a></li>
+                    <li class="active"><a href="connerswann.me/category/2017.html">2017</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+
+            <aside id="featured" class="body">
+                <article>
+                    <h1 class="entry-title"><a href="connerswann.me/my-mac-keeps-dropping-wi-fi-how-i-fixed-it.html">My Mac Keeps Dropping Wi-Fi - How I Fixed It</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2017-11-14T00:00:00-08:00">
+                Published: Tue 14 November 2017
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="connerswann.me/author/conner-swann.html">Conner Swann</a>
+        </address>
+<p>In <a href="connerswann.me/category/2017.html">2017</a>.</p>
+
+</footer><!-- /.post-info --><p>I run a lot of things on my Desktop Mac Pro at home -- from basic stuff like a Plex media server to more custom projects like web servers or a VPN gateway. It's pretty important that these semi-critical services stay online as much as possible, however in furtherance of this goal I ran into one major issue: the shape of my house. </p>
+<p>My computer is upstairs and the cable modem is ~200 feet away, through multiple floors, in the basement. I obviously have in-home Wi-Fi, but occasionally the Mac would disconnect from the network with no warning, and the only way to get it back on was to physically be there at the keyboard. Not Optimal! </p>
+<p>It's not a gigantic issue because simply sitting down, logging in, and cycling the Wi-Fi power is all that's needed to reconnect. However, this is really inconvenient if I'm not physically there but still want to consume the media on the machine -- so I set out to fix the problem for good. </p>
+<p>Luckily for me, Apple is really good about providing command-line control over hardware functionality in most circumstances, and Wi-Fi is no exception. There is a handy program on all OS X Machines called <code>networksetup</code>. Here's an excerpt from the man page entry: </p>
+<div class="highlight"><pre><span></span><span class="nv">NAME</span>
+     <span class="nv">networksetup</span> <span class="o">--</span> <span class="nv">configuration</span> <span class="nv">tool</span> <span class="k">for</span> <span class="nv">network</span> <span class="nv">settings</span> <span class="nv">in</span> <span class="nv">System</span> <span class="nv">Preferences</span>.
+
+<span class="nv">DESCRIPTION</span>
+     <span class="nv">The</span> <span class="nv">networksetup</span> <span class="nv">command</span> <span class="nv">is</span> <span class="nv">used</span> <span class="nv">to</span> <span class="nv">configure</span> <span class="nv">network</span> <span class="nv">settings</span> <span class="nv">typically</span> <span class="nv">configured</span> <span class="nv">in</span> <span class="nv">the</span> <span class="nv">System</span> <span class="nv">Preferences</span> <span class="nv">application</span>.  <span class="nv">The</span> <span class="nv">networksetup</span> <span class="nv">command</span>
+     <span class="nv">requires</span> <span class="nv">at</span> <span class="nv">least</span> <span class="s2">&quot;</span><span class="s">admin</span><span class="s2">&quot;</span> <span class="nv">privileges</span> <span class="nv">to</span> <span class="nv">run</span>. <span class="nv">Most</span> <span class="nv">of</span> <span class="nv">the</span> <span class="nv">set</span> <span class="nv">commands</span> <span class="nv">require</span> <span class="s2">&quot;</span><span class="s">root</span><span class="s2">&quot;</span> <span class="nv">privileges</span> <span class="nv">to</span> <span class="nv">run</span>.
+
+     <span class="nv">Any</span> <span class="nv">flag</span> <span class="nv">that</span> <span class="nv">takes</span> <span class="nv">a</span> <span class="nv">password</span> <span class="nv">will</span> <span class="nv">accept</span> <span class="s2">&quot;</span><span class="s">-</span><span class="s2">&quot;</span> <span class="nv">in</span> <span class="nv">place</span> <span class="nv">of</span> <span class="nv">the</span> <span class="nv">password</span> <span class="nv">to</span> <span class="nv">indicate</span> <span class="nv">it</span> <span class="nv">should</span> <span class="nv">read</span> <span class="nv">the</span> <span class="nv">password</span> <span class="nv">from</span> <span class="nv">stdin</span>.
+</pre></div>
+
+
+<p>Knowing that <code>networksetup</code> exists and how it works, I set out to whip up a little BASH script that can be run with cron and can check for internet connectivity and cycle the Wi-Fi if necessary. Below is what I came up with: </p>
+<script src="https://gist.github.com/yourbuddyconner/22c37e5246b041fd5c6e4d1e89db0d34.js"></script>
+
+<p>After the script was written, it was trivial to add it to my crontab to be executed once every couple minutes. I also set up external monitoring Namecheap's Dynamic DNS service and UptimeRobot.com, but that's a topic for a future post. </p>                </article>
+            </aside><!-- /#featured -->
+                <section id="content" class="body">
+                    <h1>Other articles</h1>
+                    <hr />
+                    <ol id="posts-list" class="hfeed">
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="connerswann.me/myci-a-look-into-my-personal-cloud-environment.html" rel="bookmark"
+                           title="Permalink to MyCI - A Look Into My Personal Cloud Environment">MyCI - A Look Into My Personal Cloud Environment</a></h1>
+                </header>
+
+                <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2017-05-04T20:14:00-07:00">
+                Published: Thu 04 May 2017
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="connerswann.me/author/conner-swann.html">Conner Swann</a>
+        </address>
+<p>In <a href="connerswann.me/category/2017.html">2017</a>.</p>
+
+</footer><!-- /.post-info -->                <h1>Why Do I Need a Personal Cloud Environment?</h1>
+<p><img alt="" src="connerswann.me/images/2017/Leveraging-the-Cloud-Featured-Image.jpg">
+For a long time now, I have enjoyed doing personal software projects that teach me new skills, frameworks or even programming languages. I think that an engineer in a computer-science-related field should always be learning new technology and innovating. However, at times …</p>
+                <a class="readmore" href="connerswann.me/myci-a-look-into-my-personal-cloud-environment.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
+                </ol><!-- /#posts-list -->
+                </section><!-- /#content -->
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>links</h2>
+                        <ul>
+                            <li><a href="http://getpelican.com/">Pelican</a></li>
+                            <li><a href="http://python.org/">Python.org</a></li>
+                            <li><a href="http://jinja.pocoo.org/">Jinja2</a></li>
+                            <li><a href="#">You can modify those links in your config file</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+
+                            <li><a href="#">You can add links in your config file</a></li>
+                            <li><a href="#">Another social link</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>

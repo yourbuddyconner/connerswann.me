@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8" />
+        <title>Personal Analytics: Gleaning Metadata from Text Messages With Splunk</title>
+        <link rel="stylesheet" href="connerswann.me/theme/css/main.css" />
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="connerswann.me/">connerswann.me </a></h1>
+                <nav><ul>
+                    <li><a href="connerswann.me/category/2014.html">2014</a></li>
+                    <li class="active"><a href="connerswann.me/category/2015.html">2015</a></li>
+                    <li><a href="connerswann.me/category/2017.html">2017</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="connerswann.me/personal-analytics-gleaning-metadata-from-text-messages-with-splunk.html" rel="bookmark"
+           title="Permalink to Personal Analytics: Gleaning Metadata from Text Messages With Splunk">Personal Analytics: Gleaning Metadata from Text Messages With Splunk</a></h1>
+    </header>
+
+    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2015-02-06T05:58:00-08:00">
+                Published: Fri 06 February 2015
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="connerswann.me/author/conner-swann.html">Conner Swann</a>
+        </address>
+<p>In <a href="connerswann.me/category/2015.html">2015</a>.</p>
+
+</footer><!-- /.post-info -->      <p><img alt="Splunk Logo" src="connerswann.me/images/2015/personal-analytics-splunk-logo.gif">
+</hr>
+I've been using <a href="http://www.splunk.com/">Splunk</a> a lot at work. According to their website: </p>
+<blockquote>
+<p>You see servers and devices, apps and logs, traffic and clouds. We see data—everywhere. Splunk® offers the leading platform for Operational Intelligence. It enables the curious to look closely at what others ignore—machine data—and find what others never see: insights that can help make your company more productive, profitable, competitive and secure. What can Splunk do for you? Just ask.</p>
+</blockquote>
+<p>My team uses the software to index and search through wide-ranging, potentially disparate datasources like server logs, google logins, data from our honeypot, and more. It fills so many use-cases, from tracking down users who have had their passwords phished to allowing us to pinpoint machines which are being tampered with (thanks to the wonder that is <a href="http://www.ossec.net/">OSSEC</a>). It's got a <em>really</em> steep learning curve, but once you get the hang of it, administering a distributed Splunk environment is actually pretty fun. </p>
+<p>Since I've been using Splunk so much, I wanted to give it a spin on a personal project. I had read at some point that iOS's text messages are stored in a SQLite database, so I decided to try and pull that data out and do some analysis on it. </p>
+<p>SQLite has the advantage of being a flat file, making it perfectly suited for applications where network access either isn't needed or isn't readily available. Luckily for me, the <a href="https://apps.splunk.com/app/958/">Splunk DB Connect</a> app can natively parse SQLite and index the data as key-value pairs. </p>
+<p>As it turns out, the iOS text messaging database has been pretty heavily documented in the past, and by using the information <a href="https://theiphonewiki.com/wiki/Messages#Indexes">here</a> I was able to extract the text message database from a backup of my iPhone. There were a lot of entries in this 37MB database, the messages table has over 50,000 entries, each one representing either an outgoing or incoming text message. </p>
+<p>The database also has a 'Handles' table, which stores information about the phone number the user is communicating with. Without joining the two tables, the data is incomplete, so I  crafted a SQL query to grab the data I wanted to index from the table. This query is fed to the Splunk DB Connect app which then takes care of parsing out all 53,024 rows and splitting them up into indivudual events.  </p>
+<pre class="line-numbers">
+<code class="language-sql">
+SELECT message.ROWID as message_id,
+    datetime(message.date,'unixepoch', '+31 years', '-6 hours') as timestamp, 
+    datetime(message.date_read, 'unixepoch', '+31 years', '-6 hours') as date_read, 
+    message.is_from_me as is_from_me,
+    message.is_read as is_read,
+    handle.id as handle, 
+    message.service as service, 
+    message.text as message FROM message, 
+    handle 
+WHERE message.handle_id = handle.ROWID;
+</code>
+</pre>
+
+<p><small>The SQL Query to create complete events</small></p>
+<p>Once Splunk has digested the data, heading to the Search &amp; Reporting app and typing <code>index=text_messages</code> into the search box gives me a nice frequency graph and a list of events: </p>
+<p><img alt="Splunk Screenshot" src="connerswann.me/images/2015/personal-analytics-screenshot-1.png"></p>
+<p>Each text message event is just a line of text that looks like this:</p>
+<p><code>message_id=53091 timestamp="2015-02-03 20:31:38" date_read="2015-02-03 20:31:28" is_from_me=1 is_read=1 handle=+xxxxxxxxxx service=iMessage message="I know, haha"</code></p>
+<hr>
+
+<p>Using Splunk's powerful search tools and some apps created by the Splunk community, I could begin doing some batch processing of all the events. </p>
+<p>Since I have so much text, the first thing I did was download a <a href="https://apps.splunk.com/app/1179/">Sentiment Analysis</a> app. Doing so adds a couple dashboards and the "sentiment" search command which will evaluate one field in every event you give it, assigning the event a positive or negative value. </p>
+<p>Armed with this new field, I can now create some inferential data about the contents of the database as a whole. </p>
+<p>For example, I can chart average sentiment over time. To do this, you chain together multiple splunk search commands until the desired output is reached:</p>
+<p><code>index=text_messages  is_from_me=1 | sentiment twitter message | timechart avg(sentiment) as sentiment span=1mon</code></p>
+<p>In english, it says:</p>
+<ul>
+<li>In index <code>text_messages</code>, search for events which have <code>is_from_me</code> equal to 1.</li>
+<li>After that, run a sentiment analysis on the results' <code>message</code> field. </li>
+<li>Then use the results to chart the average of the <code>sentiment</code> field over time spans of one month."</li>
+</ul>
+<p>The resulting graph looks like this:</p>
+<p><img alt="sentiment over time" src="connerswann.me/images/2015/personal-analytics-screenshot-2.png"></p>
+<p>By chaining together more complex series of commands, you can get some pretty cool results! </p>
+<p>The next graph is created by finding the average sentiment and forming a baseline sentiment value, allowing good and bad sentiment to cancel each other out, leaving only a remainder. </p>
+<p>Looking at the blue sentiment portion of the graph, zero is this baseline. Any column that falls below this has a "below average" sentiment while columns that are greater than zero posess an "above average" sentiment as compared with the rest of the events. </p>
+<p>The second yellow line simply charts the number of events in each period. </p>
+<p><code>index=text_messages  is_from_me=1 | sentiment twitter message |eval diff=sentiment-0.788400| eval count=count|  timechart avg(diff) as sentiment, count span=14d</code>
+</br>
+<img alt="Splunk Screenshot" src="connerswann.me/images/2015/personal-analytics-screenshot-3.png"></p>
+<p>This last one is my favorite. It overlays the sentiment of incoming messages over the sentiment of outgoing messages. This was to test the hypothesis that the sentiment of incoming texts could affect the sentiment of outgouing texts. While correlation doesn't imply causation, I still think it's interesting that the graphs follow each other in so many places! </p>
+<p><code>index=text_messages  is_from_me=0 |  sentiment twitter message |  eval diff=sentiment-0.788400 | timechart avg(diff) as sentiment_from span=1mon | appendcols [search index=text_messages  is_from_me=1 |  sentiment twitter message |  eval diff2=sentiment-0.788400 | timechart avg(diff2) as sentiment_me span=1mon]</code></p>
+<p><img alt="Splunk Screenshot" src="connerswann.me/images/2015/personal-analytics-screenshot-4.png"></p>
+<p>It's truly fascinating how each of these events are pretty useless by themselves, however when you take them all into account some interesting information can be gleaned. I plan to continue on with this little Personal Analytics project by incorporating more data sources like sleep analysis, stay tuned! </p>
+<p>If you're interested in this sort of thing, shoot me a tweet <a href="http://twitter.com/yourbuddyconner">@YourBuddyConner</a>, I'd love to hear what you think!</p>
+    </div><!-- /.entry-content -->
+
+  </article>
+</section>
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>links</h2>
+                        <ul>
+                            <li><a href="http://getpelican.com/">Pelican</a></li>
+                            <li><a href="http://python.org/">Python.org</a></li>
+                            <li><a href="http://jinja.pocoo.org/">Jinja2</a></li>
+                            <li><a href="#">You can modify those links in your config file</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+
+                            <li><a href="#">You can add links in your config file</a></li>
+                            <li><a href="#">Another social link</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8" />
+        <title>Internet of Things: Connecting my WiFi Arduino and PHP</title>
+        <link rel="stylesheet" href="connerswann.me/theme/css/main.css" />
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="connerswann.me/">connerswann.me </a></h1>
+                <nav><ul>
+                    <li><a href="connerswann.me/category/2014.html">2014</a></li>
+                    <li class="active"><a href="connerswann.me/category/2015.html">2015</a></li>
+                    <li><a href="connerswann.me/category/2017.html">2017</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="connerswann.me/internet-of-things-connecting-my-wifi-arduino-and-php.html" rel="bookmark"
+           title="Permalink to Internet of Things: Connecting my WiFi Arduino and PHP">Internet of Things: Connecting my WiFi Arduino and PHP</a></h1>
+    </header>
+
+    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2015-01-01T21:04:00-08:00">
+                Published: Thu 01 January 2015
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="connerswann.me/author/conner-swann.html">Conner Swann</a>
+        </address>
+<p>In <a href="connerswann.me/category/2015.html">2015</a>.</p>
+
+</footer><!-- /.post-info -->      <h2>Background</h2>
+<p>In a <a href="http://connerswann.me/playing-with-the-adafruit-cc3000-wifi-shield/">previous post</a> I discussed the Adafruit CC3000 WiFi shield and how I got the hardware and libraries installed. In this post I'm going to show you how I got my WiFi Arduino talking to a simple PHP script. </p>
+<p>First, I think it's helpful to visualize exactly what's going on in these sorts of interactions. The handy diagram below is a rough sketch of what's talking to what (it's actually much more complicated, but the code I wrote pertains to these actors):
+</br>
+<img alt="Arduino WiFi Diagram" src="connerswann.me/images/2015/internet-of-things-arduino-diagram.png"></p>
+<p>The Arduino first connects to the WiFi access point through the CC3000, piping the credentials and configuration options through one of several pins on the Arduino to the CC3000 hardware. The CC3000 handles the logistics of sending and revieving messages from the router, returning the results to the Arduino. </p>
+<p>Then, through the magic of TCP, these messages that are sent from the Arduino are recieved and interpreted by my server running PHP. For this exercise, I used the <a href="http://www.slimframework.com/">Slim PHP Framework</a> to create two URL Routes (more on that later) that the arduino can send requests to -- one that allows it to set a value and one that simply responds with the current value. These values are collected and stored in a MySQL database that is queried by PHP.  </p>
+<p>Once the initial request is interpreted by the PHP script, a response is generated and sent back via TCP to the Arduino for it to interpret. </p>
+<p>As I hope you can see, this sort of interaction is highly extensible and can be leveraged to preform all sorts of duties. For example, you could report values to a server and have the server catch them and store them in a database or periodically check for messages and display any that it recieves. Also, with a WiFi shield the communication is totally wireless!</p>
+<hr>
+<h2>The Arduino Code</h2>
+<p>Now it's time for the code, however it does require a little explanation. I used an command line application called <a href="https://www.biicode.com/">"bii"</a> to do this project. It's a dependancy manager that keeps all your libraries in one place and fetches them from the internet if they're not there locally.  At compile time, bii reads your main C++ file, collects all of the includes, and links them. It's very handy at the expense of having random includes in your file. It is also capable of compiling your Arduino source files and uploading them to your board, a definite plus.</p>
+<p>I did this because doing advanced interactions via HTTP on the Arduino is actually really hard and requires a lot of string manipulation. HTTP responses in this context are all plain text streams and the CC3000 library doesn't have any capability to parse out any information in the responses it recieves. The Bii repository had a <a href="https://www.biicode.com/lasote/lasote/arduino_http/master/25/readme.md">nice library created by a guy named "Lasote"</a> that did just that, so I decided to roll with it. </p>
+<p>Here's an example HTTP Response so you have an idea of what you need to parse through and why this client interface is necessary: </p>
+<pre>
+<code class="language-http">
+Date: Thu, 01 Jan 2015 21:27:23 GMT
+Server: Apache/2.4.7 (Ubuntu)
+X-Powered-By: PHP/5.5.9-1ubuntu4.5
+Vary: Accept-Encoding
+Content-Encoding: gzip
+Content-Length: 87
+Keep-Alive: timeout=5, max=100
+Connection: Keep-Alive
+Content-Type: text/html
+{"id":"4","value":"99","reason":"To test if the arduino can decode json"}
+</code>
+</pre>
+
+<p>Being able to print out <code>ret_code</code> and the raw response body in <code>response_buffer</code> (both variables populated by this interface) as opposed to having to parse through the entire string above is pretty handy.</p>
+<p>Now, without further ado, here's my C++ code for the arduino:
+<pre class="line-numbers">
+<code class="language-c">
+// Arduino symbols and Bindings</p>
+<h1>include "Arduino.h"</h1>
+<h1>include "ntruchsess/arduino_uip/uipethernet.h"</h1>
+<p>// client interface for HTTP communication</p>
+<h1>include "lasote/arduino_http/http_client.h"</h1>
+<p>// a processor to decode JSON</p>
+<h1>include "lasote/stream_processor/stream_json_processor.h"</h1>
+<h1>include "lasote/stream_recorder/stream_recorder.h"</h1>
+<p>//For cc3000 adapter</p>
+<h1>include <adafruit/cc3000_library/adafruit_cc3000.h></h1>
+<h1>include "diego/ardunet/cc3000client.h"</h1>
+<h1>include "diego/ardunet/cc3000utils.h"</h1>
+<h1>define WLAN_SSID       "Atlantis"        // cannot be longer than 32 characters!</h1>
+<p>//#define WLAN_PASS       "xxxxxxxx"
+char WLAN_PASS[] = {0x69, 0x69, 0x69, 0x69, 0x69, 0x00}; 
+// Security can be WLAN_SEC_UNSEC, WLAN_SEC_WEP, WLAN_SEC_WPA or WLAN_SEC_WPA2</p>
+<h1>define WLAN_SECURITY   WLAN_SEC_WEP</h1>
+<p>// These are the interrupt and control pins</p>
+<h1>define ADAFRUIT_CC3000_IRQ   3  // MUST be an interrupt pin!</h1>
+<p>// These can be any two pins</p>
+<h1>define ADAFRUIT_CC3000_VBAT  5</h1>
+<h1>define ADAFRUIT_CC3000_CS    10</h1>
+<p>using namespace lasote;</p>
+<p>//create CC3000 instance, and an SDK compatible Client
+Adafruit_CC3000 cc3000 = Adafruit_CC3000(ADAFRUIT_CC3000_CS,
+        ADAFRUIT_CC3000_IRQ, ADAFRUIT_CC3000_VBAT, SPI_CLOCK_DIVIDER);</p>
+<p>CC3000Client client(cc3000);</p>
+<p>char response_buffer[150];
+// This processor simply writes the response to a buffer
+StreamRecorderProcessor response_recorder(response_buffer, 150); 
+HttpClient http_client(client, Serial);</p>
+<p>// the keys of the values I'd like to fetch from the response
+//const char* queries[] = {"id", "value", "reason"};
+//                  processor(ArrayofQueries, nQueries, MaxNameSize, MaxValueSize, MaxTraceSize)
+//StreamJsonProcessor processor(queries, 3, 10, 10, 10);
+// the setup routine runs once when you press reset:
+void setup() {
+    // open the serial connection to report messages
+    Serial.begin(9600);
+    Serial.println("<strong><em>*</em></strong><strong><em>*</em>* SETUP </strong><strong><em>*</em></strong><strong><em>*</em></strong>");
+    // begin the wifi connection using the cc3000 interface
+    startConnection(cc3000, WLAN_SSID, WLAN_PASS, WLAN_SECURITY);</p>
+<div class="highlight"><pre><span></span><span class="o">//</span> <span class="k">add</span> <span class="n">a</span> <span class="n">HTTP</span> <span class="n">Response</span> <span class="n">processor</span>
+<span class="o">//</span> <span class="n">this</span> <span class="n">will</span> <span class="n">take</span> <span class="n">the</span> <span class="n">response</span> <span class="n">stream</span> <span class="k">and</span> <span class="n">process</span> <span class="n">it</span> <span class="n">depending</span> <span class="k">on</span>
+<span class="o">//</span> <span class="n">which</span> <span class="n">processor</span> <span class="n">we</span> <span class="n">use</span><span class="p">.</span> <span class="p">(</span><span class="n">i</span><span class="p">.</span><span class="n">e</span><span class="p">.</span> <span class="n">JSON</span> <span class="k">or</span> <span class="n">just</span> <span class="n">a</span> <span class="n">raw</span> <span class="n">buffer</span><span class="p">)</span>
+<span class="o">//</span> <span class="n">http_client</span><span class="p">.</span><span class="n">processors</span><span class="p">.</span><span class="n">add_item</span><span class="p">(</span><span class="o">&amp;</span><span class="n">processor</span><span class="p">);</span>
+<span class="n">http_client</span><span class="p">.</span><span class="n">processors</span><span class="p">.</span><span class="n">add_item</span><span class="p">(</span><span class="o">&amp;</span><span class="n">response_recorder</span><span class="p">);</span>
+</pre></div>
+
+
+<p>}</p>
+<p>// the loop routine runs over and over again forever:
+void loop() {</p>
+<div class="highlight"><pre><span></span><span class="nv">delay</span><span class="ss">(</span><span class="mi">20000</span><span class="ss">)</span><span class="c1">;</span>
+<span class="nv">Serial</span>.<span class="nv">println</span><span class="ss">(</span><span class="s2">&quot;</span><span class="s">--- SENDING POST---</span><span class="s2">&quot;</span><span class="ss">)</span><span class="c1">;</span>
+<span class="o">//</span><span class="nv">Reset</span> <span class="nv">processors</span> <span class="nv">and</span> <span class="nv">custom</span> <span class="nv">headers</span>
+<span class="nv">http_client</span>.<span class="nv">reset</span><span class="ss">()</span><span class="c1">; </span>
+<span class="o">//</span><span class="nv">We</span> <span class="nv">can</span> <span class="nv">add</span> <span class="nv">custom</span> <span class="nv">headers</span> <span class="nv">to</span> <span class="nv">the</span> <span class="nv">request</span> <span class="k">if</span> <span class="nv">we</span> <span class="nv">wanted</span>
+<span class="o">//</span><span class="nv">http_client</span>.<span class="nv">add_custom_header</span><span class="ss">(</span><span class="s2">&quot;</span><span class="s">Content-Type</span><span class="s2">&quot;</span>, <span class="s2">&quot;</span><span class="s">application/json</span><span class="s2">&quot;</span><span class="ss">)</span><span class="c1">;</span>
+
+<span class="o">//</span> <span class="k">Send</span> <span class="nv">an</span> <span class="nv">HTTP</span> <span class="nv">GET</span> <span class="nv">request</span> <span class="k">for</span> <span class="nv">the</span> <span class="nv">value</span>
+<span class="nv">int</span> <span class="nv">sent</span> <span class="o">=</span> <span class="nv">http_client</span>.<span class="nv">get</span><span class="ss">(</span><span class="s2">&quot;</span><span class="s">condejo.org</span><span class="s2">&quot;</span>, <span class="s2">&quot;</span><span class="s">/api/wifitest.php/getvalue</span><span class="s2">&quot;</span>, <span class="mi">80</span><span class="ss">)</span><span class="c1">;</span>
+<span class="o">//</span> <span class="nv">Evaluate</span> <span class="nv">the</span> <span class="k">return</span> <span class="nv">code</span> <span class="nv">from</span> <span class="nv">the</span> <span class="nv">HTTP</span> <span class="nv">response</span>
+<span class="nv">short</span> <span class="nv">int</span> <span class="nv">ret_code</span> <span class="o">=</span> <span class="nv">http_client</span>.<span class="nv">receive</span><span class="ss">()</span><span class="c1">;</span>
+<span class="nv">Serial</span>.<span class="nv">println</span><span class="ss">(</span><span class="nv">ret_code</span><span class="ss">)</span><span class="c1">;</span>
+<span class="k">if</span><span class="ss">(</span><span class="nv">sent</span><span class="ss">)</span>{
+    <span class="k">if</span><span class="ss">(</span><span class="nv">ret_code</span><span class="ss">)</span>{
+        <span class="k">if</span><span class="ss">(</span><span class="nv">ret_code</span> <span class="o">==</span> <span class="mi">200</span><span class="ss">)</span>{
+            <span class="nv">Serial</span>.<span class="nv">println</span><span class="ss">(</span><span class="s2">&quot;</span><span class="s">Code 200 OK!</span><span class="s2">&quot;</span><span class="ss">)</span><span class="c1">;</span>
+            <span class="o">//</span> <span class="k">for</span> <span class="nv">the</span> <span class="nv">JSON</span> <span class="nv">processor</span> <span class="k">if</span> <span class="nv">we</span> <span class="nv">were</span> <span class="nv">using</span> <span class="nv">it</span>
+            <span class="o">//</span> <span class="k">if</span><span class="ss">(</span><span class="nv">processor</span>.<span class="nv">finished</span><span class="ss">())</span>{
+            <span class="o">//</span>     <span class="nv">Serial</span>.<span class="nv">print</span><span class="ss">(</span><span class="s2">&quot;</span><span class="s">Reading ID: </span><span class="s2">&quot;</span><span class="ss">)</span><span class="c1">;</span>
+            <span class="o">//</span>     <span class="nv">Serial</span>.<span class="nv">println</span><span class="ss">(</span><span class="nv">processor</span>.<span class="nv">results</span>[<span class="mi">0</span>]<span class="ss">)</span><span class="c1">;</span>
+            <span class="o">//</span>     <span class="nv">Serial</span>.<span class="nv">print</span><span class="ss">(</span><span class="s2">&quot;</span><span class="s">Reading Value: </span><span class="s2">&quot;</span><span class="ss">)</span><span class="c1">;</span>
+            <span class="o">//</span>     <span class="nv">Serial</span>.<span class="nv">println</span><span class="ss">(</span><span class="nv">processor</span>.<span class="nv">results</span>[<span class="mi">1</span>]<span class="ss">)</span><span class="c1">;</span>
+            <span class="o">//</span>     <span class="nv">Serial</span>.<span class="nv">print</span><span class="ss">(</span><span class="s2">&quot;</span><span class="s">Reason: </span><span class="s2">&quot;</span><span class="ss">)</span><span class="c1">;</span>
+            <span class="o">//</span>     <span class="nv">Serial</span>.<span class="nv">println</span><span class="ss">(</span><span class="nv">processor</span>.<span class="nv">results</span>[<span class="mi">2</span>]<span class="ss">)</span><span class="c1">;</span>
+            <span class="o">//</span> }
+            <span class="o">//</span> <span class="k">else</span>{
+            <span class="o">//</span>     <span class="nv">Serial</span>.<span class="nv">println</span><span class="ss">(</span><span class="s2">&quot;</span><span class="s">Return JSON not detected or queries not found!</span><span class="s2">&quot;</span><span class="ss">)</span><span class="c1">;</span>
+            <span class="o">//</span> }
+            <span class="nv">Serial</span>.<span class="nv">println</span><span class="ss">(</span><span class="nv">response_buffer</span><span class="ss">)</span><span class="c1">;</span>
+        }
+        <span class="k">else</span>{
+            <span class="o">//</span> <span class="nv">PHP</span> <span class="nv">didn</span><span class="s1">&#39;</span><span class="s">t like the request </span>
+            <span class="nv">Serial</span>.<span class="nv">print</span><span class="ss">(</span><span class="s2">&quot;</span><span class="s">Http Error:</span><span class="s2">&quot;</span><span class="ss">)</span><span class="c1">;</span>
+            <span class="nv">Serial</span>.<span class="nv">println</span><span class="ss">(</span><span class="nv">ret_code</span><span class="ss">)</span><span class="c1">;</span>
+        }
+    }
+    <span class="k">else</span>{
+        <span class="o">//</span> <span class="nv">TCP</span> <span class="nv">Broke</span> <span class="nv">and</span> <span class="nv">we</span> <span class="nv">didn</span><span class="s1">&#39;</span><span class="s">t get a response to our request</span>
+        <span class="nv">Serial</span>.<span class="nv">println</span><span class="ss">(</span><span class="s2">&quot;</span><span class="s">Error receiving!</span><span class="s2">&quot;</span><span class="ss">)</span><span class="c1">;</span>
+    }
+}
+<span class="k">else</span>{
+    <span class="o">//</span> <span class="nv">Couldn</span><span class="s1">&#39;</span><span class="s">t send the initial request in the first place</span>
+    <span class="nv">Serial</span>.<span class="nv">println</span><span class="ss">(</span><span class="s2">&quot;</span><span class="s">ERROR CONNECTING... retrying</span><span class="s2">&quot;</span><span class="ss">)</span><span class="c1">;</span>
+}
+</pre></div>
+
+
+<p>}
+</code>
+</pre></p>
+<p>On first run, this program runs a subroutine that initializes critical objects and connects to the configures WiFi access point (in this example, it's called Atlantis). </p>
+<p>It then enters a loop, making a request to the server once every ten seconds. I simply have the arduino report this response over Serial, however you can do much more with it. For example, the response can be programmatically used as a trigger to preform advanced functions like turning LED's on/off, sending a text message, or even sending a new HTTP request to a different server. </p>
+<hr>
+<h2>The PHP Code</h2>
+<p>As I already discussed above, the PHP is designed to recieve, interpret, and respond to the Arduino's HTTP requests. </p>
+<p>For this exercise, I decided to work with <a href="http://www.slimframework.com/">Slim PHP Framework</a> because it makes doing this sort of thing trivial, whereas with raw PHP it would be much more involved (read: more code). In this context I'm only utilizing Slim's easy-to-use URL router, however there's plenty more to be had including a templating system and a debugging interface (this last one is immensely useful). </p>
+<p>Here's the code: </p>
+<pre class="line-numbers">
+<code class="language-php">
+< ?php
+
+require 'libs/Slim/Slim.php';
+require_once 'dbHandler.php';
+
+\Slim\Slim::registerAutoloader();
+
+$app = new \Slim\Slim();
+
+// create a route at wifitest.php/getvalue
+// when someone makes an HTTP GET request here, this function will be called
+$app->get('/getvalue', function() {
+    // dbHandler is a piece of code I picked up along the way that encapsulates
+    // often repeated SQL commands. I've modified it pretty heavily, and it's probably
+    // its own post at this point.
+    $db = new DbHandler();
+    // grab the record with the highest ID
+    $record = $db->getOneRecord("SELECT * FROM wifitest ORDER BY reading_id DESC");
+    // create a new response object and populate it
+    $response["id"] = $record["reading_id"];
+    $response["value"] = $record["reading_value"];
+    $response["reason"] = "To test if the arduino can decode json"; 
+    // convert it to JSON and send it back to the client
+    echo json_encode($response);
+}); 
+
+// create a route at wifitest.php/setvalue
+$app->get('/setvalue', function() use ($app){
+    // grab the request parameter from the Slim app object
+    $value = $app->request()->params('value');
+    $db = new DbHandler();
+    if ($value){
+        // create a new data object
+        $newvalue["reading_value"] = $value;
+        // insert that ish to the DB 
+        $result = $db->insertIntoTable($newvalue, array('reading_value'), 'wifitest');
+        if ($result != NULL) {
+            // let the client know the insert was a success
+            $response["message"] = "Value saved!";
+            $response["code"] = 1;
+            echo json_encode($response);
+        }
+        else{
+            // let the user know the insert failed
+            $response["message"] = "Value not saved.";
+            $response["code"] = 0;
+            echo json_encode($response);
+        }
+    }
+});
+
+$app->run();
+?>
+</code>
+</pre>
+
+<p>If you've got any questions or comments about how this works, feel free to shoot me an email or Tweet! Thanks for reading. </p>
+    </div><!-- /.entry-content -->
+
+  </article>
+</section>
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>links</h2>
+                        <ul>
+                            <li><a href="http://getpelican.com/">Pelican</a></li>
+                            <li><a href="http://python.org/">Python.org</a></li>
+                            <li><a href="http://jinja.pocoo.org/">Jinja2</a></li>
+                            <li><a href="#">You can modify those links in your config file</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+
+                            <li><a href="#">You can add links in your config file</a></li>
+                            <li><a href="#">Another social link</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>

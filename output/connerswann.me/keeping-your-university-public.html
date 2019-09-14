@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8" />
+        <title>Keeping Your University Public</title>
+        <link rel="stylesheet" href="connerswann.me/theme/css/main.css" />
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="connerswann.me/">connerswann.me </a></h1>
+                <nav><ul>
+                    <li><a href="connerswann.me/category/2014.html">2014</a></li>
+                    <li class="active"><a href="connerswann.me/category/2015.html">2015</a></li>
+                    <li><a href="connerswann.me/category/2017.html">2017</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="connerswann.me/keeping-your-university-public.html" rel="bookmark"
+           title="Permalink to Keeping Your University Public">Keeping Your University Public</a></h1>
+    </header>
+
+    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2015-04-20T22:09:00-07:00">
+                Published: Mon 20 April 2015
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="connerswann.me/author/conner-swann.html">Conner Swann</a>
+        </address>
+<p>In <a href="connerswann.me/category/2015.html">2015</a>.</p>
+
+</footer><!-- /.post-info -->      <p>Over the past year or so, I've slowly become aware of the sheer amount of <em>stuff</em> my school (Northern Arizona University) buys and how sometimes, I don't agree that a particular thing needed to be bought. Regardless of what's being purchased, from more residence halls and parking (I wish) to contractors, it turns out that pretty much everything is published and freely available due to NAU being a public institution. </p>
+<p>A couple of days ago, one of my friends showed me <a href="http://nau.edu/Contracting-Purchasing-Services/_Forms/Bids/P15JO001/">a Request for Proposals</a> that NAU had published, detailing a intent to hire "Federal Lobbying Services and Public Relations Consulting." Now, that got me asking some questions. Why exactly does NAU need federal lobbyists and why is this the first time I was hearing about this? </p>
+<p><img alt="" src="connerswann.me/images/2015/keeping-university-public-lobbying-proposal.png"></p>
+<p>As a student, I definitely feel like I am far removed from decisions that often affect me and the general campus community directly. Questions like who is building the new science lab building or how much parking is needed seem to be answered without even consulting the people (students) that the university is (hypothetically) serving. While it is obvious that these proposals are being posted publically, they're posted in areas of the nau.edu website that might be "off the beaten path" for your average student. </p>
+<p>Now, I can agree that most of these decisions are boring and it makes sense to compartmentalize the decision-making process as much as possible. Furthermore, a lot of these issues are horrendously complex, so sometimes they're understandably difficult to summarize. However, I believe an attempt needs to be made to engage the student body, if only passively so that they know projects are taking place.</p>
+<p>It was with that sentiment that I decided to throw together a quick proof-of-concept project called <a href="http://twitter.com/KeepNAUPublic">@KeepNAUPublic</a>, a Twitter bot that watches the <a href="http://nau.edu/Contracting-Purchasing-Services/NAU-Bid-Board/">NAU Bid Board</a> and tweets the title, due date, and a link to the proposal whenever a new RFP is posted. </p>
+<blockquote class="twitter-tweet tw-align-center" lang="en"><p>P15JO001&#10;Req: Federal Lobbying Services and Public Relations Consulting&#10;Link: <a href="http://t.co/E9hoxfuxMO">http://t.co/E9hoxfuxMO</a>&#10;Due: April 21, 2015, at 2:00 PM</p>&mdash; Keep NAU Public (@KeepNAUPublic) <a href="https://twitter.com/KeepNAUPublic/status/590240493943959552">April 20, 2015</a></blockquote>
+
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<p>Currently, the process is pretty basic, however as time goes on I forsee the ability to search proposals for keywords, red-flags, and other things that a student might care about. I forsee this being a nice visualization of when, where and how NAU makes purchasing decisions. </p>
+<p>The bot is implemented with a couple Python libraries including <a href="http://www.crummy.com/software/BeautifulSoup/">BeautifulSoup</a> for HTML scraping and parsing, and <a href="http://www.tweepy.org/">Tweepy</a> which I used as a Twitter API Client. I've decided to hold off on posting the source code for now until the bot has been significantly more fleshed out, but if you have any questions about how I went about it, feel free to shoot me a tweet <a href="http://twitter.com/yourbuddyconner">@YourBuddyConner</a>!</p>
+    </div><!-- /.entry-content -->
+
+  </article>
+</section>
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>links</h2>
+                        <ul>
+                            <li><a href="http://getpelican.com/">Pelican</a></li>
+                            <li><a href="http://python.org/">Python.org</a></li>
+                            <li><a href="http://jinja.pocoo.org/">Jinja2</a></li>
+                            <li><a href="#">You can modify those links in your config file</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+
+                            <li><a href="#">You can add links in your config file</a></li>
+                            <li><a href="#">Another social link</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>
