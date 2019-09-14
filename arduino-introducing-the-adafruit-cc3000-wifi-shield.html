@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+
+  <title>Arduino: Introducing The Adafruit CC3000 WiFi Shield</title>
+
+
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="referrer" content="origin" />
+  <meta name="generator" content="Pelican" />
+<link href="https://arduino-introducing-the-adafruit-cc3000-wifi-shield.html" rel="canonical" />
+  <!-- Feed -->
+        <link href="https://feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="connerswann.me Full Atom Feed" />
+          <link href="https://feeds/{slug}.atom.xml" type="application/atom+xml" rel="alternate" title="connerswann.me Categories Atom Feed" />
+
+  <link href="https://theme/css/style.css" type="text/css" rel="stylesheet" />
+
+  <!-- Code highlight color scheme -->
+      <link href="https://theme/css/code_blocks/monokai.css" rel="stylesheet">
+
+
+  <!-- Custom fonts -->
+  <link href='https://fonts.googleapis.com/css?family=Montserrat:400,300' rel='stylesheet' type='text/css' />
+  <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css" />
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+
+
+
+    <meta name="description" content="I recently got my hands on an Adafruit CC3000 WiFi Shield. From the Adafruit product page: "The CC3000 hits that sweet spot of...">
+
+    <meta name="author" content="Conner Swann">
+
+
+
+
+
+<!-- Open Graph -->
+<meta property="og:site_name" content="connerswann.me"/>
+<meta property="og:title" content="Arduino: Introducing The Adafruit CC3000 WiFi Shield"/>
+<meta property="og:description" content="I recently got my hands on an Adafruit CC3000 WiFi Shield. From the Adafruit product page: "The CC3000 hits that sweet spot of..."/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:url" content="https://arduino-introducing-the-adafruit-cc3000-wifi-shield.html"/>
+<meta property="og:type" content="article"/>
+<meta property="article:published_time" content="2014-12-29 00:45:00-08:00"/>
+<meta property="article:modified_time" content=""/>
+<meta property="article:author" content="https://author/conner-swann.html">
+  <meta property="article:publisher" content="https://facebook.com/myprofile" />
+<meta property="article:section" content="2014"/>
+<meta property="og:image" content="https://theme/images/post-bg.jpg">
+
+<!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@myprofile">
+    <meta name="twitter:title" content="Arduino: Introducing The Adafruit CC3000 WiFi Shield">
+    <meta name="twitter:url" content="https://arduino-introducing-the-adafruit-cc3000-wifi-shield.html">
+
+        <meta name="twitter:image:src" content="https://theme/images/post-bg.jpg">
+
+      <meta name="twitter:description" content="I recently got my hands on an Adafruit CC3000 WiFi Shield. From the Adafruit product page: "The CC3000 hits that sweet spot of...">
+
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Article",
+  "name": "Arduino: Introducing The Adafruit CC3000 WiFi Shield",
+  "headline": "Arduino: Introducing The Adafruit CC3000 WiFi Shield",
+  "datePublished": "2014-12-29 00:45:00-08:00",
+  "dateModified": "",
+  "author": {
+    "@type": "Person",
+    "name": "Conner Swann",
+    "url": "https://author/conner-swann.html"
+  },
+  "image": "https://theme/images/post-bg.jpg",
+  "url": "https://arduino-introducing-the-adafruit-cc3000-wifi-shield.html",
+  "description": "I recently got my hands on an Adafruit CC3000 WiFi Shield. From the Adafruit product page: "The CC3000 hits that sweet spot of..."
+}
+</script>
+</head>
+<!-- TODO : Body class -->
+<body class="home-template">
+
+<nav id="menu">
+  <a class="close-button">Close</a>
+  <div class="nav-wrapper">
+    <p class="nav-label">Menu</p>
+    <ul>
+
+
+    </ul>
+  </div>
+</nav>
+    <!-- Progressbar -->
+    <div class="progress-container">
+        <span class="progress-bar"></span>
+    </div>
+
+    <!-- Page Header -->
+    <!-- Set your background image for this header on the line below. -->
+    <header id="post-header" >
+      <div class="inner">
+        <nav id="navigation">
+            <span id="home-button" class="nav-button">
+                <a class="home-button" href="https://" title="Home"><i class="ic ic-arrow-left"></i> Home</a>
+            </span>
+          <span id="menu-button" class="nav-button">
+            <a class="menu-button"><i class="ic ic-menu"></i> Menu</a>
+          </span>
+        </nav>
+        <h1 class="post-title">Arduino: Introducing The Adafruit CC3000 WiFi Shield</h1>
+        <!-- TODO : Proper class for headline -->
+        <span class="post-meta">
+                <a href="https://author/conner-swann.html">Conner Swann</a>
+            | <time datetime="Mon 29 December 2014">Mon 29 December 2014</time>
+        </span>
+        <!-- TODO : Modified check -->
+      </div>
+    </header>
+
+  <section id="wrapper">
+    <a class="hidden-close"></a>
+
+    <!-- Post content -->
+    <main class="content" role="main">
+        <article class="post">
+        <div class="inner">
+            <section class="post-content">
+                <p>I recently got my hands on an <a href="http://www.adafruit.com/product/1491">Adafruit CC3000 WiFi Shield</a>. From the Adafruit product page:</p>
+</p>
+
+<blockquote>
+</p>
+
+<p>"The CC3000 hits that sweet spot of usability, price and capability. It uses SPI for communication (not UART!) so you can push data as fast as you want or as slow as you want.</p>
+</blockquote>
+</p>
+            </section>
+
+            <section class="post-info">
+                <div class="post-share">
+                    <a class="twitter" href="https://twitter.com/share?text=Arduino: Introducing The Adafruit CC3000 WiFi Shield&amp;url=https://arduino-introducing-the-adafruit-cc3000-wifi-shield.html" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <i class="ic ic-twitter"></i><span class="hidden">Twitter</span>
+                    </a>
+                    <a class="facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://arduino-introducing-the-adafruit-cc3000-wifi-shield.html" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <i class="ic ic-facebook"></i><span class="hidden">Facebook</span>
+                    </a>
+                    <a class="googleplus" href="https://plus.google.com/share?url=https://arduino-introducing-the-adafruit-cc3000-wifi-shield.html" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <i class="ic ic-googleplus"></i><span class="hidden">Google+</span>
+                    </a>
+                    <div class="clear"></div>
+                </div>
+
+
+                <div class="clear"></div>
+
+
+                </section>
+
+
+                <aside class="post-nav">
+                    <div class="clear"></div>
+                </aside>
+
+            </div>
+        </article>
+    </main>
+      <!-- TODO : Body class -->
+    <div id="body-class" style="display: none;" class=""></div>
+
+    <footer id="footer">
+      <div class="inner">
+        <section class="credits">
+
+
+          <span class="credits-theme">Theme <a href="https://github.com/arulrajnet/attila" rel="nofollow">Attila</a></span>
+          <span class="credits-software">Published with <a href="https://github.com/getpelican/pelican" rel="nofollow">Pelican</a></span>
+        </section>
+      </div>
+    </footer>
+  </section>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script type="text/javascript" src="https://theme/js/script.js"></script>
+
+</body>
+</html>
