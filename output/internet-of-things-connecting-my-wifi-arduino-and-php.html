@@ -14,13 +14,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="referrer" content="origin" />
   <meta name="generator" content="Pelican" />
-<link href="/internet-of-things-connecting-my-wifi-arduino-and-php.html" rel="canonical" />
+<link href="https://connerswann.me/internet-of-things-connecting-my-wifi-arduino-and-php.html" rel="canonical" />
   <!-- Feed -->
+        <link href="https://connerswann.me/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="connerswann.me Full Atom Feed" />
+          <link href="https://connerswann.me/feeds/{slug}.atom.xml" type="application/atom+xml" rel="alternate" title="connerswann.me Categories Atom Feed" />
 
-  <link href="/theme/css/style.css" type="text/css" rel="stylesheet" />
+  <link href="https://connerswann.me/theme/css/style.css" type="text/css" rel="stylesheet" />
 
   <!-- Code highlight color scheme -->
-      <link href="/theme/css/code_blocks/monokai.css" rel="stylesheet">
+      <link href="https://connerswann.me/theme/css/code_blocks/monokai.css" rel="stylesheet">
 
 
   <!-- Custom fonts -->
@@ -49,22 +51,22 @@
 <meta property="og:title" content="Internet of Things: Connecting my WiFi Arduino and PHP"/>
 <meta property="og:description" content="Background In a previous post I discussed the Adafruit CC3000 WiFi shield and how I got the hardware and libraries installed. In this..."/>
 <meta property="og:locale" content="en_US"/>
-<meta property="og:url" content="/internet-of-things-connecting-my-wifi-arduino-and-php.html"/>
+<meta property="og:url" content="https://connerswann.me/internet-of-things-connecting-my-wifi-arduino-and-php.html"/>
 <meta property="og:type" content="article"/>
 <meta property="article:published_time" content="2015-01-01 21:04:00-08:00"/>
 <meta property="article:modified_time" content=""/>
-<meta property="article:author" content="/author/conner-swann.html">
+<meta property="article:author" content="https://connerswann.me/author/conner-swann.html">
   <meta property="article:publisher" content="https://facebook.com/myprofile" />
 <meta property="article:section" content="2015"/>
-<meta property="og:image" content="/theme/images/post-bg.jpg">
+<meta property="og:image" content="https://connerswann.me/theme/images/post-bg.jpg">
 
 <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@myprofile">
     <meta name="twitter:title" content="Internet of Things: Connecting my WiFi Arduino and PHP">
-    <meta name="twitter:url" content="/internet-of-things-connecting-my-wifi-arduino-and-php.html">
+    <meta name="twitter:url" content="https://connerswann.me/internet-of-things-connecting-my-wifi-arduino-and-php.html">
 
-        <meta name="twitter:image:src" content="/theme/images/post-bg.jpg">
+        <meta name="twitter:image:src" content="https://connerswann.me/theme/images/post-bg.jpg">
 
       <meta name="twitter:description" content="Background In a previous post I discussed the Adafruit CC3000 WiFi shield and how I got the hardware and libraries installed. In this...">
 
@@ -79,10 +81,10 @@
   "author": {
     "@type": "Person",
     "name": "Conner Swann",
-    "url": "/author/conner-swann.html"
+    "url": "https://connerswann.me/author/conner-swann.html"
   },
-  "image": "/theme/images/post-bg.jpg",
-  "url": "/internet-of-things-connecting-my-wifi-arduino-and-php.html",
+  "image": "https://connerswann.me/theme/images/post-bg.jpg",
+  "url": "https://connerswann.me/internet-of-things-connecting-my-wifi-arduino-and-php.html",
   "description": "Background In a previous post I discussed the Adafruit CC3000 WiFi shield and how I got the hardware and libraries installed. In this..."
 }
 </script>
@@ -111,7 +113,7 @@
       <div class="inner">
         <nav id="navigation">
             <span id="home-button" class="nav-button">
-                <a class="home-button" href="/" title="Home"><i class="ic ic-arrow-left"></i> Home</a>
+                <a class="home-button" href="https://connerswann.me/" title="Home"><i class="ic ic-arrow-left"></i> Home</a>
             </span>
           <span id="menu-button" class="nav-button">
             <a class="menu-button"><i class="ic ic-menu"></i> Menu</a>
@@ -120,7 +122,7 @@
         <h1 class="post-title">Internet of Things: Connecting my WiFi Arduino and PHP</h1>
         <!-- TODO : Proper class for headline -->
         <span class="post-meta">
-                <a href="/author/conner-swann.html">Conner Swann</a>
+                <a href="https://connerswann.me/author/conner-swann.html">Conner Swann</a>
             | <time datetime="Thu 01 January 2015">Thu 01 January 2015</time>
         </span>
         <!-- TODO : Modified check -->
@@ -139,7 +141,7 @@
 <p>In a <a href="http://connerswann.me/playing-with-the-adafruit-cc3000-wifi-shield/">previous post</a> I discussed the Adafruit CC3000 WiFi shield and how I got the hardware and libraries installed. In this post I'm going to show you how I got my WiFi Arduino talking to a simple PHP script. </p>
 <p>First, I think it's helpful to visualize exactly what's going on in these sorts of interactions. The handy diagram below is a rough sketch of what's talking to what (it's actually much more complicated, but the code I wrote pertains to these actors):
 </br>
-<img alt="Arduino WiFi Diagram" src="/images/2015/internet-of-things-arduino-diagram.png"></p>
+<img alt="Arduino WiFi Diagram" src="https://connerswann.me/images/2015/internet-of-things-arduino-diagram.png"></p>
 <p>The Arduino first connects to the WiFi access point through the CC3000, piping the credentials and configuration options through one of several pins on the Arduino to the CC3000 hardware. The CC3000 handles the logistics of sending and revieving messages from the router, returning the results to the Arduino. </p>
 <p>Then, through the magic of TCP, these messages that are sent from the Arduino are recieved and interpreted by my server running PHP. For this exercise, I used the <a href="http://www.slimframework.com/">Slim PHP Framework</a> to create two URL Routes (more on that later) that the arduino can send requests to -- one that allows it to set a value and one that simply responds with the current value. These values are collected and stored in a MySQL database that is queried by PHP.  </p>
 <p>Once the initial request is interpreted by the PHP script, a response is generated and sent back via TCP to the Arduino for it to interpret. </p>
@@ -342,13 +344,13 @@ $app->run();
 
             <section class="post-info">
                 <div class="post-share">
-                    <a class="twitter" href="https://twitter.com/share?text=Internet of Things: Connecting my WiFi Arduino and PHP&amp;url=/internet-of-things-connecting-my-wifi-arduino-and-php.html" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <a class="twitter" href="https://twitter.com/share?text=Internet of Things: Connecting my WiFi Arduino and PHP&amp;url=https://connerswann.me/internet-of-things-connecting-my-wifi-arduino-and-php.html" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
                     <i class="ic ic-twitter"></i><span class="hidden">Twitter</span>
                     </a>
-                    <a class="facebook" href="https://www.facebook.com/sharer/sharer.php?u=/internet-of-things-connecting-my-wifi-arduino-and-php.html" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <a class="facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://connerswann.me/internet-of-things-connecting-my-wifi-arduino-and-php.html" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
                     <i class="ic ic-facebook"></i><span class="hidden">Facebook</span>
                     </a>
-                    <a class="googleplus" href="https://plus.google.com/share?url=/internet-of-things-connecting-my-wifi-arduino-and-php.html" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <a class="googleplus" href="https://plus.google.com/share?url=https://connerswann.me/internet-of-things-connecting-my-wifi-arduino-and-php.html" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
                     <i class="ic ic-googleplus"></i><span class="hidden">Google+</span>
                     </a>
                     <div class="clear"></div>
@@ -384,7 +386,7 @@ $app->run();
   </section>
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-  <script type="text/javascript" src="/theme/js/script.js"></script>
+  <script type="text/javascript" src="https://connerswann.me/theme/js/script.js"></script>
 
 </body>
 </html>
