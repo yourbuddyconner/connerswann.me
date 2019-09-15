@@ -2,6 +2,8 @@ Title: Internet of Things: Connecting my WiFi Arduino and PHP
 Date: 2015-01-01 21:04
 Author: Conner Swann
 Slug: internet-of-things-connecting-my-wifi-arduino-and-php
+Category: Arduino
+Tags: Wi-Fi, Arduino, PHP, REST, API
 
 ## Background
 In a [previous post](http://connerswann.me/playing-with-the-adafruit-cc3000-wifi-shield/) I discussed the Adafruit CC3000 WiFi shield and how I got the hardware and libraries installed. In this post I'm going to show you how I got my WiFi Arduino talking to a simple PHP script. 

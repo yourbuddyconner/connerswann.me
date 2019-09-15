@@ -2,7 +2,100 @@ Title: Verve: Death-Drink and Money-Waster or Solid Gold Ambrosia of the Gods?
 Date: 2014-07-31 16:32
 Author: Conner Swann
 Slug: verve-death-drink-and-money-waster-or-solid-gold-ambrosia-of-the-gods
+Category: OpEds
+Tags: Verve, MLM, Vemma, Scam
 
-*This is a blog post which was originally published in 2012 on my old blog at condejo.org. I believe that the information within holds true to this day, but there is a posibility that my data is no longer correct. Please feel free to send me an email with*
+*This is a blog post which was originally published  in 2012 on my old blog at condejo.org. I believe that the information within holds true to this day, but there is a posibility that my data is no longer correct. Please feel free to send me an email with corrections if there are any glaring inaccuracies.*
 
-</p>
+<p style="text-align: center;"><img class="aligncenter  wp-image-307" title="vervearticle" src="http://condejo.org/wp-content/uploads/2012/09/vervearticle.png" alt="" width="736" height="160" /></p>
+<em><span style="font-size: large;">Disclaimer:All of the following non-publicly-available names are fictitious, but the words said are 100% accurate and true to form. Any webpages that I will refer to have been copied on Monday, September 17, 2012 and are locally hosted and are available as images.</span></em>
+<h4><span style="font-size: medium;">[Quick Edit: This is in response to some linking of this post under the guise that it's a "false understanding on what they're doing as a <em>movement</em>." While I respect almost any attempt to make some money by selling legal goods, calling Verve a social "movement" is just silly, unless you're referring to the imminent bowel movement you'll be partaking in after ingesting three cans of the highly caffeinated soft drink. It's a beverage manufacturer, not a political party...  I'll let you decide for yourself, but that's my take on it.]</span></h4>
+Okay. Recently some former peers of mine as well as some sketchy people on campus  have been bellowing to the heavens about this "new" energy drink, catchily named "Verve!" There were some pretty unbelievable things being said about this miracle product that could allow you to take [sic] "a nap and waking up and seeing that I made money while I was sleeping." - Joey Jobmeister
+
+Now, I'm not very old, but I know the mantra that states "If it's too good to be true, it usually is." I was naturally skeptical and did the due-diligence to glean more information, but what really made me giggle was the following statement about what Verve!'s affiliate program can do for you:
+<blockquote>What I also know is none of that shit matters because 15 year olds are making more than there damn principals and driving free cars before they even have their licenses. So idgaf who's the smartest or toughest it's pretty much who just wants to be in the right place in the right time and thanks to Holly Helpful you all have that opportunity now. Take it or leave it. - Joey Jobmeister</blockquote>
+Okay. You've got my attention. Let's see what Verve! and it's manufacturer Vemma can do, and wether or not it's as true-to-form as Joey over here is saying it is.
+
+First, a history lesson. What is Vemma and what's so amazing about their product(s)?
+<p style="text-align: center;"><span style="font-size: x-large;"><strong>Vemma - The Alleged Poor/Sick/Unhealthy/Unfit Man's Savior</strong></span></p>
+First off, I'd like to mention that their company <a title="Company Bio - Vemma" href="http://www.vemma.com/our-story/">bio</a> reads like a self-help ad out of a cheap tabloid, but I'll ignore that for the sake of science or something.
+
+Vemma is based in Scottsdale, Arizona and headed up by the founder and CEO BK Boreyko. From the get-go in their description, the company alleges that their core mission is to help consumers by "enhancing their well-being" and to offer "an income stream to people who introduce others to a product line they believe in." Those are some pretty genuine-sounding statements from a health-food company, but it doesn't make me want to buy their product. Not yet anyway.
+
+I immediately changed my mind when they insinuated that Vemma products can indirectly cure bankruptcy  and divorce. I shit you not.
+<blockquote>Considering that the number-one reason for personal bankruptcy is illness, and the number-one reason for divorce is financial difficulties, the need Vemma can fill is incredibly important. It's really hard to feel like you're living the life you deserve when you're sick or unhappy.</blockquote>
+If there's any other way to read that, please let me know, because that's a tall order for a dietary supplement manufacturer...
+
+I'll spare you the rest of the masturbatory dialogue, but their basic claims are as follows:
+<ul>
+	<li>Their compensation plan for affiliates is "strong, generous and <em> charitable.</em>"</li>
+	<li>Their product is "ultra-premium"</li>
+	<li>Their product will help you be healthier and happier.</li>
+	<li>Their product is for people who like "helping others."</li>
+</ul>
+I only really want to address their "charitable" affiliate program for the time being, as that was the source of the argument which lead me to write this in the first place. I'll give them the benefit of the doubt that their absolutely ridiculous claims of "Ultra-Premium" product are true.
+<p style="text-align: center;"><span style="font-size: x-large;"><strong>Vemma and Verve! - Early Retirement For Teens and Infants or Something</strong></span></p>
+<p style="text-align: left;">Vemma has an incredibly well-worded and enticing pitch to potential affiliates, I'll give them that. Just look at the friggin <a title="Screenshot of &quot;Opportunities&quot;" href="http://condejo.org/images/Verve%20Article/Vemma%20Business%20Model%20-%20The%20Vemma%20Opportunity.png" target="_blank">landing page</a> when you click on "Opportunity" on the official website. In case you don't want to go through the trouble of clicking on it, I'll describe it for you.</p>
+<p style="text-align: left;">An image dominates the page which depicts what appears to be a stock image of a male and a female in a convertible. Superimposed over the image in the Vemma trademark orange text are the words "If You Could Not Fail, How Big Would You Dream?" Underneath this admittedly heart-lifting image are the words, "Achieve Your Dreams with Our Rewarding Business Strategy."</p>
+<p style="text-align: left;">Now if that's not enough well-placed idealism, the entire "Opportunity" section of their site is filled with intentionally vague and cliche words of encouragement like,</p>
+
+<blockquote>
+<p style="text-align: left;">Unlimited possibilities! We don't place any barriers ahead of you; we let you determine your own success.</p>
+<p style="text-align: center;">or</p>
+<p style="text-align: left;">So if your dream is to run your own business, get out of debt, earn a secondary source of income, exchange the traditional 9 to 5  for your own schedule, or all of the above, Vemma's business opportunity can help you achieve it.</p>
+</blockquote>
+<p style="text-align: left;"> I'll move on from the obvious to the not-so-obvious forms of borderline misleading information. If you navigate to "How to Get Paid" you'll be confronted with a video that hypothetically describes how you can make money with Vemma. While I admit it does that, it also feeds information to the viewer that requires a disclaimer that reads "Results not Typical." Claims like, "We have a Game Plan to get you earning $500, $5,000, or even $50,000 per  month!**"</p>
+
+[Video](http://www.youtube.com/watch?v=yK7GbjDk0iE)
+<p style="text-align: left;">Mr. Boreyko likes to use large fantastical language all throughout the video, while <em>almost never </em>actually saying anything of real substance. The entire script is worded in such a way that it appears to insinuate a bunch of cool things that are available only if you work for Vemma. Allegations that the "Game Plan" can give the <em><span style="text-decoration: underline;">opportunity</span></em> to be <em><span style="text-decoration: underline;">profitable</span></em> fast and also be driving a new BMW in 90 days. Yes. All in the same sentence.</p>
+<p style="text-align: left;">Let's break that down really quick, it's important to see the wording here that is meant to be misinterpreted. This "Game Plan" will give you the opportunity to make at least one dollar more than you spent, and ALSO will give you the CHANCE to enter a CONTEST to win a new car.</p>
+<p style="text-align: left;">Now, being misleading to total strangers is something I definitely disagree with, however where I personally begin to have serious reservations about companies like Vemma is the point when they request you take advantage of the trust you've built and use the same almost misleading, superfluous language with your friends and family.</p>
+<p style="text-align: center;"><strong><span style="font-size: x-large;">The "Game Plan" Also Known As: "Rationale to Milk People That Trust You Out Of Their Money"</span></strong></p>
+<p style="text-align: left;">In the video cited above, it assumes you are starting your own pyramid from scratch, so step one is to get people to be beneath you.</p>
+<p style="text-align: left;"><span style="font-size: medium;"><strong>Step 1: Convince Suckers to Sell Beneath You</strong></span></p>
+<p style="text-align: left;"><span style="font-size: medium;">First, you have to find people that "see what you see" and sign them up underneath you. The video suggests three, but their business model only requires two (I guess you have to just drop one, whoops!).  With those people, you then <strong><em>buy</em></strong> one or more "builder packs," please correct me if I'm wrong in the comments or via e-mail, but basically you're fronting about $500.00 or more for a couple of cases of their golden health nectar. Look here at the <a title="Verve Builder Packs" href="http://condejo.org/images/Verve%20Article/Vemma%20Store%20-%20Verve%20Builder%20Packs.png">screenshot</a> or even their <a title="Verve Store" href="https://www.vemma.com/store/index.cfm?fuseAction=dspProductVerveStore">store</a> which is rampant with unicode errors. Accordinng to the video at that point you should have made "about $700" yet he never clarified exactly what you'd have sold at that point. Is it one $500 set of Verve! Is it two? Seven? </span></p>
+<p style="text-align: left;">Okay, I apologize to those of you who didn't read this for the math, but I wanted to put numbers to the words.</p>
+<p style="text-align: left; padding-left: 30px;">In one $499.95 "Verve! Builder Pack" there are:</p>
+
+<ul>
+	<li>72 cans of Verve Energy Drink (8.3-oz. can)</li>
+	<li>48 cans of Verve Zero Sugar Energy Drink (8.3-oz. can)</li>
+	<li>48 bottles of Verve Energy Shot (2-oz. bottles)</li>
+</ul>
+<p style="padding-left: 30px;">That's a total of 120, 8.3-oz. cans which I would sell at the same price, and 48 2-oz. shots which obviously you'd sell for less than the cans.</p>
+<p style="padding-left: 30px;">The only way I thought to price it all out was to simply price it by the Fluid Ounce, because according to Vemma all their stuff if the same and it's being sold wholesale anyways.</p>
+<p style="padding-left: 30px;">That's 996 Fluid Ounces in the cans and 96 in the bottles. Divided, the liquid is distributed 91.2% to the cans and 7.8% to the bottles. The final cost coming to $455.95 of your investment going into the cans and $40 going into the little bottles. About $3.80 a can and $0.83 a bottle.</p>
+<p style="padding-left: 30px;">With a can of Red Bull, Verve!'s main competitor, costing about <a title="Red Bull Data" href="http://energy-drinks.findthebest.com/l/156/Red-Bull-Energy-Drink" target="_blank">$2.99 a can</a>, that doesn't leave a whole lot of room for competition.  Let's say that since Verve! is "Ultra-Premium" you're willing to pay at most 50% more for it, for a total of $4.50 a can. Assuming you are able to sell every single can, and don't drink any of them in the process, you'd net $540.00 from the cans, a profit of $84.05.</p>
+<p style="padding-left: 30px;">Moving onto the bottles. The average 5-Hour Energy shot costs about <a title="5-Hour Energy Shots Info" href="http://energy-drinks.findthebest.com/l/6/5-Hour-Energy" target="_blank">$1.50 a bottle</a>, and again, assuming Verve! has the ability to cure all the ills of the world like Divorce and Bankruptcy, you're willing to pay 50% more for a taste. That's $2.25 a bottle, but let's round down to $2.00 for simplicity's sake. Again, assuming you are able to sell all 48 bottles, you've just collected $96.00, a $56.00 profit.</p>
+<p style="padding-left: 30px;">Together, you've made a profit of $140.05, off of your original $500 investment, and if you're paying attention to their shipment schedule you only have a month before your next shipment comes.</p>
+<p style="padding-left: 30px;">To meet the original estimate of $700 of profit, you'd have to sell 5 full cases of the stuff with an initial investment of $2,500.</p>
+<strong>Step 2: Help Your Minions Out</strong>
+
+Yup, you guessed right, as the people underneath you sell stuff, you get a kickback from their profits. At this point, you probably don't have to do much selling anymore because if your minions are doing what they're supposed to be doing you can just coast along on the percentage of their profits. You're basically like a Meth lord with dealers peddling small amounts of crystal on the streets of New Mexico and instead of Vemma your supplier is a man known only as Heisenberg.
+<p style="text-align: center;"><span style="color: #000000; font-size: x-large;"><span style="line-height: 36px;"><strong>So... Now What?</strong></span></span></p>
+<p style="text-align: left;">To me, all this hardly sounds feasable, let alone sound judgement for someone who is   several steps down the "pyramid." Ah, you may be wondering, "What are you talking about? Pyramid? Like a Pyramid Scheme?" To that I answer, yes, exactly like a pyramid scheme. Refer to the following picture (click for a larger version):</p>
+<a href="http://condejo.org/images/Verve%20Article/mlm.gif"><img class="aligncenter" style="line-height: 18px; font-size: 12px;" title="MLM" src="http://condejo.org/images/Verve%20Article/mlm.gif" alt="" width="196" height="265" /></a><br>This is an graphic representation of your basic Multi-Level-Marketing (or MLM from now onward) scheme. Assume for a moment that you are Tuco, the Verve! pusher at the top of the chart. You have your two lackies below you, Slim Jim and Gordo, and you give them strict instructions to recruit people beneath them to sell product with the condition that you get 10% of everybody's profits who sells beneath you.
+
+You get rich once the people stream in to get a taste of the drink that can purportedly cure cancer or something, and even richer as more and more people want to sell it for you. However, it's a pyramid, and profits only go one direction. Up.
+
+Eventually, the market becomes so inundated with people peddling Verve! and curing all the ills of humanity that nobody wants to buy it anymore, and the pyramid collapses. However you Mr. Tuco, are now fantastically rich and the people stuck with cases upon cases of Verve! are now stuck trying to figure out what the hell to do with all of their miracle water.
+
+Now, there is a difference between this and the illegal "pyramid" schemes. The illegal variety specifically doesn't have a product to sell, making it fraud. Instead of a tangible product, the illegal kind asks for an initial investment and then gives payments for recruiting more people (in the same fashion as most MLM strategies I might add) until there are so many people that it's impossible to keep track of anything and it collapses.  Although different, the basic defining point of a "pyramid" scheme remains the same and that's the unstable pyramid structure it produces.
+<p style="text-align: center;"><strong><span style="font-size: x-large;">The Bottom Line</span></strong></p>
+<p style="text-align: left;"> Can you make a significant amount money with Vemma? Yes, most definitely. Will you? The answer might surprise you. It's statistically <strong>INCREDIBLY UNLIKELY</strong> that you or anyone else will make any large amount of money, with about 84% of affiliates having an annual income of less than $3,071.51. Even more miraculous, 73% make less than $1,000 annually.</p>
+<p style="text-align: left;">For your information, if you were listening and thinking that the "opportunity" to make "$500, $5,000, 0r even $50,000 each month," was a easy-to-achieve goal, I hate to break it to you,  it's not. Less than 8% make the lowest of the list, $500 a month, about .2% make $5,000, and a grand total of zero makes $50,000.</p>
+<p style="text-align: left;"><a title="Vemma Income Disclosure" href="http://www.vemma.com/backoffice/pdf/2011-income-disclosure.pdf" target="_blank">Sorry. Look for yourself.</a></p>
+<p style="text-align: center;"><strong><span style="font-size: x-large;"><span style="line-height: 36px;">Any</span><span style="line-height: 36px;"> Questions?</span></span></strong></p>
+So that's it. Now you have a  (hopefully) good, simple to understand layman's guide to Verve! and now you're able to make an informed decision about wether or not to get involved with this company.
+
+If you have any questions, or suggestions for things to add to this I'd be happy to listen. There's a whole BUNCH of information, and I only touched a small part of it. For the interested, and also to stave off a wave of people saying "You didn't do any research!!1!11111" a categorized list of websites I used as sources can be found <a title="Sources!" href="http://condejo.org/images/Verve%20Article/sources.txt" target="_blank">here</a>.
+<p style="text-align: center;"><strong><span style="font-size: x-large;">More Reading On the Subject</span></strong></p>
+How to start your own MLM-Pyramid Scheme (sounds and smells like Verve!):
+
+<a href="http://mlm-thetruth.com/tools1/humor-satire/start-pyramid-scheme">http://mlm-thetruth.com/tools1/humor-satire/start-pyramid-scheme</a>
+<p style="text-align: center;"><span style="font-size: x-large;">TL;DR</span></p>
+For those that didn't want to read it all, I thank you for scrolling this far to find the TL;DR.
+
+TL;DR: Vemma is a MLM (Multi-Level-Marketing) company. They insinuate that you're able to make a boatload of money by working part-time. That's basically false, to make any money in the MLM business you have to be there at the inception of the venture and work your ass off. MLM companies request that you use your social networks to sell goods, preying off of the trust you've created with those people to make a buck. They're marketing a product that's very similar to competitors by saying it's akin to Ambrosia and can solve Divorce and Bankruptcy. You can make money with this snakewater if you work your butt off, but the statistical likelihood is that you won't.
+
+2/10 would not recommend.

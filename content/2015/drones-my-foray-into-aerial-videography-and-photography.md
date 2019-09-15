@@ -2,6 +2,8 @@ Title: Drones: My Foray Into Aerial Videography and Photography
 Date: 2015-06-27 20:49
 Author: Conner Swann
 Slug: drones-my-foray-into-aerial-videography-and-photography
+Category: Video
+Tags: Videography, Video, Photography, Drone, DJI
 
 ![]({static}/images/2015/drones-cover-pano.jpg)
 

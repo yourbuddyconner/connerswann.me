@@ -3,8 +3,9 @@
 from __future__ import unicode_literals
 
 AUTHOR = 'Conner Swann'
-SITENAME = 'connerswann.me'
-#SITEURL = 'connerswann.me'
+SITENAME = 'Conner Swann'
+SITESUBTITLE = u'Protocol Reliability Engineer'
+#SITEURL = 'https://connerswann.me'
 
 PATH = 'content'
 
@@ -20,17 +21,15 @@ AUTHOR_FEED_ATOM = None
 AUTHOR_FEED_RSS = None
 
 # Blogroll
-LINKS = (('Pelican', 'http://getpelican.com/'),
+LINKS = (('Coda Protocol', 'https://codaprotocol.org'),
          ('Python.org', 'http://python.org/'),
          ('Jinja2', 'http://jinja.pocoo.org/'),
          ('You can modify those links in your config file', '#'),)
 
 # Social widget
-SOCIAL = (('twitter', 'https://twitter.com/myprofile'),
-          ('github', 'https://github.com/myprofile'),
-          ('facebook','https://facebook.com/myprofile'),
-          ('flickr','https://www.flickr.com/myprofile/'),
-          ('envelope','mailto:my@mail.address'))
+SOCIAL = (('twitter', 'https://twitter.com/yourbuddyconner'),
+          ('github', 'https://github.com/yourbuddyconner'),
+          ('linkedin', 'https://www.linkedin.com/in/connerswann/'))
 
 DEFAULT_PAGINATION = 10
 
@@ -38,16 +37,41 @@ DEFAULT_PAGINATION = 10
 #RELATIVE_URLS = True
 
 # Theme Settings
+
+# Post and Pages path
+ARTICLE_URL = '{date:%Y}/{date:%m}/{slug}.html'
+ARTICLE_SAVE_AS = '{date:%Y}/{date:%m}/{slug}.html'
+PAGE_URL = 'pages/{slug}/'
+PAGE_SAVE_AS = 'pages/{slug}/index.html'
+YEAR_ARCHIVE_SAVE_AS = '{date:%Y}/index.html'
+MONTH_ARCHIVE_SAVE_AS = '{date:%Y}/{date:%m}/index.html'
+
+# Tags and Category path
+CATEGORY_URL = 'category/{slug}'
+CATEGORY_SAVE_AS = 'category/{slug}/index.html'
+CATEGORIES_SAVE_AS = 'catgegories.html'
+TAG_URL = 'tag/{slug}'
+TAG_SAVE_AS = 'tag/{slug}/index.html'
+TAGS_SAVE_AS = 'tags.html'
+
+# Author
+AUTHOR_URL = 'author/{slug}'
+AUTHOR_SAVE_AS = 'author/{slug}/index.html'
+AUTHORS_SAVE_AS = 'authors.html'
+
 THEME = "attila"
-HOME_COVER = '/images/blog-cover.jpg'
+HOME_COVER = 'https://connerswann.me/images/blog-cover.jpg'
 COLOR_SCHEME_CSS = 'monokai.css'
 AUTHORS_BIO = {
-  "Conner Swann": {
+  "conner swann": {
     "name": "Conner Swann",
-    "cover": "https://arulrajnet.github.io/attila-demo/assets/images/avatar.png",
-    "image": "https://arulrajnet.github.io/attila-demo/assets/images/avatar.png",
-    "website": "http://blog.arulraj.net",
-    "location": "Chennai",
-    "bio": "This is the place for a small biography with max 200 characters. Well, now 100 are left. Cool, hugh?"
+    "image": "https://connerswann.me/images/conner-profile-picture.png",
+    "cover": "https://connerswann.me/images/blog-cover.jpg",
+    "website": "https://connerswann.me",
+    "github": "yourbuddyconner",
+    "twitter": "yourbuddyconner",
+    "linkedin": "connerswann",
+    "location": "San Francisco",
+    "bio": "Software Engineer, Infrastructure Magician, Architecture Nerd </br> Core Maintainer @ Coda Protocol"
   }
 }

@@ -2,6 +2,8 @@ Title: You've Got Junk In Your Splunk (Part 2) - An Examination of Real-World Us
 Date: 2015-11-30
 Author: Conner Swann
 Slug: youve-got-junk-in-your-splunk-part-2
+Category: Splunk
+Tags: Splunk, Case Study
 
 <small>This is Part 2 of a multi-part post about the amazing software that is Splunk, if you haven't already, head over to [Part 1](http://connerswann.me/youve-got-junk-in-your-splunk-an-introduction-to-splunk-and-it-data-analysis/) and check it out.</small>
 

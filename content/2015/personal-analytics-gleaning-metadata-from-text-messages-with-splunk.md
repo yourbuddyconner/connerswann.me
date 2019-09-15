@@ -2,6 +2,8 @@ Title: Personal Analytics: Gleaning Metadata from Text Messages With Splunk
 Date: 2015-02-06 05:58
 Author: Conner Swann
 Slug: personal-analytics-gleaning-metadata-from-text-messages-with-splunk
+Category: Splunk
+Tags: Splunk, Analytics, Sentiment Analysis, Text Message, iOS
 
 ![Splunk Logo]({static}/images/2015/personal-analytics-splunk-logo.gif)
 </hr>

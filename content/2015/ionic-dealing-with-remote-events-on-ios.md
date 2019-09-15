@@ -2,6 +2,8 @@ Title: Ionic: Dealing with Remote Events on iOS
 Date: 2015-01-23 18:03
 Author: Conner Swann
 Slug: ionic-dealing-with-remote-events-on-ios
+Category: Ionic
+Tags: Ionic Framework, Hybrid Apps, Javascript, iOS
 
 For the past couple semesters, I've been working on an [Ionic](http://ionicframework.com/) app for my university's radio station. Ionic is a "hybrid" framework, that is, the main body of the app is written using web technology (AngularJS, HTML, CSS) and that is coupled with Cordova, a piece of softeware that provides an interface between the web view and the bare metal of the phone. 
 

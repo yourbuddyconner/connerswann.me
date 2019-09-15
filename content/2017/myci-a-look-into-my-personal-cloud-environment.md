@@ -2,9 +2,11 @@ Title: MyCI - A Look Into My Personal Cloud Environment
 Date: 2017-05-04 20:14
 Author: Conner Swann
 Slug: myci-a-look-into-my-personal-cloud-environment
+Category: Infrastructure
+Tags: continuous integration, rancher, docker, drone-ci 
+Cover: images/2017/Leveraging-the-Cloud-Featured-Image.jpg
 
 # Why Do I Need a Personal Cloud Environment?
-![]({static}/images/2017/Leveraging-the-Cloud-Featured-Image.jpg)
 For a long time now, I have enjoyed doing personal software projects that teach me new skills, frameworks or even programming languages. I think that an engineer in a computer-science-related field should always be learning new technology and innovating. However, at times it can be a real struggle to get anything done quickly. When it comes to complex web-based systems there's so much that goes into learning a new language or framework that the entire process quickly becomes overwhelming. 
 
 This is a common problem that many small companies and startups face, and it's one I have personally run into time and time again in my personal projects. Due to the layered nature of web-based communications, there's potentially a _lot_ involved when setting up a development environment. That overhead can at times discourage me from even starting a cool new project to begin with, and that's no fun!

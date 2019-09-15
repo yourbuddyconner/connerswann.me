@@ -2,6 +2,8 @@ Title: Keeping Your University Public
 Date: 2015-04-20 22:09
 Author: Conner Swann
 Slug: keeping-your-university-public
+Category: College
+Tags: Freedom, NAU, Public Data
 
 Over the past year or so, I've slowly become aware of the sheer amount of *stuff* my school (Northern Arizona University) buys and how sometimes, I don't agree that a particular thing needed to be bought. Regardless of what's being purchased, from more residence halls and parking (I wish) to contractors, it turns out that pretty much everything is published and freely available due to NAU being a public institution. 
 

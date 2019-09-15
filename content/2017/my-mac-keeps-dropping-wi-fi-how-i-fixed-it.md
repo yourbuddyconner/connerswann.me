@@ -2,6 +2,8 @@ Title: My Mac Keeps Dropping Wi-Fi - How I Fixed It
 Date: 2017-11-14
 Author: Conner Swann
 Slug: my-mac-keeps-dropping-wi-fi-how-i-fixed-it
+Category: MacOS
+Tags: Wi-Fi, cron, MacOS
 
 I run a lot of things on my Desktop Mac Pro at home -- from basic stuff like a Plex media server to more custom projects like web servers or a VPN gateway. It's pretty important that these semi-critical services stay online as much as possible, however in furtherance of this goal I ran into one major issue: the shape of my house. 
 

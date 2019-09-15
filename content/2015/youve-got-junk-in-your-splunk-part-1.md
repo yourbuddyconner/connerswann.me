@@ -2,6 +2,8 @@ Title: You've Got Junk In Your Splunk (Part 1) - An Introduction to Splunk and I
 Date: 2015-11-20 22:17
 Author: Conner Swann
 Slug: youve-got-junk-in-your-splunk-part-1
+Category: Splunk
+Tags: Splunk, Case Study
 
 If you've read some of my older posts, you might have seen [this one](http://connerswann.me/splunk-analyzing-text-messages/) about my personal analytics project project where I used Splunk to index 50,000+ text messages and preform analysis on them. 
 
