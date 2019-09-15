@@ -161,7 +161,7 @@
 <p>This is an animated gif of the visualization with roughly 400 blocks depicted. 
 <img alt="Chain Visualization Gif" src="https://connerswann.me/drafts/weekend-project-1-chain-visualization.gif"></p>
 <p>While it's not the most practical, I really like this visualization because it <em>feels</em> organic somehow. Leaving it up on a TV or extra monitor has a lava lamp vibe that I enjoy -- it's art!</p>
-<h1>Next Steps / Lessons Learned</h1>
+<h1>Lessons Learned</h1>
 <p>There's a bunch of stuff I would have done differently had I been designing this for deployment in a production setting: </p>
 <h4>Live Loading of New Blocks</h4>
 <p>The visualization is pretty cool, but it needs to be reloaded every 5-10 minutes or so in order to retrieve new blocks that might have been produced. I discovered to my dismay that React-Vis-Force doesn't allow you to dynamically add and remove nodes in the graph without reloading the whole thing. In order to get this working, I'd have to fork their library or craft my own D3-based react components. </p>
@@ -175,6 +175,8 @@
 <p>I did implement some basic "block explorer" functionality, in that if you select a node a <code>div</code> appears with the JSON data from the block. I would have liked to spend more time displaying this data on the graph itself, via colors, numerical badges, or otherwise. </p>
 <h4>Different Color Profiles</h4>
 <p>I would love to mess with different colorings on the graph <em>way</em> more than I did here. This visualization can be super useful for visually debugging the blockchain by coloring the blocks based on number of transactions, snark jobs, fee transfers, etc. </p>
+<h4>CORS Proxy</h4>
+<p>Since the Coda Daemon is serving data on a different URI than my development server, CORS comes into play. Since the Daemon doesn't support CORS headers, I had to run it through a proxy that would add the appropriate headers for me. Luckily, there's plenty of packages that do this, and I opted to use <a href="https://www.npmjs.com/package/local-cors-proxy">local-cors-proxy</a>.</p>
 <h4>Examples of Different Coloring:</h4>
 <p>Red -&gt; Main Chain / Blue -&gt; Leaf Nodes: 
 <img alt="colored-by-leaves" src="https://connerswann.me/drafts/weekend-project-1-chain-vis-red-blue.png"></p>
