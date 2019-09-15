@@ -167,7 +167,7 @@
 <p>The visualization is pretty cool, but it needs to be reloaded every 5-10 minutes or so in order to retrieve new blocks that might have been produced. I discovered to my dismay that React-Vis-Force doesn't allow you to dynamically add and remove nodes in the graph without reloading the whole thing. In order to get this working, I'd have to fork their library or craft my own D3-based react components. </p>
 <h4>Block Pagination</h4>
 <p>The <code>blocks</code> query in the Coda Daemon's GraphQL endpoint doesn't <em>actually</em> support pagination at the time of writing, so loading the page gets slow as nBlocks increases. Though, even if it did support pagination, you'd still have to load all the blocks first due to the lack of live loading. </p>
-<h4>Node Arrangement At Load</h4>
+<h4>Node Arrangement On Load</h4>
 <p>When there's a lot of nodes on the graph, it takes a really long time to work all the crossings out. I wished there was a way I could have laid out the nodes from left-right/top-bottom by their timestamp at render time. </p>
 <h4>Archive Node Proxy</h4>
 <p>The Archive node's endpoint is <em>dangerous</em> in that there is no authentication, so anyone with access could change the Daemon's internal state. As such, the visualization is only compatible with a running Daemon on the same machine. I would love to build out a GraphQL Proxy of some kind in order to mitigate this risk. </p>
