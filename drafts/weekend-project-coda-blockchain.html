@@ -169,14 +169,14 @@
 <p>The <code>blocks</code> query in the Coda Daemon's GraphQL endpoint doesn't <em>actually</em> support pagination at the time of writing, so loading the page gets slow as nBlocks increases. Though, even if it did support pagination, you'd still have to load all the blocks first due to the lack of live loading. </p>
 <h4>Node Arrangement On Load</h4>
 <p>When there's a lot of nodes on the graph, it takes a really long time to work all the crossings out. I wished there was a way I could have laid out the nodes from left-right/top-bottom by their timestamp at render time. </p>
+<h4>CORS Proxy</h4>
+<p>Since the Coda Daemon is serving data on a different URI than my development server, CORS comes into play. Since the Daemon doesn't support CORS headers, I had to run it through a proxy that would add the appropriate headers for me. Luckily, there's plenty of packages that do this, and I opted to use <a href="https://www.npmjs.com/package/local-cors-proxy">local-cors-proxy</a>.</p>
 <h4>Archive Node Proxy</h4>
-<p>The Archive node's endpoint is <em>dangerous</em> in that there is no authentication, so anyone with access could change the Daemon's internal state. As such, the visualization is only compatible with a running Daemon on the same machine. I would love to build out a GraphQL Proxy of some kind in order to mitigate this risk. </p>
+<p>The Archive node's endpoint is <em>dangerous</em> in that there is no authentication, so anyone with access could change the Daemon's internal state. As such, the visualization is only compatible with a Daemon running on the same machine. I would love to build out a GraphQL Proxy of some kind in order to mitigate this risk. </p>
 <h4>More Useful "Block Explorer" Functionality</h4>
 <p>I did implement some basic "block explorer" functionality, in that if you select a node a <code>div</code> appears with the JSON data from the block. I would have liked to spend more time displaying this data on the graph itself, via colors, numerical badges, or otherwise. </p>
 <h4>Different Color Profiles</h4>
 <p>I would love to mess with different colorings on the graph <em>way</em> more than I did here. This visualization can be super useful for visually debugging the blockchain by coloring the blocks based on number of transactions, snark jobs, fee transfers, etc. </p>
-<h4>CORS Proxy</h4>
-<p>Since the Coda Daemon is serving data on a different URI than my development server, CORS comes into play. Since the Daemon doesn't support CORS headers, I had to run it through a proxy that would add the appropriate headers for me. Luckily, there's plenty of packages that do this, and I opted to use <a href="https://www.npmjs.com/package/local-cors-proxy">local-cors-proxy</a>.</p>
 <h4>Examples of Different Coloring:</h4>
 <p>Red -&gt; Main Chain / Blue -&gt; Leaf Nodes: 
 <img alt="colored-by-leaves" src="https://connerswann.me/drafts/weekend-project-1-chain-vis-red-blue.png"></p>
