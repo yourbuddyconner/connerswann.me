@@ -161,13 +161,27 @@
 <p>This is an animated gif of the visualization with roughly 400 blocks depicted. 
 <img alt="Chain Visualization Gif" src="https://connerswann.me/drafts/weekend-project-1-chain-visualization.gif"></p>
 <h1>Next Steps / Lessons Learned</h1>
-<p>There's a bunch of stuff I would have done differently, had I been designing this for deployment in a production setting: 
-- React-Vis-Force doesn't allow you to dynamically add and remove nodes in the graph without reloading the whole thing. To accomplish this, I'd have to fork their library or craft my own D3-based react components. 
-- The <code>blocks</code> query in the Coda Daemon's GraphQL endponint doesn't <em>actually</em> support pagination at the time of writing, so loading the page gets slow as nBlocks increases. Though, even if it did support pagination, you'd still have to load all the blocks first due to #1. 
-- When there's a lot of nodes on the graph, it takes a really long time to work all the crossings out. I wished there was a way I could have laid out the nodes from left-right/top-bottom by their timestamp at render time. 
-- The Archive node's endpoint is <em>dangerous</em> in that there is no authentication, so anyone with access could change the Daemon's internal state. As such, this only works when running a Daemon on the same machine as the visualization. I would love to build out a GraphQL Proxy of some kind in order to mitigate this risk. 
-- I did implement basic "block explorer" functionality, in that if you select a node a <code>div</code> appears with the json data from the block. I would have liked to spend more time displaying this data on the graph itself, via colors or otherwise. 
-- I would love to mess with different colorings on the graph <em>way</em> more than I did here. This visualization can be super useful for visually debugging the blockchain by coloring the blocks based on number of transactions, snark jobs, fee transfers, etc. </p>
+<p>There's a bunch of stuff I would have done differently, had I been designing this for deployment in a production setting: </p>
+<ul>
+<li>
+<p>React-Vis-Force doesn't allow you to dynamically add and remove nodes in the graph without reloading the whole thing. To accomplish this, I'd have to fork their library or craft my own D3-based react components. </p>
+</li>
+<li>
+<p>The <code>blocks</code> query in the Coda Daemon's GraphQL endponint doesn't <em>actually</em> support pagination at the time of writing, so loading the page gets slow as nBlocks increases. Though, even if it did support pagination, you'd still have to load all the blocks first due to #1. </p>
+</li>
+<li>
+<p>When there's a lot of nodes on the graph, it takes a really long time to work all the crossings out. I wished there was a way I could have laid out the nodes from left-right/top-bottom by their timestamp at render time. </p>
+</li>
+<li>
+<p>The Archive node's endpoint is <em>dangerous</em> in that there is no authentication, so anyone with access could change the Daemon's internal state. As such, this only works when running a Daemon on the same machine as the visualization. I would love to build out a GraphQL Proxy of some kind in order to mitigate this risk. </p>
+</li>
+<li>
+<p>I did implement basic "block explorer" functionality, in that if you select a node a <code>div</code> appears with the json data from the block. I would have liked to spend more time displaying this data on the graph itself, via colors or otherwise. </p>
+</li>
+<li>
+<p>I would love to mess with different colorings on the graph <em>way</em> more than I did here. This visualization can be super useful for visually debugging the blockchain by coloring the blocks based on number of transactions, snark jobs, fee transfers, etc. </p>
+</li>
+</ul>
 <h3>Examples of Different Coloring:</h3>
 <p>Red -&gt; Main Chain / Blue -&gt; Leaf Nodes: 
 <img alt="colored-by-leaves" src="https://connerswann.me/drafts/weekend-project-1-chain-vis-red-blue.png"></p>
