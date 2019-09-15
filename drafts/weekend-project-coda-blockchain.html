@@ -149,10 +149,10 @@
         <div class="inner">
             <section class="post-content">
                 <h1>What's Coda?</h1>
-<p>Coda is a Crypto Protocol that I am working on as part of the O(1) Labs Team. Coda implements a "succinct" blockchain that effectively "<a href="https://codaprotocol.com/">swaps the traditional blockchain for a tiny cryptographic proof.</a>" Practically, this means that by default once a transition <em>(a.k.a. block)</em> with transactions is "swapped" for a proof, it gets thrown out to save disk space. </p>
-<p>The protocol is stil very much in active development, and there are regular <a href="https://codaprotocol.com/docs/coda-testnet/">Testnets</a> that are designed to help us surface bugs and teach the community how to operate Coda Nodes. </p>
+<p>Coda is a Crypto Protocol that I am working on as part of the O(1) Labs Team. Coda implements a "succinct" blockchain that effectively "<a href="https://codaprotocol.com/">swaps the traditional blockchain for a tiny cryptographic proof.</a>" </p>
+<p>Practically, this means that in the average Coda node, once a transition <em>(a.k.a. block)</em> with transactions is "swapped" for a proof, it gets thrown out to save disk space. </p>
 <h1>The Problem</h1>
-<p>When I decided to sit down and get my roommate <a href="https://github.com/reem">@reem</a> to help me with this visualization, it was to try and solve one particular issue I'd been having. <em>There wasn't a way to at-a-glance verify that the network was forked!</em></p>
+<p>When I decided to sit down and get my roommate <a href="https://github.com/reem">@reem</a> to help me with this visualization, it was to try and solve one particular issue I'd been having. There wasn't a way to <em>at-a-glance</em> verify that the network was forked!</p>
 <p>Fortunately, John Wu (<a href="https://github.com/wu-s-john">@wu-s-john</a>), one of the protocol developers, had just implemented basic block archive functionality that allows a node to store all blocks that it observes, along with all the associated metadata. With this data, I figured we could build a nice visualization of the chain and any forks. </p>
 <h1>The Visualization</h1>
 <p>The blockchain visualization is implemented with using React, the Apollo GraphQL Client, and <a href="https://github.com/uber/react-vis-force">React-Vis-Force</a> a library for building D3-based force-directed graphs. Since I had used this kind of graphs in the past, I decided to opt to stick with something I was comfortable with -- as I will mention later, this might not have been the best approach. </p>
@@ -174,7 +174,8 @@
 <p>Black -&gt; No Txs / Redder -&gt; More Txs
 <img alt="colored-by-transactions" src="https://connerswann.me/drafts/weekend-project-1-chain-vis-red-black.png"></p>
 <h1>Think You Can Do Better?</h1>
-<p>I am confident that there are people out there who are better at Javascript than I am. The project is licensed under the <a href="https://github.com/yourbuddyconner/coda-chain-visualization/blob/master/license">Apache License 2.0</a>, which is a perissive license that allows for derivative works! Please, if you decide to make something cool with this please let me know on <a href="https://twitter.com/yourbuddyconner">Twitter</a>!</p>
+<p>I am confident that there are people out there who are better at Javascript than I am. The project is licensed under the <a href="https://github.com/yourbuddyconner/coda-chain-visualization/blob/master/license">Apache License 2.0</a>, which is a perissive license that allows for derivative works! </p>
+<p>Also, the Coda Protocol is still <em>very much</em> in active development, and there are regular <a href="https://codaprotocol.com/docs/coda-testnet/">Testnets</a> that are designed to help us surface bugs and teach the community how to operate Coda Nodes. Please, if you decide to make something cool with this please let me know on <a href="https://twitter.com/yourbuddyconner">Twitter</a> or the Coda Discord!</p>
             </section>
 
             <section class="post-info">
