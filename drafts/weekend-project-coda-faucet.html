@@ -7,14 +7,14 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 
 
-  <title>Weekend Project - Coda Blockchain Visualization</title>
+  <title>Weekend Project - Coda Faucet Bot</title>
 
 
   <meta name="HandheldFriendly" content="True" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="referrer" content="origin" />
   <meta name="generator" content="Pelican" />
-<link href="https://connerswann.me/drafts/weekend-project-coda-blockchain.html" rel="canonical" />
+<link href="https://connerswann.me/drafts/weekend-project-coda-faucet.html" rel="canonical" />
   <!-- Feed -->
         <link href="https://connerswann.me/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Conner Swann Full Atom Feed" />
           <link href="https://connerswann.me/feeds/{slug}.atom.xml" type="application/atom+xml" rel="alternate" title="Conner Swann Categories Atom Feed" />
@@ -42,38 +42,38 @@
 
     <meta name="author" content="Conner Swann">
 
-    <meta name="tags" content="Javascript">
+    <meta name="tags" content="Python">
     <meta name="tags" content="React">
     <meta name="tags" content="Coda">
     <meta name="tags" content="Blockchain">
-    <meta name="tags" content="Block Explorer">
+    <meta name="tags" content="Discord Bot">
 
 
 
 
 <!-- Open Graph -->
 <meta property="og:site_name" content="Conner Swann"/>
-<meta property="og:title" content="Weekend Project - Coda Blockchain Visualization"/>
+<meta property="og:title" content="Weekend Project - Coda Faucet Bot"/>
 <meta property="og:description" content="What's Coda? Coda is a Crypto Protocol that I am working on as part of the O(1) Labs Team. Coda implements a "succinct" blockchain that..."/>
 <meta property="og:locale" content="en_US"/>
-<meta property="og:url" content="https://connerswann.me/drafts/weekend-project-coda-blockchain.html"/>
+<meta property="og:url" content="https://connerswann.me/drafts/weekend-project-coda-faucet.html"/>
 <meta property="og:type" content="article"/>
 <meta property="article:published_time" content="2019-09-14 00:00:00-07:00"/>
 <meta property="article:modified_time" content=""/>
 <meta property="article:author" content="https://connerswann.me/author/conner-swann">
 <meta property="article:section" content="Coda Protocol"/>
-<meta property="article:tag" content="Javascript"/>
+<meta property="article:tag" content="Python"/>
 <meta property="article:tag" content="React"/>
 <meta property="article:tag" content="Coda"/>
 <meta property="article:tag" content="Blockchain"/>
-<meta property="article:tag" content="Block Explorer"/>
+<meta property="article:tag" content="Discord Bot"/>
 <meta property="og:image" content="https://connerswann.me/images/2019/coda-cover.jpg">
 
 <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@yourbuddyconner">
-    <meta name="twitter:title" content="Weekend Project - Coda Blockchain Visualization">
-    <meta name="twitter:url" content="https://connerswann.me/drafts/weekend-project-coda-blockchain.html">
+    <meta name="twitter:title" content="Weekend Project - Coda Faucet Bot">
+    <meta name="twitter:url" content="https://connerswann.me/drafts/weekend-project-coda-faucet.html">
 
         <meta name="twitter:image:src" content="https://connerswann.me/images/2019/coda-cover.jpg">
 
@@ -83,8 +83,8 @@
 {
   "@context": "http://schema.org",
   "@type": "Article",
-  "name": "Weekend Project - Coda Blockchain Visualization",
-  "headline": "Weekend Project - Coda Blockchain Visualization",
+  "name": "Weekend Project - Coda Faucet Bot",
+  "headline": "Weekend Project - Coda Faucet Bot",
   "datePublished": "2019-09-14 00:00:00-07:00",
   "dateModified": "",
   "author": {
@@ -93,7 +93,7 @@
     "url": "https://connerswann.me/author/conner-swann"
   },
   "image": "https://connerswann.me/images/2019/coda-cover.jpg",
-  "url": "https://connerswann.me/drafts/weekend-project-coda-blockchain.html",
+  "url": "https://connerswann.me/drafts/weekend-project-coda-faucet.html",
   "description": "What's Coda? Coda is a Crypto Protocol that I am working on as part of the O(1) Labs Team. Coda implements a "succinct" blockchain that..."
 }
 </script>
@@ -129,7 +129,7 @@
             <a class="menu-button"><i class="ic ic-menu"></i> Menu</a>
           </span>
         </nav>
-        <h1 class="post-title">Weekend Project - Coda Blockchain Visualization</h1>
+        <h1 class="post-title">Weekend Project - Coda Faucet Bot</h1>
         <!-- TODO : Proper class for headline -->
         <span class="post-meta">
                 <a href="https://connerswann.me/author/conner-swann">Conner Swann</a>
@@ -152,70 +152,41 @@
 <p>Coda is a Crypto Protocol that I am working on as part of the O(1) Labs Team. Coda implements a "succinct" blockchain that effectively "<a href="https://codaprotocol.com/">swaps the traditional blockchain for a tiny cryptographic proof.</a>" </p>
 <p>Practically, this means that in the average Coda node, once a transition <em>(a.k.a. block)</em> with transactions is "swapped" for a proof, it gets thrown out to save disk space. </p>
 <h1>The Problem</h1>
-<p>When I decided to sit down and get my roommate <a href="https://github.com/reem">@reem</a> to help me with this visualization, it was to try and solve one particular issue I'd been having. There wasn't a way to <em>at-a-glance</em> verify that the network was forked!</p>
-<p>Fortunately, John Wu (<a href="https://github.com/wu-s-john">@wu-s-john</a>), one of the O(1) protocol engineers, had just implemented basic block archive functionality that allows a node to store all blocks that it observes, along with all the associated metadata. With this data, I figured we could build a nice visualization of the chain and any forks. </p>
-<h1>The Visualization</h1>
-<p>The blockchain visualization is implemented with using React, the <a href="https://www.apollographql.com/">Apollo GraphQL Client</a>, and <a href="https://github.com/uber/react-vis-force">React-Vis-Force</a> a library for building D3-based force-directed graphs. Since I had used this kind of graphs in the past, I decided to opt to stick with something I was comfortable with -- as I will mention later, this might not have been the best approach. </p>
-<p>A graph from a previous project:
-<img alt="Social Media Graph" src="https://connerswann.me/drafts/weekend-project-1-facebook-graph.png"></p>
-<p>This is an animated gif of the visualization with roughly 400 blocks depicted. 
-<img alt="Chain Visualization Gif" src="https://connerswann.me/drafts/weekend-project-1-chain-visualization.gif"></p>
-<p>While it's not the most practical, I really like this visualization because it <em>feels</em> organic somehow. Leaving it up on a TV or extra monitor has a lava lamp vibe that I enjoy -- it's art!</p>
-<h1>Next Steps / Lessons Learned</h1>
-<p>There's a bunch of stuff I would have done differently had I been designing this for deployment in a production setting: </p>
-<h4>Live Loading of New Blocks</h4>
-<p>The visualization is pretty cool, but it needs to be reloaded every 5-10 minutes or so in order to retrieve new blocks that might have been produced. I discovered to my dismay that React-Vis-Force doesn't allow you to dynamically add and remove nodes in the graph without reloading the whole thing. In order to get this working, I'd have to fork their library or craft my own D3-based react components. </p>
-<h4>Block Pagination</h4>
-<p>The <code>blocks</code> query in the Coda Daemon's GraphQL endpoint doesn't <em>actually</em> support pagination at the time of writing, so loading the page gets slow as nBlocks increases. Though, even if it did support pagination, you'd still have to load all the blocks first due to the lack of live loading. </p>
-<h4>Node Arrangement At Load</h4>
-<p>When there's a lot of nodes on the graph, it takes a really long time to work all the crossings out. I wished there was a way I could have laid out the nodes from left-right/top-bottom by their timestamp at render time. </p>
-<h4>Archive Node Proxy</h4>
-<p>The Archive node's endpoint is <em>dangerous</em> in that there is no authentication, so anyone with access could change the Daemon's internal state. As such, the visualization is only compatible with a running Daemon on the same machine. I would love to build out a GraphQL Proxy of some kind in order to mitigate this risk. </p>
-<h4>More Useful "Block Explorer" Functionality</h4>
-<p>I did implement some basic "block explorer" functionality, in that if you select a node a <code>div</code> appears with the JSON data from the block. I would have liked to spend more time displaying this data on the graph itself, via colors, numerical badges, or otherwise. </p>
-<h4>Different Color Profiles</h4>
-<p>I would love to mess with different colorings on the graph <em>way</em> more than I did here. This visualization can be super useful for visually debugging the blockchain by coloring the blocks based on number of transactions, snark jobs, fee transfers, etc. </p>
-<h4>Examples of Different Coloring:</h4>
-<p>Red -&gt; Main Chain / Blue -&gt; Leaf Nodes: 
-<img alt="colored-by-leaves" src="https://connerswann.me/drafts/weekend-project-1-chain-vis-red-blue.png"></p>
-<p>Black -&gt; No Txs / Redder -&gt; More Txs
-<img alt="colored-by-transactions" src="https://connerswann.me/drafts/weekend-project-1-chain-vis-red-black.png"></p>
-<h1>Think You Can Do Better? (I Bet You Can!)</h1>
-<p>I am confident that there are people out there who are better at Javascript than I am. This was done in a few days with little regard for practical deployment concerns. As such, the project is licensed under the <a href="https://github.com/yourbuddyconner/coda-chain-visualization/blob/master/license">Apache License 2.0</a>, which is a permissive license that allows for derivative works! </p>
-<p>The Coda Protocol is still <em>very much</em> in active development, and the O(1) Team is constantly pushing out fun projects like this -- there's so many ways to get involved:</p>
+<p>When one builds a blockchain testnet, the first thing you're going to want to do is send tokens to people to test out functionality. Without a dedicated faucet service, you'd have to manually issue transactions so the need is obvious.</p>
+<h1>The Python Client</h1>
+<p>In the spirit of "<strong>D</strong>on't <strong>R</strong>epeat <strong>Y</strong>ourself" I opted to start this project by writing a quick wrapper around the Coda Daemon's GraphQL Endpoint. It provides a nice clean API that abstracts away the GraphQL calls, leaving synchronous queries and mutations as simple function calls that return <code>dict</code> objects. </p>
+<p>The GraphQL subscriptions are exposed via <a href="https://docs.python.org/3/library/asyncio.html">Asyncio</a> coroutines, and are simple to program with in an event-driven manner.</p>
+<h1>The Bot</h1>
+<p>The main meeting spot online for the Coda Community is the official <a href="https://bit.ly/CodaDiscord">Coda Discord Server</a>, so it was an easy decision to write a Discord bot that would enable community members to get testnet tokens on-demand! </p>
+<p>My goals for the bot were the following: </p>
 <ul>
-<li>
-<p><em>Want to learn how to operate a Node on the Coda Network?</em> 
-</br>There are regular <a href="https://codaprotocol.com/docs/coda-testnet/">Testnets</a> that are designed to help us surface bugs and teach the community how to use Coda. Come join us!</p>
-</li>
-<li>
-<p><em>Want to spend some time building something immediately useful to the Coda Community?</em> 
-</br>Check out the <a href="https://github.com/CodaProtocol/coda-grants">Coda Grant Proposal Repository</a> for a list of projects O(1) Labs is sponsoring. </p>
-</li>
-<li>
-<p><em>Have an idea for some other <strong>cool thing</strong> I haven't mentioned?</em> 
-</br>Join the <a href="http://bit.ly/CodaDiscord">Coda Community</a>, and lets talk about it!</p>
-</li>
+<li>Automate the sending of Coda testnet tokens.</li>
+<li>Prevent people from requesting a bunch of tokens. </li>
+<li>Allow server mods to make unlimited requests. </li>
+<li>Get live metrics from the bot about its operations.</li>
 </ul>
-<p>Lastly, if you decide to make something cool with this let me know on <a href="https://twitter.com/yourbuddyconner">Twitter</a> or the <a href="http://bit.ly/CodaDiscord">Coda Discord Server</a> -- you can find me with <code>@conner</code>! </p>
+<p>Since I enjoy a little bit of personality in my bots, I decided that he'd be called "The Grumpus" and would embody this picture of this grumpy shiba I found on the internet: </p>
+<p><img alt="Doggo" src="/../images/2019/coda-discord-bot-grumpus.jpg"></p>
+<p>In keeping with the Python theme, I decided to build the bot using the <a href="https://discordpy.readthedocs.io/en/latest/quickstart.html">DiscordPy</a> framework. The library is event-driven and makes it simple to create a Discord bot with a couple functions. </p>
+<p>I also wanted to expose <a href="https://prometheus.io/">Prometheus</a> metrics, which is easy to do with the official <a href="https://github.com/prometheus/client_python">Prometheus Python Library</a>.</p>
             </section>
 
             <section class="post-info">
                 <div class="post-share">
-                    <a class="twitter" href="https://twitter.com/share?text=Weekend Project - Coda Blockchain Visualization&amp;url=https://connerswann.me/drafts/weekend-project-coda-blockchain.html" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <a class="twitter" href="https://twitter.com/share?text=Weekend Project - Coda Faucet Bot&amp;url=https://connerswann.me/drafts/weekend-project-coda-faucet.html" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
                     <i class="ic ic-twitter"></i><span class="hidden">Twitter</span>
                     </a>
-                    <a class="facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://connerswann.me/drafts/weekend-project-coda-blockchain.html" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <a class="facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://connerswann.me/drafts/weekend-project-coda-faucet.html" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
                     <i class="ic ic-facebook"></i><span class="hidden">Facebook</span>
                     </a>
-                    <a class="googleplus" href="https://plus.google.com/share?url=https://connerswann.me/drafts/weekend-project-coda-blockchain.html" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <a class="googleplus" href="https://plus.google.com/share?url=https://connerswann.me/drafts/weekend-project-coda-faucet.html" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
                     <i class="ic ic-googleplus"></i><span class="hidden">Google+</span>
                     </a>
                     <div class="clear"></div>
                 </div>
 
                 <aside class="post-tags">
-<a href="https://connerswann.me/tag/javascript">Javascript</a><a href="https://connerswann.me/tag/react">React</a><a href="https://connerswann.me/tag/coda">Coda</a><a href="https://connerswann.me/tag/blockchain">Blockchain</a><a href="https://connerswann.me/tag/block-explorer">Block Explorer</a>                </aside>
+<a href="https://connerswann.me/tag/python">Python</a><a href="https://connerswann.me/tag/react">React</a><a href="https://connerswann.me/tag/coda">Coda</a><a href="https://connerswann.me/tag/blockchain">Blockchain</a><a href="https://connerswann.me/tag/discord-bot">Discord Bot</a>                </aside>
 
                 <div class="clear"></div>
 
