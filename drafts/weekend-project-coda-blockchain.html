@@ -170,7 +170,7 @@
 <h4>Node Arrangement On Load</h4>
 <p>When there's a lot of nodes on the graph, it takes a really long time to work all the crossings out. I wished there was a way I could have laid out the nodes from left-right/top-bottom by their timestamp at render time. </p>
 <h4>CORS Proxy</h4>
-<p>Since the Coda Daemon is serving data on a different URI than my development server, CORS comes into play. Since the Daemon doesn't support CORS headers, I had to run it through a proxy that would add the appropriate headers for me. Luckily, there's plenty of packages that do this, and I opted to use <a href="https://www.npmjs.com/package/local-cors-proxy">local-cors-proxy</a>.</p>
+<p>Since the Coda Daemon is serving data on a different URI than my development server, <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS">CORS</a> comes into play. Since the Daemon doesn't support CORS headers, I had to run it through a proxy that would add the appropriate headers for me. Luckily, there's plenty of packages that do this, and I opted to use <a href="https://www.npmjs.com/package/local-cors-proxy">local-cors-proxy</a>.</p>
 <h4>Archive Node Proxy</h4>
 <p>The Archive node's endpoint is <em>dangerous</em> in that there is no authentication, so anyone with access could change the Daemon's internal state. As such, the visualization is only compatible with a Daemon running on the same machine. I would love to build out a GraphQL Proxy of some kind in order to mitigate this risk. </p>
 <h4>More Useful "Block Explorer" Functionality</h4>
