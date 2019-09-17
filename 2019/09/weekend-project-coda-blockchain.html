@@ -14,7 +14,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="referrer" content="origin" />
   <meta name="generator" content="Pelican" />
-<link href="https://connerswann.me/drafts/weekend-project-coda-blockchain.html" rel="canonical" />
+<link href="https://connerswann.me/2019/09/weekend-project-coda-blockchain.html" rel="canonical" />
   <!-- Feed -->
         <link href="https://connerswann.me/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Conner Swann Full Atom Feed" />
           <link href="https://connerswann.me/feeds/{slug}.atom.xml" type="application/atom+xml" rel="alternate" title="Conner Swann Categories Atom Feed" />
@@ -56,7 +56,7 @@
 <meta property="og:title" content="Weekend Project - Coda Blockchain Visualization"/>
 <meta property="og:description" content="What's Coda? Coda is a Crypto Protocol that I am working on as part of the O(1) Labs Team. Coda implements a "succinct" blockchain that..."/>
 <meta property="og:locale" content="en_US"/>
-<meta property="og:url" content="https://connerswann.me/drafts/weekend-project-coda-blockchain.html"/>
+<meta property="og:url" content="https://connerswann.me/2019/09/weekend-project-coda-blockchain.html"/>
 <meta property="og:type" content="article"/>
 <meta property="article:published_time" content="2019-09-14 00:00:00-07:00"/>
 <meta property="article:modified_time" content=""/>
@@ -73,7 +73,7 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@yourbuddyconner">
     <meta name="twitter:title" content="Weekend Project - Coda Blockchain Visualization">
-    <meta name="twitter:url" content="https://connerswann.me/drafts/weekend-project-coda-blockchain.html">
+    <meta name="twitter:url" content="https://connerswann.me/2019/09/weekend-project-coda-blockchain.html">
 
         <meta name="twitter:image:src" content="https://connerswann.me/images/2019/coda-cover.jpg">
 
@@ -93,7 +93,7 @@
     "url": "https://connerswann.me/author/conner-swann"
   },
   "image": "https://connerswann.me/images/2019/coda-cover.jpg",
-  "url": "https://connerswann.me/drafts/weekend-project-coda-blockchain.html",
+  "url": "https://connerswann.me/2019/09/weekend-project-coda-blockchain.html",
   "description": "What's Coda? Coda is a Crypto Protocol that I am working on as part of the O(1) Labs Team. Coda implements a "succinct" blockchain that..."
 }
 </script>
@@ -150,23 +150,28 @@
             <section class="post-content">
                 <h1>What's Coda?</h1>
 <p>Coda is a Crypto Protocol that I am working on as part of the O(1) Labs Team. Coda implements a "succinct" blockchain that effectively "<a href="https://codaprotocol.com/">swaps the traditional blockchain for a tiny cryptographic proof.</a>" </p>
-<p>Practically, this means that in the average Coda node, once a transition <em>(a.k.a. block)</em> with transactions is "swapped" for a proof, it gets thrown out to save disk space. </p>
+<p>Practically, this means that in the average Coda node, once a block with transactions is "swapped" for a proof, it gets thrown out to save disk space. Earlier blockchain implementations like Bitcoin and Ethereum don't have this ability, and as such the hardware requirements for running a Node on their networks increase steadily with the size of their respective chains (240GB and &gt;1TB respectively). </p>
 <h1>The Problem</h1>
 <p>When I decided to sit down and get my roommate <a href="https://github.com/reem">@reem</a> to help me with this visualization, it was to try and solve one particular issue I'd been having. There wasn't a way to <em>at-a-glance</em> verify that the network was forked!</p>
-<p>Fortunately, John Wu (<a href="https://github.com/wu-s-john">@wu-s-john</a>), one of the O(1) protocol engineers, had just implemented basic block archive functionality that allows a node to store all blocks that it observes, along with all the associated metadata. With this data, I figured we could build a nice visualization of the chain and any forks. </p>
+<p>Put simply, a <a href="https://en.wikipedia.org/wiki/Fork_(blockchain)">"<em>Fork</em>"</a> is what happens when a blockchain diverges into two or more paths forward. They can occur for a multitude of reasons:<br>
+<em>intentional forks</em> which can be scheduled and relate to protocol upgrades or hotfixes to the blockchain
+  <em>unintentional forks</em> due to hardware outages, network partitions, or protocol bugs </p>
+<p>In most blockchain contexts, the consensus algorithm is designed to work forks out as a matter of course, but when they don't work out it's an indicator that something is wrong. In any protocol that is in active development, knowing an <em>unintentional fork</em> is occurring and quickly identifying the root-cause has an incredible amount of utility from an observability perspective -- both to the protocol developers and any community members who might be participating on a network. </p>
+<p><em>Fortunately</em>, John Wu (<a href="https://github.com/wu-s-john">@wu-s-john</a>), one of the O(1) protocol engineers, had just implemented basic block archive functionality that allows a node to store all blocks that it observes, along with all the associated metadata. With this data, I figured we could build a nice visualization of the chain and any forks. </p>
 <h1>The Visualization</h1>
 <p>The blockchain visualization is implemented using <a href="https://reactjs.org/">React</a>, the <a href="https://www.apollographql.com/">Apollo GraphQL Client</a>, and <a href="https://github.com/uber/react-vis-force">React-Vis-Force</a> a library for building D3-based force-directed graphs. Since I had used this kind of graph in the past, I decided to opt to stick with something I was comfortable with -- as I will mention later, this might not have been the best approach. </p>
 <p>A graph from a previous project:
-<img alt="Social Media Graph" src="https://connerswann.me/drafts/weekend-project-1-facebook-graph.png"></p>
+<img alt="Social Media Graph" src="https://connerswann.me/2019/09/weekend-project-1-facebook-graph.png"></p>
 <p>This is an animated gif of the visualization with roughly 400 blocks depicted. 
-<img alt="Chain Visualization Gif" src="https://connerswann.me/drafts/weekend-project-1-chain-visualization.gif"></p>
+<img alt="Chain Visualization Gif" src="https://connerswann.me/2019/09/weekend-project-1-chain-visualization.gif"></p>
 <p>While it's not the most practical, I really like this visualization because it <em>feels</em> organic somehow. Leaving it up on a TV or extra monitor has a lava lamp vibe that I enjoy -- it's art!</p>
 <h1>Lessons Learned</h1>
 <p>There's a bunch of stuff I would have done differently had I been designing this for deployment in a production setting: </p>
 <h4>Live Loading of New Blocks</h4>
 <p>The visualization is pretty cool, but it needs to be reloaded every 5-10 minutes or so in order to retrieve new blocks that might have been produced. I discovered to my dismay that React-Vis-Force doesn't allow you to dynamically add and remove nodes in the graph without reloading the whole thing. In order to get this working, I'd have to fork their library or craft my own D3-based react components. </p>
 <h4>Block Pagination</h4>
-<p>The <code>blocks</code> query in the Coda Daemon's GraphQL endpoint doesn't <em>actually</em> support pagination at the time of writing, so loading the page gets slow as nBlocks increases. Though, even if it did support pagination, you'd still have to load all the blocks first due to the lack of live loading. </p>
+<p>Due to the <em>Archive</em> functionality overriding the normal behavior of the Coda Daemon, there can be a lot of observed blocks in the database. Additionally, the <code>blocks</code> query in the Coda Daemon's GraphQL endpoint doesn't <em>actually</em> support pagination at the time of writing, so loading the page gets slow as nBlocks increases. Though, even if it did support pagination, you'd still have to load all the blocks first due to the lack of live loading. </p>
+<p>This obviously is only an issue in the current Archive Node implementation, and there's an <a href="https://github.com/CodaProtocol/coda/pull/2901">RFC</a> in the works for a more robust Archive solution. </p>
 <h4>Node Arrangement On Load</h4>
 <p>When there's a lot of nodes on the graph, it takes a really long time to work all the crossings out. I wished there was a way I could have laid out the nodes from left-right/top-bottom by their timestamp at render time. </p>
 <h4>CORS Proxy</h4>
@@ -175,18 +180,24 @@
 <p>The Archive node's endpoint is <em>dangerous</em> in that there is no authentication, so anyone with access could change the Daemon's internal state. As such, the visualization is only compatible with a Daemon running on the same machine. I would love to build out a GraphQL Proxy of some kind in order to mitigate this risk. </p>
 <h4>More Useful "Block Explorer" Functionality</h4>
 <p>I did implement some basic "block explorer" functionality, in that if you select a node a <code>div</code> appears with the JSON data from the block. I would have liked to spend more time displaying this data on the graph itself, via colors, numerical badges, or otherwise. </p>
+<h4>Click and Drag Nodes</h4>
+<p>One other major feature that would make the visualization feel more interactive would obviously be draggable nodes on the graph. D3 has full support for interactive elements, but it's another thing that wasn't possible with the React-Vis-Force library. </p>
 <h4>Different Color Profiles</h4>
 <p>I would love to mess with different colorings on the graph <em>way</em> more than I did here. This visualization can be super useful for visually debugging the blockchain by coloring the blocks based on number of transactions, snark jobs, fee transfers, etc. </p>
 <h4>Examples of Different Coloring:</h4>
 <p>Red -&gt; Main Chain / Blue -&gt; Leaf Nodes: 
-<img alt="colored-by-leaves" src="https://connerswann.me/drafts/weekend-project-1-chain-vis-red-blue.png"></p>
+<img alt="colored-by-leaves" src="https://connerswann.me/2019/09/weekend-project-1-chain-vis-red-blue.png"></p>
 <p>Black -&gt; No Txs / Redder -&gt; More Txs
-<img alt="colored-by-transactions" src="https://connerswann.me/drafts/weekend-project-1-chain-vis-red-black.png"></p>
+<img alt="colored-by-transactions" src="https://connerswann.me/2019/09/weekend-project-1-chain-vis-red-black.png"></p>
 <h1>Think You Can Do Better? </br> (I Bet You Can!)</h1>
 <p>I am confident that there are people out there who are better at Javascript than I am. This was done in a few days with little regard for practical deployment concerns. As such, the project is licensed under the <a href="https://github.com/yourbuddyconner/coda-chain-visualization/blob/master/license">Apache License 2.0</a>, which is a permissive license that allows for derivative works! </p>
 <p>Check out the repository <a href="https://github.com/yourbuddyconner/coda-chain-visualization">here</a>.</p>
 <p>The Coda Protocol is still <em>very much</em> in active development, and the O(1) Team is constantly pushing out fun projects like this -- there's so many ways to get involved:</p>
 <ul>
+<li>
+<p><em>Have an idea for some other <strong>cool thing</strong> I haven't mentioned?</em> 
+</br>Join the <a href="http://bit.ly/CodaDiscord">Coda Community</a>, and lets talk about it!</p>
+</li>
 <li>
 <p><em>Want to learn how to operate a Node on the Coda Network?</em> 
 </br>There are regular <a href="https://codaprotocol.com/docs/coda-testnet/">Testnets</a> that are designed to help us surface bugs and teach the community how to use Coda. Come join us!</p>
@@ -195,23 +206,19 @@
 <p><em>Want to spend some time building something useful to the Coda Community?</em> 
 </br>Check out the <a href="https://github.com/CodaProtocol/coda-grants">Coda Grant Proposal Repository</a> for a list of projects O(1) Labs is sponsoring. </p>
 </li>
-<li>
-<p><em>Have an idea for some other <strong>cool thing</strong> I haven't mentioned?</em> 
-</br>Join the <a href="http://bit.ly/CodaDiscord">Coda Community</a>, and lets talk about it!</p>
-</li>
 </ul>
 <p>Lastly, if you decide to make something cool with this let me know on <a href="https://twitter.com/yourbuddyconner">Twitter</a> or the <a href="http://bit.ly/CodaDiscord">Coda Discord Server</a> -- you can find me with <code>@conner</code>! </p>
             </section>
 
             <section class="post-info">
                 <div class="post-share">
-                    <a class="twitter" href="https://twitter.com/share?text=Weekend Project - Coda Blockchain Visualization&amp;url=https://connerswann.me/drafts/weekend-project-coda-blockchain.html" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <a class="twitter" href="https://twitter.com/share?text=Weekend Project - Coda Blockchain Visualization&amp;url=https://connerswann.me/2019/09/weekend-project-coda-blockchain.html" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
                     <i class="ic ic-twitter"></i><span class="hidden">Twitter</span>
                     </a>
-                    <a class="facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://connerswann.me/drafts/weekend-project-coda-blockchain.html" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <a class="facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://connerswann.me/2019/09/weekend-project-coda-blockchain.html" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
                     <i class="ic ic-facebook"></i><span class="hidden">Facebook</span>
                     </a>
-                    <a class="googleplus" href="https://plus.google.com/share?url=https://connerswann.me/drafts/weekend-project-coda-blockchain.html" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <a class="googleplus" href="https://plus.google.com/share?url=https://connerswann.me/2019/09/weekend-project-coda-blockchain.html" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
                     <i class="ic ic-googleplus"></i><span class="hidden">Google+</span>
                     </a>
                     <div class="clear"></div>
