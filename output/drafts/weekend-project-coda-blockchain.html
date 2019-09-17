@@ -67,7 +67,7 @@
 <meta property="article:tag" content="Coda"/>
 <meta property="article:tag" content="Blockchain"/>
 <meta property="article:tag" content="Block Explorer"/>
-<meta property="og:image" content="https://connerswann.me//images/2019/coda-cover.jpeg">
+<meta property="og:image" content="https://connerswann.me/images/2019/coda-cover.jpg">
 
 <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
@@ -75,7 +75,7 @@
     <meta name="twitter:title" content="Weekend Project - Coda Blockchain Visualization">
     <meta name="twitter:url" content="https://connerswann.me/drafts/weekend-project-coda-blockchain.html">
 
-        <meta name="twitter:image:src" content="https://connerswann.me//images/2019/coda-cover.jpeg">
+        <meta name="twitter:image:src" content="https://connerswann.me/images/2019/coda-cover.jpg">
 
       <meta name="twitter:description" content="What's Coda? Coda is a Crypto Protocol that I am working on as part of the O(1) Labs Team. Coda implements a "succinct" blockchain that...">
 
@@ -92,7 +92,7 @@
     "name": "Conner Swann",
     "url": "https://connerswann.me/author/conner-swann"
   },
-  "image": "https://connerswann.me//images/2019/coda-cover.jpeg",
+  "image": "https://connerswann.me/images/2019/coda-cover.jpg",
   "url": "https://connerswann.me/drafts/weekend-project-coda-blockchain.html",
   "description": "What's Coda? Coda is a Crypto Protocol that I am working on as part of the O(1) Labs Team. Coda implements a "succinct" blockchain that..."
 }
@@ -136,7 +136,7 @@
             | <time datetime="Sat 14 September 2019">Sat 14 September 2019</time>
         </span>
         <!-- TODO : Modified check -->
-            <div class="post-cover cover" style="background-image: url('https://connerswann.me//images/2019/coda-cover.jpeg')">
+            <div class="post-cover cover" style="background-image: url('https://connerswann.me/images/2019/coda-cover.jpg')">
       </div>
     </header>
 
@@ -149,32 +149,58 @@
         <div class="inner">
             <section class="post-content">
                 <h1>What's Coda?</h1>
-<p>Coda is a Crypto Protocol that I am working on as part of the O(1) Labs Team. Coda implements a "succinct" blockchain that effectively "<a href="https://codaprotocol.com/">swaps the traditional blockchain for a tiny cryptographic proof.</a>" Practically, this means that by default once a transition <em>(a.k.a. block)</em> with transactions is "swapped" for a proof, it gets thrown out to save disk space. </p>
-<p>The protocol is stil very much in active development, and there are regular <a href="https://codaprotocol.com/docs/coda-testnet/">Testnets</a> that are designed to help us surface bugs and teach the community how to operate Coda Nodes. </p>
+<p>Coda is a Crypto Protocol that I am working on as part of the O(1) Labs Team. Coda implements a "succinct" blockchain that effectively "<a href="https://codaprotocol.com/">swaps the traditional blockchain for a tiny cryptographic proof.</a>" </p>
+<p>Practically, this means that in the average Coda node, once a transition <em>(a.k.a. block)</em> with transactions is "swapped" for a proof, it gets thrown out to save disk space. </p>
 <h1>The Problem</h1>
-<p>When I decided to sit down and get my roommate <a href="https://github.com/reem">@reem</a> to help me with this visualization, it was to try and solve one particular issue I'd been having. <em>There wasn't a way to at-a-glance verify that the network was forked!</em></p>
-<p>Fortunately, John Wu (<a href="https://github.com/wu-s-john">@wu-s-john</a>), one of the protocol developers, had just implemented basic block archive functionality that allows a node to store all blocks that it observes, along with all the associated metadata. With this data, I figured we could build a nice visualization of the chain and any forks. </p>
+<p>When I decided to sit down and get my roommate <a href="https://github.com/reem">@reem</a> to help me with this visualization, it was to try and solve one particular issue I'd been having. There wasn't a way to <em>at-a-glance</em> verify that the network was forked!</p>
+<p>Fortunately, John Wu (<a href="https://github.com/wu-s-john">@wu-s-john</a>), one of the O(1) protocol engineers, had just implemented basic block archive functionality that allows a node to store all blocks that it observes, along with all the associated metadata. With this data, I figured we could build a nice visualization of the chain and any forks. </p>
 <h1>The Visualization</h1>
-<p>The blockchain visualization is implemented with using React, the Apollo GraphQL Client, and <a href="https://github.com/uber/react-vis-force">React-Vis-Force</a> a library for building D3-based force-directed graphs. Since I had used this kind of graphs in the past, I decided to opt to stick with something I was comfortable with -- as I will mention later, this might not have been the best approach. </p>
+<p>The blockchain visualization is implemented using <a href="https://reactjs.org/">React</a>, the <a href="https://www.apollographql.com/">Apollo GraphQL Client</a>, and <a href="https://github.com/uber/react-vis-force">React-Vis-Force</a> a library for building D3-based force-directed graphs. Since I had used this kind of graph in the past, I decided to opt to stick with something I was comfortable with -- as I will mention later, this might not have been the best approach. </p>
 <p>A graph from a previous project:
 <img alt="Social Media Graph" src="https://connerswann.me/drafts/weekend-project-1-facebook-graph.png"></p>
 <p>This is an animated gif of the visualization with roughly 400 blocks depicted. 
 <img alt="Chain Visualization Gif" src="https://connerswann.me/drafts/weekend-project-1-chain-visualization.gif"></p>
-<h1>Next Steps / Lessons Learned</h1>
-<p>There's a bunch of stuff I would have done differently, had I been designing this for deployment in a production setting: 
-- React-Vis-Force doesn't allow you to dynamically add and remove nodes in the graph without reloading the whole thing. To accomplish this, I'd have to fork their library or craft my own D3-based react components. 
-- The <code>blocks</code> query in the Coda Daemon's GraphQL endponint doesn't <em>actually</em> support pagination at the time of writing, so loading the page gets slow as nBlocks increases. Though, even if it did support pagination, you'd still have to load all the blocks first due to #1. 
-- When there's a lot of nodes on the graph, it takes a really long time to work all the crossings out. I wished there was a way I could have laid out the nodes from left-right/top-bottom by their timestamp at render time. 
-- The Archive node's endpoint is <em>dangerous</em> in that there is no authentication, so anyone with access could change the Daemon's internal state. As such, this only works when running a Daemon on the same machine as the visualization. I would love to build out a GraphQL Proxy of some kind in order to mitigate this risk. 
-- I did implement basic "block explorer" functionality, in that if you select a node a <code>div</code> appears with the json data from the block. I would have liked to spend more time displaying this data on the graph itself, via colors or otherwise. 
-- I would love to mess with different colorings on the graph <em>way</em> more than I did here. This visualization can be super useful for visually debugging the blockchain by coloring the blocks based on number of transactions, snark jobs, fee transfers, etc. </p>
-<h3>Examples of Different Coloring:</h3>
+<p>While it's not the most practical, I really like this visualization because it <em>feels</em> organic somehow. Leaving it up on a TV or extra monitor has a lava lamp vibe that I enjoy -- it's art!</p>
+<h1>Lessons Learned</h1>
+<p>There's a bunch of stuff I would have done differently had I been designing this for deployment in a production setting: </p>
+<h4>Live Loading of New Blocks</h4>
+<p>The visualization is pretty cool, but it needs to be reloaded every 5-10 minutes or so in order to retrieve new blocks that might have been produced. I discovered to my dismay that React-Vis-Force doesn't allow you to dynamically add and remove nodes in the graph without reloading the whole thing. In order to get this working, I'd have to fork their library or craft my own D3-based react components. </p>
+<h4>Block Pagination</h4>
+<p>The <code>blocks</code> query in the Coda Daemon's GraphQL endpoint doesn't <em>actually</em> support pagination at the time of writing, so loading the page gets slow as nBlocks increases. Though, even if it did support pagination, you'd still have to load all the blocks first due to the lack of live loading. </p>
+<h4>Node Arrangement On Load</h4>
+<p>When there's a lot of nodes on the graph, it takes a really long time to work all the crossings out. I wished there was a way I could have laid out the nodes from left-right/top-bottom by their timestamp at render time. </p>
+<h4>CORS Proxy</h4>
+<p>Since the Coda Daemon is serving data on a different URI than my development server, <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS">CORS</a> comes into play. Since the Daemon doesn't support CORS headers, I had to run it through a proxy that would add the appropriate headers for me. Luckily, there's plenty of packages that do this, and I opted to use <a href="https://www.npmjs.com/package/local-cors-proxy">local-cors-proxy</a>.</p>
+<h4>Archive Node Proxy</h4>
+<p>The Archive node's endpoint is <em>dangerous</em> in that there is no authentication, so anyone with access could change the Daemon's internal state. As such, the visualization is only compatible with a Daemon running on the same machine. I would love to build out a GraphQL Proxy of some kind in order to mitigate this risk. </p>
+<h4>More Useful "Block Explorer" Functionality</h4>
+<p>I did implement some basic "block explorer" functionality, in that if you select a node a <code>div</code> appears with the JSON data from the block. I would have liked to spend more time displaying this data on the graph itself, via colors, numerical badges, or otherwise. </p>
+<h4>Different Color Profiles</h4>
+<p>I would love to mess with different colorings on the graph <em>way</em> more than I did here. This visualization can be super useful for visually debugging the blockchain by coloring the blocks based on number of transactions, snark jobs, fee transfers, etc. </p>
+<h4>Examples of Different Coloring:</h4>
 <p>Red -&gt; Main Chain / Blue -&gt; Leaf Nodes: 
 <img alt="colored-by-leaves" src="https://connerswann.me/drafts/weekend-project-1-chain-vis-red-blue.png"></p>
 <p>Black -&gt; No Txs / Redder -&gt; More Txs
 <img alt="colored-by-transactions" src="https://connerswann.me/drafts/weekend-project-1-chain-vis-red-black.png"></p>
-<h1>Think You Can Do Better?</h1>
-<p>I am confident that there are people out there who are better at Javascript than I am. The project is licensed under the <a href="https://github.com/yourbuddyconner/coda-chain-visualization/blob/master/license">Apache License 2.0</a>, which is a perissive license that allows for derivative works! Please, if you decide to make something cool with this please let me know on <a href="https://twitter.com/yourbuddyconner">Twitter</a>!</p>
+<h1>Think You Can Do Better? </br> (I Bet You Can!)</h1>
+<p>I am confident that there are people out there who are better at Javascript than I am. This was done in a few days with little regard for practical deployment concerns. As such, the project is licensed under the <a href="https://github.com/yourbuddyconner/coda-chain-visualization/blob/master/license">Apache License 2.0</a>, which is a permissive license that allows for derivative works! </p>
+<p>Check out the repository <a href="https://github.com/yourbuddyconner/coda-chain-visualization">here</a>.</p>
+<p>The Coda Protocol is still <em>very much</em> in active development, and the O(1) Team is constantly pushing out fun projects like this -- there's so many ways to get involved:</p>
+<ul>
+<li>
+<p><em>Want to learn how to operate a Node on the Coda Network?</em> 
+</br>There are regular <a href="https://codaprotocol.com/docs/coda-testnet/">Testnets</a> that are designed to help us surface bugs and teach the community how to use Coda. Come join us!</p>
+</li>
+<li>
+<p><em>Want to spend some time building something useful to the Coda Community?</em> 
+</br>Check out the <a href="https://github.com/CodaProtocol/coda-grants">Coda Grant Proposal Repository</a> for a list of projects O(1) Labs is sponsoring. </p>
+</li>
+<li>
+<p><em>Have an idea for some other <strong>cool thing</strong> I haven't mentioned?</em> 
+</br>Join the <a href="http://bit.ly/CodaDiscord">Coda Community</a>, and lets talk about it!</p>
+</li>
+</ul>
+<p>Lastly, if you decide to make something cool with this let me know on <a href="https://twitter.com/yourbuddyconner">Twitter</a> or the <a href="http://bit.ly/CodaDiscord">Coda Discord Server</a> -- you can find me with <code>@conner</code>! </p>
             </section>
 
             <section class="post-info">
@@ -243,5 +269,13 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script type="text/javascript" src="https://connerswann.me/theme/js/script.js"></script>
 
+    <!-- Global Site Tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-24471866-2"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-24471866-2', { 'anonymize_ip': true });
+    </script>
 </body>
 </html>

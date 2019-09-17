@@ -4,8 +4,9 @@ from __future__ import unicode_literals
 
 AUTHOR = 'Conner Swann'
 SITENAME = 'Conner Swann'
-SITESUBTITLE = u'Protocol Reliability Engineer'
+SITESUBTITLE = u'Reliability Engineer'
 #SITEURL = 'https://connerswann.me'
+STATIC_PATHS = ['images']
 
 PATH = 'content'
 
@@ -31,7 +32,7 @@ SOCIAL = (('twitter', 'https://twitter.com/yourbuddyconner'),
           ('github', 'https://github.com/yourbuddyconner'),
           ('linkedin', 'https://www.linkedin.com/in/connerswann/'))
 
-DEFAULT_PAGINATION = 10
+DEFAULT_PAGINATION = 5
 
 # Uncomment following line if you want document-relative URLs when developing
 #RELATIVE_URLS = True
