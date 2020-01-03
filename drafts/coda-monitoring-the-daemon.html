@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+      <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+
+  <title>Monitoring the Coda Daemon</title>
+
+
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="referrer" content="origin" />
+  <meta name="generator" content="Pelican" />
+  <link href="https://connerswann.me" rel="canonical" />
+
+  <!-- Feed -->
+        <link href="https://connerswann.me/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Conner Swann Full Atom Feed" />
+          <link href="https://connerswann.me/feeds/{slug}.atom.xml" type="application/atom+xml" rel="alternate" title="Conner Swann Categories Atom Feed" />
+
+  <link href="https://connerswann.me/theme/css/style.css" type="text/css" rel="stylesheet" />
+
+  <!-- Code highlight color scheme -->
+      <link href="https://connerswann.me/theme/css/code_blocks/monokai.css" rel="stylesheet">
+
+
+  <!-- Custom fonts -->
+  <link href='https://fonts.googleapis.com/css?family=Montserrat:400,300' rel='stylesheet' type='text/css' />
+  <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css" />
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+
+
+    <link href="https://connerswann.me/drafts/coda-monitoring-the-daemon.html" rel="canonical" />
+
+        <meta name="description" content="What's Coda? Coda is a Crypto Protocol that I am working on as part of the O(1) Labs Team. Coda implements a "succinct" blockchain that...">
+
+        <meta name="author" content="Conner Swann">
+
+        <meta name="tags" content="Coda">
+        <meta name="tags" content="Blockchain">
+        <meta name="tags" content="Prometheus">
+        <meta name="tags" content="Monitoring">
+
+        <meta property="og:locale" content="" />
+    <meta property="og:site_name" content="Conner Swann" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Conner Swann" />
+    <meta property="og:description" content="Reliability Engineer" />
+    <meta property="og:url" content="https://connerswann.me" />
+      <meta property="og:image" content="https://connerswann.me/https://connerswann.me/images/blog-cover.jpg" />
+
+  <meta property="og:type" content="article">
+            <meta property="article:author" content="https://connerswann.me/author/conner-swann">
+  <meta property="og:url" content="https://connerswann.me/drafts/coda-monitoring-the-daemon.html">
+  <meta property="og:title" content="Monitoring the Coda Daemon">
+  <meta property="article:published_time" content="2020-01-01 00:00:00-08:00">
+            <meta property="og:description" content="What's Coda? Coda is a Crypto Protocol that I am working on as part of the O(1) Labs Team. Coda implements a "succinct" blockchain that...">
+
+            <meta property="og:image" content="https://connerswann.me/https://connerswann.me/images/blog-cover.jpg">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:site" content="@yourbuddyconner">
+        <meta name="twitter:title" content="Monitoring the Coda Daemon">
+        <meta name="twitter:url" content="https://connerswann.me/drafts/coda-monitoring-the-daemon.html">
+
+            <meta name="twitter:image:src" content="https://connerswann.me/https://connerswann.me/images/blog-cover.jpg">
+
+            <meta name="twitter:description" content="What's Coda? Coda is a Crypto Protocol that I am working on as part of the O(1) Labs Team. Coda implements a "succinct" blockchain that...">
+</head>
+<!-- TODO : Body class -->
+<body class="home-template">
+
+<nav id="menu">
+  <a class="close-button">Close</a>
+  <div class="nav-wrapper">
+    <p class="nav-label">Menu</p>
+    <ul>
+
+
+    </ul>
+  </div>
+</nav>
+    <!-- Progressbar -->
+    <div class="progress-container">
+        <span class="progress-bar"></span>
+    </div>
+
+    <!-- Page Header -->
+    <!-- Set your background image for this header on the line below. -->
+    <header id="post-header" class="has-cover">
+      <div class="inner">
+        <nav id="navigation">
+            <span id="home-button" class="nav-button">
+                <a class="home-button" href="https://connerswann.me" title="Home"><i class="ic ic-arrow-left"></i> Home</a>
+            </span>
+          <span id="menu-button" class="nav-button">
+            <a class="menu-button"><i class="ic ic-menu"></i> Menu</a>
+          </span>
+        </nav>
+        <h1 class="post-title">Monitoring the Coda Daemon</h1>
+        <!-- TODO : Proper class for headline -->
+        <span class="post-meta">
+                <a href="https://connerswann.me/author/conner-swann">Conner swann</a>
+            | <time datetime="Wed 01 January 2020">Wed 01 January 2020</time>
+        </span>
+        <!-- TODO : Modified check -->
+        
+            <div class="post-cover cover" style="background-image: url('https://connerswann.me/images/blog-cover.jpg')">            
+        
+      </div>
+    </header>    
+
+  <section id="wrapper">
+    <a class="hidden-close"></a>
+
+    <!-- Post content -->
+    <main class="content" role="main">
+        <article class="post">
+        <div class="inner">
+            <section class="post-content">
+                <h1>What's Coda?</h1>
+<p>Coda is a Crypto Protocol that I am working on as part of the O(1) Labs Team. Coda implements a "succinct" blockchain that effectively "<a href="https://codaprotocol.com/">swaps the traditional blockchain for a tiny cryptographic proof.</a>" </p>
+<p>Practically, this means that in the average Coda node, once a block with transactions is "swapped" for a proof, it gets thrown out to save disk space. </p>
+<p>This gives Coda a great advantage in terms of portability, as the resource requirements to run a consensus node are relatively small when compared with other existing blockchains. </p>
+<h1>The Problem</h1>
+<p>From an infrastructure perspective, It's very easy to view a crypto daemon (or any service for that matter) as a black box. It can either be running, or not, and if it's not running properly there isn't much insight into exactly what could be going wrong besides some CLI commands you can run or a crypic stacktrace in the logs. You restart the process and hope it comes back up successfully, but doing this repeatedly isn't necessarily a great way of running your operation... </p>
+<p><img alt="Black Box" src="https://connerswann.me/drafts/blackbox-whitebox.png"></p>
+<p>We had this exact problem initially. Once you are running test networks of more than two or three daemons at a time, it gets hard to go peek at the logs for each instance of the daemon to diagnose an issue. It's much more preferable to have some sort of at-a-glance method of verifying a daemon is functioning properly. In infrastructure land there's really two ways to do this, you could forward logs to a central location like ELK or Google Stackdriver (which we do), or you can collect application metrics using some system like StatsD or Prometheus. </p>
+<p>This post is going to focus primarily on utilizing the onboard Prometheus endpoint to glean insight and actionable data from a Coda Daemon. </p>
+<h1>Intro to Prometheus</h1>
+<p>First, for the unitiated:</p>
+<blockquote>
+<p><a href="https://prometheus.io/docs/introduction/overview/">Prometheus</a> is an open-source systems monitoring and alerting toolkit originally built at SoundCloud.  Since its inception in 2012, many companies and organizations have adopted Prometheus, and the project has a very active developer and user community. It is now a standalone open source project and maintained independently of any company.</p>
+</blockquote>
+<p>Prometheus has seen massive adoption amongst tech companies both big and small, and the project has been included in the ranks of the <a href="https://www.cncf.io/">Cloud-Native Computing Foundation</a> making it a really good choice for monitoring an open-source project. </p>
+<p>At a high-level, Prometheus is a "pull-based" metrics collection system. A central prometheus server is configured with either a static or dynamic set of targets, and the central server makes HTTP requests to the target's Prometheus endpoint. The target(s) are each presenting their individual application metrics in a standard format via this HTTP interface, allowing the Prometheus server to scrape the same endpoint <em>repeatedly on an interval</em>, building up a timeseries of the exposed metrics. </p>
+<p>Prometheus easily scales to tens of thousands of targets and runs in a Docker container, making it easy to bootstrap a project and quickly ramp up your monitoring system. </p>
+<p><img alt="Prometheus Architecture" src="https://connerswann.me/drafts/prometheus-architecture.png"></p>
+<h1>Prometheus and Coda</h1>
+<p>Now that you have an idea of how Prometheus works at a high level, lets look at how you can leverage a Prometheus installation to monitor one or more Coda Daemons.</p>
+<h2>Run a Daemon with Metrics</h2>
+<p>Note: You can install the Coda Daemon natively (or build it from source), but I usually prefer to run the daemon inside a Docker container. As such all examples will be using Docker, but can be easily translated to a native install. </p>
+<p>To activate the Coda Daemon's onboard Prometheus endpoint, pass <code>-metric-port &lt;PORT&gt;</code> to the CLI at runtime: </p>
+<p><code>docker run -p 10000:10000 codaprotocol/coda-daemon:0.0.11-beta4 daemon -metrics-port 10000</code> </p>
+<p>Lets break this command down: </p>
+<ul>
+<li><code>docker run</code>: run a docker container</li>
+<li><code>-p 10000:10000</code>: bind Port <code>10000</code> inside the Docker Container to the Docker Host</li>
+<li><code>codaprotocol/coda-daemon:0.0.11-beta4</code>: an official Coda docker image from dockerhub, version <code>0.0.11-beta4</code></li>
+<li><code>daemon -metrics-port 10000</code>: the argument(s) to the <code>coda</code> CLI -- run a daemon and expose prometheus metrics on port <code>10000</code></li>
+</ul>
+<p>Now, if you were to run that command you should see output like the following: </p>
+<div class="highlight"><pre><span></span>$ docker run -p <span class="m">10000</span>:10000 codaprotocol/coda-daemon:0.0.11-beta4 daemon -metrics-port <span class="m">10000</span>
+<span class="m">2020</span>-01-02 <span class="m">22</span>:33:42 UTC <span class="o">[</span>Info<span class="o">]</span> Coda daemon is booting up<span class="p">;</span> built with commit <span class="s2">&quot;bd5715a3f00754869498083b2506db776a7047e2&quot;</span> on branch <span class="s2">&quot;master&quot;</span>
+<span class="m">2020</span>-01-02 <span class="m">22</span>:33:42 UTC <span class="o">[</span>Info<span class="o">]</span> Daemon will expire at <span class="s2">&quot;2020-01-15 14:00:00-07:00&quot;</span>
+<span class="m">2020</span>-01-02 <span class="m">22</span>:33:42 UTC <span class="o">[</span>Info<span class="o">]</span> Booting may take several seconds, please <span class="nb">wait</span>
+<span class="m">2020</span>-01-02 <span class="m">22</span>:33:52 UTC <span class="o">[</span>Info<span class="o">]</span> Daemon started process of kind <span class="s2">&quot;Prover&quot;</span> with pid <span class="m">80</span>
+<span class="m">2020</span>-01-02 <span class="m">22</span>:33:53 UTC <span class="o">[</span>Info<span class="o">]</span> Daemon started process of kind <span class="s2">&quot;Verifier&quot;</span> with pid <span class="m">92</span>
+<span class="m">2020</span>-01-02 <span class="m">22</span>:33:54 UTC <span class="o">[</span>Info<span class="o">]</span> libp2p peer ID this session is <span class="nv">$peer_id</span>
+    peer_id: <span class="s2">&quot;12D3KooWRd6oDEwVoKmZnAZWokqTqUjmsypFyGBeLbU4Wp4UjCqE&quot;</span>
+<span class="m">2020</span>-01-02 <span class="m">22</span>:33:54 UTC <span class="o">[</span>Info<span class="o">]</span> Starting Bootstrap Controller phase
+<span class="m">2020</span>-01-02 <span class="m">22</span>:33:54 UTC <span class="o">[</span>Info<span class="o">]</span> Coda daemon is now connecting
+<span class="m">2020</span>-01-02 <span class="m">22</span>:33:54 UTC <span class="o">[</span>Info<span class="o">]</span> Pausing block production <span class="k">while</span> bootstrapping
+<span class="m">2020</span>-01-02 <span class="m">22</span>:33:54 UTC <span class="o">[</span>Info<span class="o">]</span> Attempted to turn on snark worker, but snark worker key is <span class="nb">set</span> to none
+<span class="m">2020</span>-01-02 <span class="m">22</span>:33:54 UTC <span class="o">[</span>Info<span class="o">]</span> Daemon ready. Clients can now connect
+<span class="m">2020</span>-01-02 <span class="m">22</span>:33:54 UTC <span class="o">[</span>Info<span class="o">]</span> Created GraphQL server and status endpoints at port : <span class="m">3085</span>
+</pre></div>
+
+
+<p>Prometheus metrics will be available at <code>localhost:10000</code> (Note: This assumes you are running docker on the same machine the browser is installed on). </p>
+<p>If you open that in a browser you will see all the metrics encoded in the standard Prometheus format. For example: </p>
+<div class="highlight"><pre><span></span>#HELP Coda_Bootstrap_bootstrap_time_ms time elapsed while bootstrapping
+#TYPE Coda_Bootstrap_bootstrap_time_ms gauge
+Coda_Bootstrap_bootstrap_time_ms 377529
+#HELP Coda_Consensus_stake_delegators # of delegators the node is evaluating vrfs for (in addition to evaluations for staking keypairs)
+#TYPE Coda_Consensus_stake_delegators gauge
+Coda_Consensus_stake_delegators 0
+#HELP Coda_Consensus_staking_keypairs # of actively staking keypairs
+#TYPE Coda_Consensus_staking_keypairs gauge
+Coda_Consensus_staking_keypairs 0
+...
+</pre></div>
+
+
+<p>If you have any questions about a particular <a href="https://prometheus.io/docs/prometheus/latest/querying/basics/#time-series-selectors">time series</a> exposed by the Daemon, checking the help text is a good first place to look. </p>
+<h2>Set up Sandbox Prometheus</h2>
+<p>I have set up an example repository located <a href="https://github.com/yourbuddyconner/coda-examples/tree/master/basic-prometheus">here</a>, the important stuff is included below: </p>
+<p><code>docker-compose.yml</code>
+This project uses <a href="https://docs.docker.com/compose/">docker-compose</a>, a tool for orchestrating multiple docker containers on the same machine. It has an extensive feature-set and I encourage you to check out the documentation should you want to learn more.
+<script src="https://gist-it.appspot.com/https://github.com/yourbuddyconner/coda-examples/blob/master/basic-prometheus/docker-compose.yml?footer=minimal"></script></p>
+<p><code>prometheus.yml</code>
+This is the prometheus configuration file which targets to scrape and how to scrape them.<br>
+<script src="https://gist-it.appspot.com/https://github.com/yourbuddyconner/coda-examples/blob/master/basic-prometheus/config/prometheus.yml?footer=minimal"></script></p>
+<p>To run this example, first clone the example repository: </p>
+<p><code>git clone https://github.com/yourbuddyconner/coda-examples.git</code></p>
+<p>Move to the <code>basic-prometheus</code> directory: </p>
+<p><code>cd basic-prometheus</code></p>
+<p>Run docker-compose: </p>
+<p><code>docker-compose up</code></p>
+<p>You should now be able to navigate to <code>localhost:9090</code> in your browser to get access to the Prometheus UI. </p>
+<p><img alt="Prometheus UI" src="https://connerswann.me/drafts/prometheus-ui.png"></p>
+<h2>Actionable Metrics</h2>
+<p>Note: All graphs are embedded from one of the following public dashboards: </p>
+<ul>
+<li><a href="https://o1testnet.grafana.net/d/qx4y6dfWz/network-overview?orgId=1&amp;refresh=1m">Coda Network Overview Dashboard</a>.</li>
+<li><a href="https://o1testnet.grafana.net/d/Rgo87HhWz/block-producer-dashboard?orgId=1&amp;var-role=blockproducer">Coda Block Producer Dashboard</a></li>
+<li><a href="https://o1testnet.grafana.net/d/scQUGOhWk/snark-worker-dashboard?orgId=1&amp;refresh=1m">Coda SNARK Worker Dashboard</a></li>
+</ul>
+<p>While all of the exposed metrics are useful, only a few produce actionable data from a node operation perspective. The following are useful in normal node operations: </p>
+<h3>Node Uptime</h3>
+<p>This counter is useful in alerting, as it should never reset to 0. The only scenario in which it would do so would be in the event of the Coda Daemon process reastarting. </p>
+<div class="highlight"><pre><span></span>#HELP Coda_Runtime_process_uptime_ms_total Total time the process has been running for in milliseconds.
+#TYPE Coda_Runtime_process_uptime_ms_total counter
+Coda_Runtime_process_uptime_ms_total 1.73959e+08
+</pre></div>
+
+
+<div class="grafana-container">
+<iframe src="https://o1testnet.grafana.net/d-solo/Rgo87HhWz/block-producer-dashboard?orgId=1&var-testnet=rising-phoenix&var-role=blockproducer&from=1578013877048&to=1578035477049&panelId=10" width="450" height="200" frameborder="0"></iframe>
+</div>
+
+<h4>Max Observed Block Length</h4>
+<p>Can be an indicator of forks when compared across several nodes. Reporting this to the Coda Community when in doubt is highly useful. </p>
+<div class="highlight"><pre><span></span>#HELP Coda_Transition_frontier_max_blocklength_observed max blocklength observed by the system
+#TYPE Coda_Transition_frontier_max_blocklength_observed gauge
+Coda_Transition_frontier_max_blocklength_observed 11567
+</pre></div>
+
+
+<div class="grafana-container">
+<iframe src="https://o1testnet.grafana.net/d-solo/qx4y6dfWz/network-overview?orgId=1&refresh=1m&from=1578012003609&to=1578033603609&var-testnet=rising-phoenix&panelId=2" width="550" height="350" frameborder="0"></iframe>
+</div>
+
+<h4>Blocks Produced</h4>
+<p>While useful on its own as a simple counter, the blocks produced metric is particularly useful when diagnosing block production issues. When combined with Prometheus <a href="https://prometheus.io/docs/prometheus/latest/querying/functions/">query functions</a> like <code>sum</code> and <code>increase</code>, we can derive a running rate of block production. </p>
+<p>Example query: 
+<code>sum(increase(Coda_Proposer_blocks_proposed{testnet="$testnet"}[1h]))</code></p>
+<div class="highlight"><pre><span></span>#HELP Coda_Proposer_blocks_proposed blocks produced and submitted by the proposer
+#TYPE Coda_Proposer_blocks_proposed counter
+Coda_Proposer_blocks_proposed 0
+</pre></div>
+
+
+<div class="grafana-container">
+<iframe src="https://o1testnet.grafana.net/d-solo/Rgo87HhWz/block-producer-dashboard?orgId=1&var-testnet=rising-phoenix&var-role=blockproducer&panelId=8&from=1578013175410&to=1578034775411" width="450" height="200" frameborder="0"></iframe>
+</div>
+
+<h4>Banned Peers</h4>
+<p>When taken alone, this metric is only useful in indicating that individual nodes are misbehaving, however when cross-examined against other metrics (Ex. Max Observed Block Height) it can be an indicator of systematic network-level bugs/forks.</p>
+<div class="highlight"><pre><span></span>#HELP Coda_Trust_system_banned_peers # of banned ip addresses
+#TYPE Coda_Trust_system_banned_peers gauge
+Coda_Trust_system_banned_peers 1
+</pre></div>
+
+
+<div class="grafana-container">
+<iframe src="https://o1testnet.grafana.net/d-solo/Rgo87HhWz/block-producer-dashboard?panelId=15&orgId=1&var-testnet=rising-phoenix&var-role=blockproducer&from=1578014339796&to=1578035939797" width="450" height="200" frameborder="0"></iframe>
+</div>
+
+<h4>Coda SNARK Work Fee Breakdown</h4>
+<p>Useful in helping to tune SNARK Worker fee selection. </p>
+<p>ex. If there is a lot of low-fee SNARK work in the pool, an automated system could turn off SNARK work compute until it is more economical to resume. </p>
+<div class="highlight"><pre><span></span>#HELP Coda_Snark_work_snark_fee A histogram for snark fees
+#TYPE Coda_Snark_work_snark_fee histogram
+Coda_Snark_work_snark_fee_sum 5933
+Coda_Snark_work_snark_fee_count 5512
+Coda_Snark_work_snark_fee_bucket{le=&quot;+Inf&quot;} 5512
+Coda_Snark_work_snark_fee_bucket{le=&quot;9&quot;} 5512
+...
+</pre></div>
+
+
+<div class="grafana-container">
+<iframe src="https://o1testnet.grafana.net/d-solo/qx4y6dfWz/network-overview?orgId=1&refresh=1m&from=1578012954848&to=1578034554848&var-testnet=rising-phoenix&panelId=8" width="450" height="200" frameborder="0"></iframe>
+</div>
+
+<h2>Next Time: Production GKE Setup</h2>
+<p>In the next blog post in this series, I'll show you how to set up a Coda node on Google Kubernetes Engine!</p>
+            </section>
+
+            <section class="post-info">
+                <div class="post-share">
+                    <a class="twitter" href="https://twitter.com/share?text=Monitoring the Coda Daemon&amp;url=https://connerswann.me/drafts/coda-monitoring-the-daemon.html" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <i class="ic ic-twitter"></i><span class="hidden">Twitter</span>
+                    </a>
+                    <a class="facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://connerswann.me/drafts/coda-monitoring-the-daemon.html" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <i class="ic ic-facebook"></i><span class="hidden">Facebook</span>
+                    </a>
+                    <a class="googleplus" href="https://plus.google.com/share?url=https://connerswann.me/drafts/coda-monitoring-the-daemon.html" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <i class="ic ic-googleplus"></i><span class="hidden">Google+</span>
+                    </a>
+                    <div class="clear"></div>
+                </div>
+
+                <aside class="post-tags">
+<a href="https://connerswann.me/tag/coda">Coda</a><a href="https://connerswann.me/tag/blockchain">Blockchain</a><a href="https://connerswann.me/tag/prometheus">Prometheus</a><a href="https://connerswann.me/tag/monitoring">Monitoring</a>                </aside>
+
+                <div class="clear"></div>
+
+                <aside class="post-author">
+                        <figure class="post-author-avatar">
+                            <img src="https://connerswann.me/images/conner-profile-picture.png" alt="Conner swann" />
+                        </figure>
+                    <div class="post-author-bio">
+                        <h4 class="post-author-name"><a href="https://connerswann.me/author/conner-swann">Conner swann</a></h4>
+                            <p class="post-author-about">Software Engineer, Infrastructure Magician, Architecture Nerd </br> Core Maintainer @ Coda Protocol</p>
+                            <span class="post-author-location"><i class="ic ic-location"></i> San Francisco</span>
+                            <span class="post-author-website"><a href="https://connerswann.me"><i class="ic ic-link"></i> Website</a></span>
+                            <span class="post-author-twitter"><a target="_blank" href="https://twitter.com/yourbuddyconner"><i class="ic ic-twitter"></i> Twitter</a></span>
+                    </div>
+                    <div class="clear"></div>
+                </aside>
+ 
+
+                </section>
+
+
+                <aside class="post-nav">
+                    <div class="clear"></div>
+                </aside>
+
+            </div>
+        </article>
+    </main>
+      <!-- TODO : Body class -->
+    <div id="body-class" style="display: none;" class=""></div>
+  
+    <footer id="footer">
+      <div class="inner">
+        <section class="credits">
+          <span class="credits-theme">Theme <a href="https://github.com/arulrajnet/attila" rel="nofollow">Attila</a></span>
+          <span class="credits-software">Published with <a href="https://github.com/getpelican/pelican" rel="nofollow">Pelican</a></span>
+        </section>
+      </div>
+    </footer>
+  </section>
+
+  <script type="text/javascript" src="https://connerswann.me/theme/js/script.js"></script>
+  
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-24471866-2']);
+    _gaq.push(['_trackPageview']);
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+</body>
+</html>

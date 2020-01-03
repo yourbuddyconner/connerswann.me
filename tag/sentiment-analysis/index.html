@@ -14,7 +14,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="referrer" content="origin" />
   <meta name="generator" content="Pelican" />
-<link href="https://connerswann.me/" rel="canonical" />
+  <link href="https://connerswann.me" rel="canonical" />
+
   <!-- Feed -->
         <link href="https://connerswann.me/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Conner Swann Full Atom Feed" />
 
@@ -35,6 +36,19 @@
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
   <![endif]-->
 
+      <meta property="og:locale" content="" />
+    <meta property="og:site_name" content="Conner Swann" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Conner Swann" />
+    <meta property="og:description" content="Reliability Engineer" />
+    <meta property="og:url" content="https://connerswann.me" />
+      <meta property="og:image" content="https://connerswann.me/https://connerswann.me/images/blog-cover.jpg" />
+      <meta name="twitter:card" content="summary_large_image">
+      <meta name="twitter:site" content="@yourbuddyconner">
+      <meta name="twitter:title" content="Conner Swann">
+      <meta name="twitter:description" content="Reliability Engineer">
+      <meta name="twitter:url" content="https://connerswann.me">
+          <meta name="twitter:image:src" content="https://connerswann.me/https://connerswann.me/images/blog-cover.jpg">
 </head>
 <!-- TODO : Body class -->
 <body class="home-template">
@@ -45,18 +59,17 @@
     <p class="nav-label">Menu</p>
     <ul>
 
-              <li role="presentation"><a href="https://connerswann.me/pages/about-me/">About Me</a></li>
 
     </ul>
   </div>
 </nav>
     <!-- Page Header -->
     <!-- Set your background image for this header on the line below. -->
-    <header id="blog-header" >
+    <header id="blog-header" class="has-cover">
       <div class="inner">
         <nav id="navigation">
             <span id="home-button" class="nav-button">
-                <a class="home-button" href="https://connerswann.me/" title="Home"><i class="ic ic-arrow-left"></i> Home</a>
+                <a class="home-button" href="https://connerswann.me" title="Home"><i class="ic ic-arrow-left"></i> Home</a>
             </span>
           <span id="menu-button" class="nav-button">
             <a class="menu-button"><i class="ic ic-menu"></i> Menu</a>
@@ -64,6 +77,7 @@
         </nav>
         <h1 class="post-title">Tag Sentiment Analysis</h1>
         <span class="blog-description">Posts: 1</span>
+            <div class="blog-cover cover" style="background-image: url('https://connerswann.me/images/blog-cover.jpg')">            
       </div>
     </header>
 
@@ -83,11 +97,11 @@
 
         <article class="post">
         <div class="inner">
-            <header class="post-header">
+            <header class="post-header">         
                 <h2 class="post-title"><a href="https://connerswann.me/2015/02/personal-analytics-gleaning-metadata-from-text-messages-with-splunk.html" rel="bookmark" title="Permalink to Personal Analytics: Gleaning Metadata from Text Messages With Splunk">Personal Analytics: Gleaning Metadata from Text Messages With Splunk</a>
                 </h2>
                 <span class="post-meta">
-                        <a href="https://connerswann.me/author/conner-swann">Conner Swann</a>
+                        <a href="https://connerswann.me/author/conner-swann">Conner swann</a>
                      | <time datetime="Fri 06 February 2015">Fri 06 February 2015</time>
                 </span>
                 <div class="clear"></div>
@@ -110,12 +124,10 @@
 </div>
       <!-- TODO : Body class -->
     <div id="body-class" style="display: none;" class=""></div>
-
+  
     <footer id="footer">
       <div class="inner">
         <section class="credits">
-
-
           <span class="credits-theme">Theme <a href="https://github.com/arulrajnet/attila" rel="nofollow">Attila</a></span>
           <span class="credits-software">Published with <a href="https://github.com/getpelican/pelican" rel="nofollow">Pelican</a></span>
         </section>
@@ -123,16 +135,17 @@
     </footer>
   </section>
 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script type="text/javascript" src="https://connerswann.me/theme/js/script.js"></script>
-
-    <!-- Global Site Tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-24471866-2"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'UA-24471866-2', { 'anonymize_ip': true });
+  
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-24471866-2']);
+    _gaq.push(['_trackPageview']);
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
     </script>
 </body>
 </html>
