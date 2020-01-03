@@ -14,15 +14,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="referrer" content="origin" />
   <meta name="generator" content="Pelican" />
-<link href="https://connerswann.me/2015/01/ionic-dealing-with-remote-events-on-ios.html" rel="canonical" />
+<link href="/2015/01/ionic-dealing-with-remote-events-on-ios.html" rel="canonical" />
   <!-- Feed -->
-        <link href="https://connerswann.me/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Conner Swann Full Atom Feed" />
-          <link href="https://connerswann.me/feeds/{slug}.atom.xml" type="application/atom+xml" rel="alternate" title="Conner Swann Categories Atom Feed" />
 
-  <link href="https://connerswann.me/theme/css/style.css" type="text/css" rel="stylesheet" />
+  <link href="/theme/css/style.css" type="text/css" rel="stylesheet" />
 
   <!-- Code highlight color scheme -->
-      <link href="https://connerswann.me/theme/css/code_blocks/monokai.css" rel="stylesheet">
+      <link href="/theme/css/code_blocks/monokai.css" rel="stylesheet">
 
 
   <!-- Custom fonts -->
@@ -55,25 +53,25 @@
 <meta property="og:title" content="Ionic: Dealing with Remote Events on iOS"/>
 <meta property="og:description" content="For the past couple semesters, I've been working on an Ionic app for my university's radio station. Ionic is a "hybrid" framework, that..."/>
 <meta property="og:locale" content="en_US"/>
-<meta property="og:url" content="https://connerswann.me/2015/01/ionic-dealing-with-remote-events-on-ios.html"/>
+<meta property="og:url" content="/2015/01/ionic-dealing-with-remote-events-on-ios.html"/>
 <meta property="og:type" content="article"/>
 <meta property="article:published_time" content="2015-01-23 18:03:00-08:00"/>
 <meta property="article:modified_time" content=""/>
-<meta property="article:author" content="https://connerswann.me/author/conner-swann">
+<meta property="article:author" content="/author/conner-swann">
 <meta property="article:section" content="Ionic"/>
 <meta property="article:tag" content="Ionic Framework"/>
 <meta property="article:tag" content="Hybrid Apps"/>
 <meta property="article:tag" content="Javascript"/>
 <meta property="article:tag" content="iOS"/>
-<meta property="og:image" content="https://connerswann.me/theme/images/post-bg.jpg">
+<meta property="og:image" content="/theme/images/post-bg.jpg">
 
 <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@yourbuddyconner">
     <meta name="twitter:title" content="Ionic: Dealing with Remote Events on iOS">
-    <meta name="twitter:url" content="https://connerswann.me/2015/01/ionic-dealing-with-remote-events-on-ios.html">
+    <meta name="twitter:url" content="/2015/01/ionic-dealing-with-remote-events-on-ios.html">
 
-        <meta name="twitter:image:src" content="https://connerswann.me/theme/images/post-bg.jpg">
+        <meta name="twitter:image:src" content="/theme/images/post-bg.jpg">
 
       <meta name="twitter:description" content="For the past couple semesters, I've been working on an Ionic app for my university's radio station. Ionic is a "hybrid" framework, that...">
 
@@ -88,10 +86,10 @@
   "author": {
     "@type": "Person",
     "name": "Conner Swann",
-    "url": "https://connerswann.me/author/conner-swann"
+    "url": "/author/conner-swann"
   },
-  "image": "https://connerswann.me/theme/images/post-bg.jpg",
-  "url": "https://connerswann.me/2015/01/ionic-dealing-with-remote-events-on-ios.html",
+  "image": "/theme/images/post-bg.jpg",
+  "url": "/2015/01/ionic-dealing-with-remote-events-on-ios.html",
   "description": "For the past couple semesters, I've been working on an Ionic app for my university's radio station. Ionic is a "hybrid" framework, that..."
 }
 </script>
@@ -105,7 +103,7 @@
     <p class="nav-label">Menu</p>
     <ul>
 
-              <li role="presentation"><a href="https://connerswann.me/pages/about-me/">About Me</a></li>
+              <li role="presentation"><a href="/pages/about-me/">About Me</a></li>
 
     </ul>
   </div>
@@ -121,7 +119,7 @@
       <div class="inner">
         <nav id="navigation">
             <span id="home-button" class="nav-button">
-                <a class="home-button" href="https://connerswann.me/" title="Home"><i class="ic ic-arrow-left"></i> Home</a>
+                <a class="home-button" href="/" title="Home"><i class="ic ic-arrow-left"></i> Home</a>
             </span>
           <span id="menu-button" class="nav-button">
             <a class="menu-button"><i class="ic ic-menu"></i> Menu</a>
@@ -130,7 +128,7 @@
         <h1 class="post-title">Ionic: Dealing with Remote Events on iOS</h1>
         <!-- TODO : Proper class for headline -->
         <span class="post-meta">
-                <a href="https://connerswann.me/author/conner-swann">Conner Swann</a>
+                <a href="/author/conner-swann">Conner Swann</a>
             | <time datetime="Fri 23 January 2015">Fri 23 January 2015</time>
         </span>
         <!-- TODO : Modified check -->
@@ -147,7 +145,7 @@
             <section class="post-content">
                 <p>For the past couple semesters, I've been working on an <a href="http://ionicframework.com/">Ionic</a> app for my university's radio station. Ionic is a "hybrid" framework, that is, the main body of the app is written using web technology (AngularJS, HTML, CSS) and that is coupled with Cordova, a piece of softeware that provides an interface between the web view and the bare metal of the phone. </p>
 <p>Among other things, the app needed to be able to play the station's audio stream. Since I've been focusing primarily on the iOS portion of the universal app, a while back I decided it would be really cool if I were able to control the audio from the lockscreen. However, while the documentation for the Objective C side of it is pretty abundant, there's little to none discussing connecting this with Cordova. </p>
-<p><img alt="Lockscreen Controls" src="https://connerswann.me/images/2015/ionic-ios-screenshot.png"></p>
+<p><img alt="Lockscreen Controls" src="/images/2015/ionic-ios-screenshot.png"></p>
 <p>Not knowing exactly where to begin, I found and installed this Cordova plugin from Shi11 called <a href="https://github.com/shi11/RemoteControls">RemoteControls</a>. It provides a couple ObjC methods that allow you to update the track meta and respond to any remote events that your app might recieve. </p>
 <p>The thing is, on the Objective C side Apple is very particular about <a href="https://developer.apple.com/library/ios/documentation/EventHandling/Conceptual/EventHandlingiPhoneOS/Remote-ControlEvents/Remote-ControlEvents.html">which views can and cannot recieve remote events</a>. The procedure is simple, but in practice with Cordova it gets tricky:</p>
 <blockquote>
@@ -257,20 +255,20 @@ under the License.
 
             <section class="post-info">
                 <div class="post-share">
-                    <a class="twitter" href="https://twitter.com/share?text=Ionic: Dealing with Remote Events on iOS&amp;url=https://connerswann.me/2015/01/ionic-dealing-with-remote-events-on-ios.html" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <a class="twitter" href="https://twitter.com/share?text=Ionic: Dealing with Remote Events on iOS&amp;url=/2015/01/ionic-dealing-with-remote-events-on-ios.html" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
                     <i class="ic ic-twitter"></i><span class="hidden">Twitter</span>
                     </a>
-                    <a class="facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://connerswann.me/2015/01/ionic-dealing-with-remote-events-on-ios.html" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <a class="facebook" href="https://www.facebook.com/sharer/sharer.php?u=/2015/01/ionic-dealing-with-remote-events-on-ios.html" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
                     <i class="ic ic-facebook"></i><span class="hidden">Facebook</span>
                     </a>
-                    <a class="googleplus" href="https://plus.google.com/share?url=https://connerswann.me/2015/01/ionic-dealing-with-remote-events-on-ios.html" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <a class="googleplus" href="https://plus.google.com/share?url=/2015/01/ionic-dealing-with-remote-events-on-ios.html" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
                     <i class="ic ic-googleplus"></i><span class="hidden">Google+</span>
                     </a>
                     <div class="clear"></div>
                 </div>
 
                 <aside class="post-tags">
-<a href="https://connerswann.me/tag/ionic-framework">Ionic Framework</a><a href="https://connerswann.me/tag/hybrid-apps">Hybrid Apps</a><a href="https://connerswann.me/tag/javascript">Javascript</a><a href="https://connerswann.me/tag/ios">iOS</a>                </aside>
+<a href="/tag/ionic-framework">Ionic Framework</a><a href="/tag/hybrid-apps">Hybrid Apps</a><a href="/tag/javascript">Javascript</a><a href="/tag/ios">iOS</a>                </aside>
 
                 <div class="clear"></div>
 
@@ -281,7 +279,7 @@ under the License.
                             <img src="https://connerswann.me/images/conner-profile-picture.png" alt="Conner Swann" />
                         </figure>
                     <div class="post-author-bio">
-                        <h4 class="post-author-name"><a href="https://connerswann.me/author/conner-swann">Conner Swann</a></h4>
+                        <h4 class="post-author-name"><a href="/author/conner-swann">Conner Swann</a></h4>
                             <p class="post-author-about">Software Engineer, Infrastructure Magician, Architecture Nerd </br> Core Maintainer @ Coda Protocol</p>
                             <span class="post-author-location"><i class="ic ic-location"></i> San Francisco</span>
                             <span class="post-author-website"><a href="https://connerswann.me"><i class="ic ic-link"></i> Website</a></span>
@@ -319,15 +317,7 @@ under the License.
   </section>
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-  <script type="text/javascript" src="https://connerswann.me/theme/js/script.js"></script>
+  <script type="text/javascript" src="/theme/js/script.js"></script>
 
-    <!-- Global Site Tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-24471866-2"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'UA-24471866-2', { 'anonymize_ip': true });
-    </script>
 </body>
 </html>

@@ -14,15 +14,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="referrer" content="origin" />
   <meta name="generator" content="Pelican" />
-<link href="https://connerswann.me/2014/12/arduino-introducing-the-adafruit-cc3000-wifi-shield.html" rel="canonical" />
+<link href="/2014/12/arduino-introducing-the-adafruit-cc3000-wifi-shield.html" rel="canonical" />
   <!-- Feed -->
-        <link href="https://connerswann.me/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Conner Swann Full Atom Feed" />
-          <link href="https://connerswann.me/feeds/{slug}.atom.xml" type="application/atom+xml" rel="alternate" title="Conner Swann Categories Atom Feed" />
 
-  <link href="https://connerswann.me/theme/css/style.css" type="text/css" rel="stylesheet" />
+  <link href="/theme/css/style.css" type="text/css" rel="stylesheet" />
 
   <!-- Code highlight color scheme -->
-      <link href="https://connerswann.me/theme/css/code_blocks/monokai.css" rel="stylesheet">
+      <link href="/theme/css/code_blocks/monokai.css" rel="stylesheet">
 
 
   <!-- Custom fonts -->
@@ -55,25 +53,25 @@
 <meta property="og:title" content="Arduino: Introducing The Adafruit CC3000 WiFi Shield"/>
 <meta property="og:description" content="I recently got my hands on an Adafruit CC3000 WiFi Shield. From the Adafruit product page: "The CC3000 hits that sweet spot of..."/>
 <meta property="og:locale" content="en_US"/>
-<meta property="og:url" content="https://connerswann.me/2014/12/arduino-introducing-the-adafruit-cc3000-wifi-shield.html"/>
+<meta property="og:url" content="/2014/12/arduino-introducing-the-adafruit-cc3000-wifi-shield.html"/>
 <meta property="og:type" content="article"/>
 <meta property="article:published_time" content="2014-12-29 00:45:00-08:00"/>
 <meta property="article:modified_time" content=""/>
-<meta property="article:author" content="https://connerswann.me/author/conner-swann">
+<meta property="article:author" content="/author/conner-swann">
 <meta property="article:section" content="Arduino"/>
 <meta property="article:tag" content="Arduino"/>
 <meta property="article:tag" content="IOT"/>
 <meta property="article:tag" content="HTTP"/>
 <meta property="article:tag" content="Ethernet Shield"/>
-<meta property="og:image" content="https://connerswann.me/theme/images/post-bg.jpg">
+<meta property="og:image" content="/theme/images/post-bg.jpg">
 
 <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@yourbuddyconner">
     <meta name="twitter:title" content="Arduino: Introducing The Adafruit CC3000 WiFi Shield">
-    <meta name="twitter:url" content="https://connerswann.me/2014/12/arduino-introducing-the-adafruit-cc3000-wifi-shield.html">
+    <meta name="twitter:url" content="/2014/12/arduino-introducing-the-adafruit-cc3000-wifi-shield.html">
 
-        <meta name="twitter:image:src" content="https://connerswann.me/theme/images/post-bg.jpg">
+        <meta name="twitter:image:src" content="/theme/images/post-bg.jpg">
 
       <meta name="twitter:description" content="I recently got my hands on an Adafruit CC3000 WiFi Shield. From the Adafruit product page: "The CC3000 hits that sweet spot of...">
 
@@ -88,10 +86,10 @@
   "author": {
     "@type": "Person",
     "name": "Conner Swann",
-    "url": "https://connerswann.me/author/conner-swann"
+    "url": "/author/conner-swann"
   },
-  "image": "https://connerswann.me/theme/images/post-bg.jpg",
-  "url": "https://connerswann.me/2014/12/arduino-introducing-the-adafruit-cc3000-wifi-shield.html",
+  "image": "/theme/images/post-bg.jpg",
+  "url": "/2014/12/arduino-introducing-the-adafruit-cc3000-wifi-shield.html",
   "description": "I recently got my hands on an Adafruit CC3000 WiFi Shield. From the Adafruit product page: "The CC3000 hits that sweet spot of..."
 }
 </script>
@@ -105,7 +103,7 @@
     <p class="nav-label">Menu</p>
     <ul>
 
-              <li role="presentation"><a href="https://connerswann.me/pages/about-me/">About Me</a></li>
+              <li role="presentation"><a href="/pages/about-me/">About Me</a></li>
 
     </ul>
   </div>
@@ -121,7 +119,7 @@
       <div class="inner">
         <nav id="navigation">
             <span id="home-button" class="nav-button">
-                <a class="home-button" href="https://connerswann.me/" title="Home"><i class="ic ic-arrow-left"></i> Home</a>
+                <a class="home-button" href="/" title="Home"><i class="ic ic-arrow-left"></i> Home</a>
             </span>
           <span id="menu-button" class="nav-button">
             <a class="menu-button"><i class="ic ic-menu"></i> Menu</a>
@@ -130,7 +128,7 @@
         <h1 class="post-title">Arduino: Introducing The Adafruit CC3000 WiFi Shield</h1>
         <!-- TODO : Proper class for headline -->
         <span class="post-meta">
-                <a href="https://connerswann.me/author/conner-swann">Conner Swann</a>
+                <a href="/author/conner-swann">Conner Swann</a>
             | <time datetime="Mon 29 December 2014">Mon 29 December 2014</time>
         </span>
         <!-- TODO : Modified check -->
@@ -153,7 +151,7 @@
 <p>To get my setup working, I stepped through the <a href="https://learn.adafruit.com/adafruit-cc3000-wifi">Adafruit Documentation on the CC3000</a> which is complete and very thorough. </p>
 <p>Before you can start using this board, you have to solder on the headers so you can plug it directly into the Arduino. </p>
 <p><em>Since I'm more of a software guy, I won't detail the actual process of soldering the headers, but if you're looking for instructions <a href="https://learn.adafruit.com/adafruit-cc3000-wifi/assembly-and-wiring">Adafruit has you covered</a>.</em></p>
-<p><img alt="Arduino with WiFi Shield" src="https://connerswann.me/2014/12/arduino-wifi-shield-1.jpg"></p>
+<p><img alt="Arduino with WiFi Shield" src="/2014/12/arduino-wifi-shield-1.jpg"></p>
 <p>To get it running, you have to add the shield's code libraries to your <code>arduino_sketch_location/libraries/</code> folder, the library is available for download along with installation instructions <a href="https://learn.adafruit.com/adafruit-cc3000-wifi/cc3000-library-software">here</a>.</p>
 <p>From there, all I did was pop the shield into place on top of the Arduino and load up the 'buildtest' example file [1]. </p>
 <p>I got an output that looked like this: 
@@ -202,7 +200,7 @@ Ping successful!</p>
 <hr>
 <ol>
 <li id="fn:1">
-<p>The documentation actually says that you shouldn't be able to run the Arduino and the CC3000 shield off of your computer's USB port due to power consumption being too high, however I wasn't able to verify this. It might be a problem as you get into more advanced things and require more of the Arduino's pins to be powered.&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+<p>The documentation actually says that you shouldn't be able to run the Arduino and the CC3000 shield off of your computer's USB port due to power consumption being too high, however I wasn't able to verify this. It might be a problem as you get into more advanced things and require more of the Arduino's pins to be powered.&#160;<a class="footnote-backref" href="#fnref:1" rev="footnote" title="Jump back to footnote 1 in the text">&#8617;</a></p>
 </li>
 </ol>
 </div>
@@ -210,20 +208,20 @@ Ping successful!</p>
 
             <section class="post-info">
                 <div class="post-share">
-                    <a class="twitter" href="https://twitter.com/share?text=Arduino: Introducing The Adafruit CC3000 WiFi Shield&amp;url=https://connerswann.me/2014/12/arduino-introducing-the-adafruit-cc3000-wifi-shield.html" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <a class="twitter" href="https://twitter.com/share?text=Arduino: Introducing The Adafruit CC3000 WiFi Shield&amp;url=/2014/12/arduino-introducing-the-adafruit-cc3000-wifi-shield.html" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
                     <i class="ic ic-twitter"></i><span class="hidden">Twitter</span>
                     </a>
-                    <a class="facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://connerswann.me/2014/12/arduino-introducing-the-adafruit-cc3000-wifi-shield.html" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <a class="facebook" href="https://www.facebook.com/sharer/sharer.php?u=/2014/12/arduino-introducing-the-adafruit-cc3000-wifi-shield.html" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
                     <i class="ic ic-facebook"></i><span class="hidden">Facebook</span>
                     </a>
-                    <a class="googleplus" href="https://plus.google.com/share?url=https://connerswann.me/2014/12/arduino-introducing-the-adafruit-cc3000-wifi-shield.html" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <a class="googleplus" href="https://plus.google.com/share?url=/2014/12/arduino-introducing-the-adafruit-cc3000-wifi-shield.html" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
                     <i class="ic ic-googleplus"></i><span class="hidden">Google+</span>
                     </a>
                     <div class="clear"></div>
                 </div>
 
                 <aside class="post-tags">
-<a href="https://connerswann.me/tag/arduino">Arduino</a><a href="https://connerswann.me/tag/iot">IOT</a><a href="https://connerswann.me/tag/http">HTTP</a><a href="https://connerswann.me/tag/ethernet-shield">Ethernet Shield</a>                </aside>
+<a href="/tag/arduino">Arduino</a><a href="/tag/iot">IOT</a><a href="/tag/http">HTTP</a><a href="/tag/ethernet-shield">Ethernet Shield</a>                </aside>
 
                 <div class="clear"></div>
 
@@ -234,7 +232,7 @@ Ping successful!</p>
                             <img src="https://connerswann.me/images/conner-profile-picture.png" alt="Conner Swann" />
                         </figure>
                     <div class="post-author-bio">
-                        <h4 class="post-author-name"><a href="https://connerswann.me/author/conner-swann">Conner Swann</a></h4>
+                        <h4 class="post-author-name"><a href="/author/conner-swann">Conner Swann</a></h4>
                             <p class="post-author-about">Software Engineer, Infrastructure Magician, Architecture Nerd </br> Core Maintainer @ Coda Protocol</p>
                             <span class="post-author-location"><i class="ic ic-location"></i> San Francisco</span>
                             <span class="post-author-website"><a href="https://connerswann.me"><i class="ic ic-link"></i> Website</a></span>
@@ -272,15 +270,7 @@ Ping successful!</p>
   </section>
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-  <script type="text/javascript" src="https://connerswann.me/theme/js/script.js"></script>
+  <script type="text/javascript" src="/theme/js/script.js"></script>
 
-    <!-- Global Site Tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-24471866-2"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'UA-24471866-2', { 'anonymize_ip': true });
-    </script>
 </body>
 </html>

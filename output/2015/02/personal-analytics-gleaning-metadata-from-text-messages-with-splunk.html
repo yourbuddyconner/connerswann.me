@@ -14,15 +14,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="referrer" content="origin" />
   <meta name="generator" content="Pelican" />
-<link href="https://connerswann.me/2015/02/personal-analytics-gleaning-metadata-from-text-messages-with-splunk.html" rel="canonical" />
+<link href="/2015/02/personal-analytics-gleaning-metadata-from-text-messages-with-splunk.html" rel="canonical" />
   <!-- Feed -->
-        <link href="https://connerswann.me/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Conner Swann Full Atom Feed" />
-          <link href="https://connerswann.me/feeds/{slug}.atom.xml" type="application/atom+xml" rel="alternate" title="Conner Swann Categories Atom Feed" />
 
-  <link href="https://connerswann.me/theme/css/style.css" type="text/css" rel="stylesheet" />
+  <link href="/theme/css/style.css" type="text/css" rel="stylesheet" />
 
   <!-- Code highlight color scheme -->
-      <link href="https://connerswann.me/theme/css/code_blocks/monokai.css" rel="stylesheet">
+      <link href="/theme/css/code_blocks/monokai.css" rel="stylesheet">
 
 
   <!-- Custom fonts -->
@@ -56,26 +54,26 @@
 <meta property="og:title" content="Personal Analytics: Gleaning Metadata from Text Messages With Splunk"/>
 <meta property="og:description" content="I've been using Splunk a lot at work. According to their website: You see servers and devices, apps and logs, traffic and clouds. We see..."/>
 <meta property="og:locale" content="en_US"/>
-<meta property="og:url" content="https://connerswann.me/2015/02/personal-analytics-gleaning-metadata-from-text-messages-with-splunk.html"/>
+<meta property="og:url" content="/2015/02/personal-analytics-gleaning-metadata-from-text-messages-with-splunk.html"/>
 <meta property="og:type" content="article"/>
 <meta property="article:published_time" content="2015-02-06 05:58:00-08:00"/>
 <meta property="article:modified_time" content=""/>
-<meta property="article:author" content="https://connerswann.me/author/conner-swann">
+<meta property="article:author" content="/author/conner-swann">
 <meta property="article:section" content="Splunk"/>
 <meta property="article:tag" content="Splunk"/>
 <meta property="article:tag" content="Analytics"/>
 <meta property="article:tag" content="Sentiment Analysis"/>
 <meta property="article:tag" content="Text Message"/>
 <meta property="article:tag" content="iOS"/>
-<meta property="og:image" content="https://connerswann.me/theme/images/post-bg.jpg">
+<meta property="og:image" content="/theme/images/post-bg.jpg">
 
 <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@yourbuddyconner">
     <meta name="twitter:title" content="Personal Analytics: Gleaning Metadata from Text Messages With Splunk">
-    <meta name="twitter:url" content="https://connerswann.me/2015/02/personal-analytics-gleaning-metadata-from-text-messages-with-splunk.html">
+    <meta name="twitter:url" content="/2015/02/personal-analytics-gleaning-metadata-from-text-messages-with-splunk.html">
 
-        <meta name="twitter:image:src" content="https://connerswann.me/theme/images/post-bg.jpg">
+        <meta name="twitter:image:src" content="/theme/images/post-bg.jpg">
 
       <meta name="twitter:description" content="I've been using Splunk a lot at work. According to their website: You see servers and devices, apps and logs, traffic and clouds. We see...">
 
@@ -90,10 +88,10 @@
   "author": {
     "@type": "Person",
     "name": "Conner Swann",
-    "url": "https://connerswann.me/author/conner-swann"
+    "url": "/author/conner-swann"
   },
-  "image": "https://connerswann.me/theme/images/post-bg.jpg",
-  "url": "https://connerswann.me/2015/02/personal-analytics-gleaning-metadata-from-text-messages-with-splunk.html",
+  "image": "/theme/images/post-bg.jpg",
+  "url": "/2015/02/personal-analytics-gleaning-metadata-from-text-messages-with-splunk.html",
   "description": "I've been using Splunk a lot at work. According to their website: You see servers and devices, apps and logs, traffic and clouds. We see..."
 }
 </script>
@@ -107,7 +105,7 @@
     <p class="nav-label">Menu</p>
     <ul>
 
-              <li role="presentation"><a href="https://connerswann.me/pages/about-me/">About Me</a></li>
+              <li role="presentation"><a href="/pages/about-me/">About Me</a></li>
 
     </ul>
   </div>
@@ -123,7 +121,7 @@
       <div class="inner">
         <nav id="navigation">
             <span id="home-button" class="nav-button">
-                <a class="home-button" href="https://connerswann.me/" title="Home"><i class="ic ic-arrow-left"></i> Home</a>
+                <a class="home-button" href="/" title="Home"><i class="ic ic-arrow-left"></i> Home</a>
             </span>
           <span id="menu-button" class="nav-button">
             <a class="menu-button"><i class="ic ic-menu"></i> Menu</a>
@@ -132,7 +130,7 @@
         <h1 class="post-title">Personal Analytics: Gleaning Metadata from Text Messages With Splunk</h1>
         <!-- TODO : Proper class for headline -->
         <span class="post-meta">
-                <a href="https://connerswann.me/author/conner-swann">Conner Swann</a>
+                <a href="/author/conner-swann">Conner Swann</a>
             | <time datetime="Fri 06 February 2015">Fri 06 February 2015</time>
         </span>
         <!-- TODO : Modified check -->
@@ -147,7 +145,7 @@
         <article class="post">
         <div class="inner">
             <section class="post-content">
-                <p><img alt="Splunk Logo" src="https://connerswann.me/images/2015/personal-analytics-splunk-logo.gif">
+                <p><img alt="Splunk Logo" src="/images/2015/personal-analytics-splunk-logo.gif">
 </hr>
 I've been using <a href="http://www.splunk.com/">Splunk</a> a lot at work. According to their website: </p>
 <blockquote>
@@ -175,7 +173,7 @@ WHERE message.handle_id = handle.ROWID;
 
 <p><small>The SQL Query to create complete events</small></p>
 <p>Once Splunk has digested the data, heading to the Search &amp; Reporting app and typing <code>index=text_messages</code> into the search box gives me a nice frequency graph and a list of events: </p>
-<p><img alt="Splunk Screenshot" src="https://connerswann.me/images/2015/personal-analytics-screenshot-1.png"></p>
+<p><img alt="Splunk Screenshot" src="/images/2015/personal-analytics-screenshot-1.png"></p>
 <p>Each text message event is just a line of text that looks like this:</p>
 <p><code>message_id=53091 timestamp="2015-02-03 20:31:38" date_read="2015-02-03 20:31:28" is_from_me=1 is_read=1 handle=+xxxxxxxxxx service=iMessage message="I know, haha"</code></p>
 <hr>
@@ -192,37 +190,37 @@ WHERE message.handle_id = handle.ROWID;
 <li>Then use the results to chart the average of the <code>sentiment</code> field over time spans of one month."</li>
 </ul>
 <p>The resulting graph looks like this:</p>
-<p><img alt="sentiment over time" src="https://connerswann.me/images/2015/personal-analytics-screenshot-2.png"></p>
+<p><img alt="sentiment over time" src="/images/2015/personal-analytics-screenshot-2.png"></p>
 <p>By chaining together more complex series of commands, you can get some pretty cool results! </p>
 <p>The next graph is created by finding the average sentiment and forming a baseline sentiment value, allowing good and bad sentiment to cancel each other out, leaving only a remainder. </p>
 <p>Looking at the blue sentiment portion of the graph, zero is this baseline. Any column that falls below this has a "below average" sentiment while columns that are greater than zero posess an "above average" sentiment as compared with the rest of the events. </p>
 <p>The second yellow line simply charts the number of events in each period. </p>
 <p><code>index=text_messages  is_from_me=1 | sentiment twitter message |eval diff=sentiment-0.788400| eval count=count|  timechart avg(diff) as sentiment, count span=14d</code>
 </br>
-<img alt="Splunk Screenshot" src="https://connerswann.me/images/2015/personal-analytics-screenshot-3.png"></p>
+<img alt="Splunk Screenshot" src="/images/2015/personal-analytics-screenshot-3.png"></p>
 <p>This last one is my favorite. It overlays the sentiment of incoming messages over the sentiment of outgoing messages. This was to test the hypothesis that the sentiment of incoming texts could affect the sentiment of outgouing texts. While correlation doesn't imply causation, I still think it's interesting that the graphs follow each other in so many places! </p>
 <p><code>index=text_messages  is_from_me=0 |  sentiment twitter message |  eval diff=sentiment-0.788400 | timechart avg(diff) as sentiment_from span=1mon | appendcols [search index=text_messages  is_from_me=1 |  sentiment twitter message |  eval diff2=sentiment-0.788400 | timechart avg(diff2) as sentiment_me span=1mon]</code></p>
-<p><img alt="Splunk Screenshot" src="https://connerswann.me/images/2015/personal-analytics-screenshot-4.png"></p>
+<p><img alt="Splunk Screenshot" src="/images/2015/personal-analytics-screenshot-4.png"></p>
 <p>It's truly fascinating how each of these events are pretty useless by themselves, however when you take them all into account some interesting information can be gleaned. I plan to continue on with this little Personal Analytics project by incorporating more data sources like sleep analysis, stay tuned! </p>
 <p>If you're interested in this sort of thing, shoot me a tweet <a href="http://twitter.com/yourbuddyconner">@YourBuddyConner</a>, I'd love to hear what you think!</p>
             </section>
 
             <section class="post-info">
                 <div class="post-share">
-                    <a class="twitter" href="https://twitter.com/share?text=Personal Analytics: Gleaning Metadata from Text Messages With Splunk&amp;url=https://connerswann.me/2015/02/personal-analytics-gleaning-metadata-from-text-messages-with-splunk.html" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <a class="twitter" href="https://twitter.com/share?text=Personal Analytics: Gleaning Metadata from Text Messages With Splunk&amp;url=/2015/02/personal-analytics-gleaning-metadata-from-text-messages-with-splunk.html" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
                     <i class="ic ic-twitter"></i><span class="hidden">Twitter</span>
                     </a>
-                    <a class="facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://connerswann.me/2015/02/personal-analytics-gleaning-metadata-from-text-messages-with-splunk.html" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <a class="facebook" href="https://www.facebook.com/sharer/sharer.php?u=/2015/02/personal-analytics-gleaning-metadata-from-text-messages-with-splunk.html" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
                     <i class="ic ic-facebook"></i><span class="hidden">Facebook</span>
                     </a>
-                    <a class="googleplus" href="https://plus.google.com/share?url=https://connerswann.me/2015/02/personal-analytics-gleaning-metadata-from-text-messages-with-splunk.html" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <a class="googleplus" href="https://plus.google.com/share?url=/2015/02/personal-analytics-gleaning-metadata-from-text-messages-with-splunk.html" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
                     <i class="ic ic-googleplus"></i><span class="hidden">Google+</span>
                     </a>
                     <div class="clear"></div>
                 </div>
 
                 <aside class="post-tags">
-<a href="https://connerswann.me/tag/splunk">Splunk</a><a href="https://connerswann.me/tag/analytics">Analytics</a><a href="https://connerswann.me/tag/sentiment-analysis">Sentiment Analysis</a><a href="https://connerswann.me/tag/text-message">Text Message</a><a href="https://connerswann.me/tag/ios">iOS</a>                </aside>
+<a href="/tag/splunk">Splunk</a><a href="/tag/analytics">Analytics</a><a href="/tag/sentiment-analysis">Sentiment Analysis</a><a href="/tag/text-message">Text Message</a><a href="/tag/ios">iOS</a>                </aside>
 
                 <div class="clear"></div>
 
@@ -233,7 +231,7 @@ WHERE message.handle_id = handle.ROWID;
                             <img src="https://connerswann.me/images/conner-profile-picture.png" alt="Conner Swann" />
                         </figure>
                     <div class="post-author-bio">
-                        <h4 class="post-author-name"><a href="https://connerswann.me/author/conner-swann">Conner Swann</a></h4>
+                        <h4 class="post-author-name"><a href="/author/conner-swann">Conner Swann</a></h4>
                             <p class="post-author-about">Software Engineer, Infrastructure Magician, Architecture Nerd </br> Core Maintainer @ Coda Protocol</p>
                             <span class="post-author-location"><i class="ic ic-location"></i> San Francisco</span>
                             <span class="post-author-website"><a href="https://connerswann.me"><i class="ic ic-link"></i> Website</a></span>
@@ -271,15 +269,7 @@ WHERE message.handle_id = handle.ROWID;
   </section>
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-  <script type="text/javascript" src="https://connerswann.me/theme/js/script.js"></script>
+  <script type="text/javascript" src="/theme/js/script.js"></script>
 
-    <!-- Global Site Tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-24471866-2"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'UA-24471866-2', { 'anonymize_ip': true });
-    </script>
 </body>
 </html>

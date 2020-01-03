@@ -14,15 +14,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="referrer" content="origin" />
   <meta name="generator" content="Pelican" />
-<link href="https://connerswann.me/2014/06/arduino-an-internet-of-things.html" rel="canonical" />
+<link href="/2014/06/arduino-an-internet-of-things.html" rel="canonical" />
   <!-- Feed -->
-        <link href="https://connerswann.me/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Conner Swann Full Atom Feed" />
-          <link href="https://connerswann.me/feeds/{slug}.atom.xml" type="application/atom+xml" rel="alternate" title="Conner Swann Categories Atom Feed" />
 
-  <link href="https://connerswann.me/theme/css/style.css" type="text/css" rel="stylesheet" />
+  <link href="/theme/css/style.css" type="text/css" rel="stylesheet" />
 
   <!-- Code highlight color scheme -->
-      <link href="https://connerswann.me/theme/css/code_blocks/monokai.css" rel="stylesheet">
+      <link href="/theme/css/code_blocks/monokai.css" rel="stylesheet">
 
 
   <!-- Custom fonts -->
@@ -56,26 +54,26 @@
 <meta property="og:title" content="Arduino - An Internet of Things"/>
 <meta property="og:description" content="Recently I got an Arduino Uno, a small, versatile microcontroller that has been adopted by the "Maker" community as the controller of..."/>
 <meta property="og:locale" content="en_US"/>
-<meta property="og:url" content="https://connerswann.me/2014/06/arduino-an-internet-of-things.html"/>
+<meta property="og:url" content="/2014/06/arduino-an-internet-of-things.html"/>
 <meta property="og:type" content="article"/>
 <meta property="article:published_time" content="2014-06-24 20:51:00-07:00"/>
 <meta property="article:modified_time" content=""/>
-<meta property="article:author" content="https://connerswann.me/author/conner-swann">
+<meta property="article:author" content="/author/conner-swann">
 <meta property="article:section" content="Arduino"/>
 <meta property="article:tag" content="Arduino"/>
 <meta property="article:tag" content="IOT"/>
 <meta property="article:tag" content="REST"/>
 <meta property="article:tag" content="API"/>
 <meta property="article:tag" content="Javascript"/>
-<meta property="og:image" content="https://connerswann.me/theme/images/post-bg.jpg">
+<meta property="og:image" content="/theme/images/post-bg.jpg">
 
 <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@yourbuddyconner">
     <meta name="twitter:title" content="Arduino - An Internet of Things">
-    <meta name="twitter:url" content="https://connerswann.me/2014/06/arduino-an-internet-of-things.html">
+    <meta name="twitter:url" content="/2014/06/arduino-an-internet-of-things.html">
 
-        <meta name="twitter:image:src" content="https://connerswann.me/theme/images/post-bg.jpg">
+        <meta name="twitter:image:src" content="/theme/images/post-bg.jpg">
 
       <meta name="twitter:description" content="Recently I got an Arduino Uno, a small, versatile microcontroller that has been adopted by the "Maker" community as the controller of...">
 
@@ -90,10 +88,10 @@
   "author": {
     "@type": "Person",
     "name": "Conner Swann",
-    "url": "https://connerswann.me/author/conner-swann"
+    "url": "/author/conner-swann"
   },
-  "image": "https://connerswann.me/theme/images/post-bg.jpg",
-  "url": "https://connerswann.me/2014/06/arduino-an-internet-of-things.html",
+  "image": "/theme/images/post-bg.jpg",
+  "url": "/2014/06/arduino-an-internet-of-things.html",
   "description": "Recently I got an Arduino Uno, a small, versatile microcontroller that has been adopted by the "Maker" community as the controller of..."
 }
 </script>
@@ -107,7 +105,7 @@
     <p class="nav-label">Menu</p>
     <ul>
 
-              <li role="presentation"><a href="https://connerswann.me/pages/about-me/">About Me</a></li>
+              <li role="presentation"><a href="/pages/about-me/">About Me</a></li>
 
     </ul>
   </div>
@@ -123,7 +121,7 @@
       <div class="inner">
         <nav id="navigation">
             <span id="home-button" class="nav-button">
-                <a class="home-button" href="https://connerswann.me/" title="Home"><i class="ic ic-arrow-left"></i> Home</a>
+                <a class="home-button" href="/" title="Home"><i class="ic ic-arrow-left"></i> Home</a>
             </span>
           <span id="menu-button" class="nav-button">
             <a class="menu-button"><i class="ic ic-menu"></i> Menu</a>
@@ -132,7 +130,7 @@
         <h1 class="post-title">Arduino - An Internet of Things</h1>
         <!-- TODO : Proper class for headline -->
         <span class="post-meta">
-                <a href="https://connerswann.me/author/conner-swann">Conner Swann</a>
+                <a href="/author/conner-swann">Conner Swann</a>
             | <time datetime="Tue 24 June 2014">Tue 24 June 2014</time>
         </span>
         <!-- TODO : Modified check -->
@@ -151,7 +149,7 @@
 <p>In my limited experience so far, Arduino is a real joy to deal with, having a very simplistic interface while preserving a very robbust "skillset" if you will. The first thing I did was spend a day playing with a box of components, learning how to read sensors and analog components with the board and reacting to those readings, whether it be just reporting back to the computer via serial or prehaps turning on/off an LED.</p>
 <p>I've heard the term "Internet of Things" thrown around a lot, but never really quite understood what all the hype was about. However, after screwing around with an internet-equipped Arduino for a day, I can finally appreciate the power of being able to take your physical sensors and hardware and grant them a voice on the great forum that is "The Internet".</p>
 <p>To demonstrate this idea, I wired up a photoresistor to my Arduino to take readings of the ambient light, and had it report the values to a Meteor.js server every ten seconds. The code is below, if you get lost or confused, leave a comment, but it's pretty heavily commented and (hopefully) easy to follow.</p>
-<p><img alt="Photo Of Project" src="https://connerswann.me/2014/06/arduino-1.jpg"></p>
+<p><img alt="Photo Of Project" src="/2014/06/arduino-1.jpg"></p>
 <p>Disclaimer: This is super-hacked together, I'm not claiming to be a guru. With that said, it works, so I have that going for me.</p>
 <pre class="line-numbers">
 <code class="language-c">
@@ -262,20 +260,20 @@ String constructRequest(){
 
             <section class="post-info">
                 <div class="post-share">
-                    <a class="twitter" href="https://twitter.com/share?text=Arduino - An Internet of Things&amp;url=https://connerswann.me/2014/06/arduino-an-internet-of-things.html" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <a class="twitter" href="https://twitter.com/share?text=Arduino - An Internet of Things&amp;url=/2014/06/arduino-an-internet-of-things.html" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
                     <i class="ic ic-twitter"></i><span class="hidden">Twitter</span>
                     </a>
-                    <a class="facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://connerswann.me/2014/06/arduino-an-internet-of-things.html" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <a class="facebook" href="https://www.facebook.com/sharer/sharer.php?u=/2014/06/arduino-an-internet-of-things.html" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
                     <i class="ic ic-facebook"></i><span class="hidden">Facebook</span>
                     </a>
-                    <a class="googleplus" href="https://plus.google.com/share?url=https://connerswann.me/2014/06/arduino-an-internet-of-things.html" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <a class="googleplus" href="https://plus.google.com/share?url=/2014/06/arduino-an-internet-of-things.html" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
                     <i class="ic ic-googleplus"></i><span class="hidden">Google+</span>
                     </a>
                     <div class="clear"></div>
                 </div>
 
                 <aside class="post-tags">
-<a href="https://connerswann.me/tag/arduino">Arduino</a><a href="https://connerswann.me/tag/iot">IOT</a><a href="https://connerswann.me/tag/rest">REST</a><a href="https://connerswann.me/tag/api">API</a><a href="https://connerswann.me/tag/javascript">Javascript</a>                </aside>
+<a href="/tag/arduino">Arduino</a><a href="/tag/iot">IOT</a><a href="/tag/rest">REST</a><a href="/tag/api">API</a><a href="/tag/javascript">Javascript</a>                </aside>
 
                 <div class="clear"></div>
 
@@ -286,7 +284,7 @@ String constructRequest(){
                             <img src="https://connerswann.me/images/conner-profile-picture.png" alt="Conner Swann" />
                         </figure>
                     <div class="post-author-bio">
-                        <h4 class="post-author-name"><a href="https://connerswann.me/author/conner-swann">Conner Swann</a></h4>
+                        <h4 class="post-author-name"><a href="/author/conner-swann">Conner Swann</a></h4>
                             <p class="post-author-about">Software Engineer, Infrastructure Magician, Architecture Nerd </br> Core Maintainer @ Coda Protocol</p>
                             <span class="post-author-location"><i class="ic ic-location"></i> San Francisco</span>
                             <span class="post-author-website"><a href="https://connerswann.me"><i class="ic ic-link"></i> Website</a></span>
@@ -324,15 +322,7 @@ String constructRequest(){
   </section>
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-  <script type="text/javascript" src="https://connerswann.me/theme/js/script.js"></script>
+  <script type="text/javascript" src="/theme/js/script.js"></script>
 
-    <!-- Global Site Tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-24471866-2"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'UA-24471866-2', { 'anonymize_ip': true });
-    </script>
 </body>
 </html>

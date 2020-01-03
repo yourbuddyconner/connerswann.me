@@ -5,7 +5,7 @@ Slug: hack-az-postgame-report
 Category: College
 Tags: Hackathon, Hack Arizona, Drone, Raytheon
 
-![]({attach}/images/2015/hack-az-cover.jpg)
+![Hack AZ Cover]({attach}/images/2015/hack-az-cover.jpg)
 
 This past weekend, I went to [Hack Arizona](hackarizona.org), Arizona's first-ever college Hackathon hosted at the University of Arizona in Tucson. 
 
@@ -18,7 +18,7 @@ noun informal
 
 Of all the trends the past couple of years have brought, I have to say that Hackathons are probably the coolest. Together in small groups (~1-6), college and high school-aged students get together and over the course of a sleep-deprived weekend, they create cool hardware or software projects! 
 
-![]({attach}/images/2015/hack-az-1.jpg)
+![Hack AZ 1]({attach}/images/2015/hack-az-1.jpg)
 
 I had found out a couple days before the event that Raytheon Missile Systems was sponsoring a drone challenge, and when I told my team the "Hack Jacks" (consisting of my friends Brandon Paree and Dylan Grayson, along with myself) about it, they were more than interested. 
 
@@ -26,7 +26,7 @@ Raytheon had purchased 15 [Parrot AR.Drone 2.0](http://ardrone2.parrot.com/)'s, 
 
 The AR.Drone platform is an amazing beast, it's a quadcopter with a linux box its core. It also has a slick C software development kit, making it relatively easy to get these things to basically fly themselves. It turns out that a nice guy named [felixge](https://github.com/felixge/) made a cool NodeJS library called [Node AR-Drone](https://github.com/felixge/node-ar-drone) which ports many of those C bindings into the [only real dev language](https://www.youtube.com/watch?v=ame2PH67gnk). 
 
-![]({attach}/images/2015/hack-az-drone-app.gif)
+![Hack AZ Drone App]({attach}/images/2015/hack-az-drone-app.gif)
  
 We decided that we wanted to make our drone autonomous, so we leveraged the [OpenCV](http://opencv.org/) Computer Vision library to do face tracking. 
 
@@ -40,7 +40,7 @@ We showcased the facial recognition and search capabilities by first having my t
 
 After all the demos were done, the judges walked off the field to deliberate. After almost an hour, they came back with decisions and we ended up placing third out of more than ten teams!
 
-![]({attach}/images/2015/hack-az-2.jpg)
+![Picture of Us]({attach}/images/2015/hack-az-2.jpg)
 
 This also meant we'd be going home with our very own Parrot AR Drones! 
 
@@ -55,7 +55,7 @@ If you'd like to check out our code, [the entire project is on Github](https://g
 
 Post-Hackathon, the project consists of an in-browser command-and-control center for the Parrot AR Drone, complete with gamepad support and first-person, bottom camera view, basic telemetry and a battery indicator. There are plenty of features on the roadmap, including more autonomous functionality and FPV goggle support. 
 
-![]({attach}/images/2015/hack-az-drone-app.gif)
+![Hack AZ Drone App Gif]({attach}/images/2015/hack-az-drone-app.gif)
 
 If you're interested in drones, interested in the project, or have any cool tips or tricks when it comes to Javascript image manipulation, feel free to give me a shoutout on Twitter [@YourBuddyConner](http://twitter.com/yourbuddyconner)
 

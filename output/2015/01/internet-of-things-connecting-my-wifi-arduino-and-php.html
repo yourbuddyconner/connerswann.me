@@ -14,15 +14,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="referrer" content="origin" />
   <meta name="generator" content="Pelican" />
-<link href="https://connerswann.me/2015/01/internet-of-things-connecting-my-wifi-arduino-and-php.html" rel="canonical" />
+<link href="/2015/01/internet-of-things-connecting-my-wifi-arduino-and-php.html" rel="canonical" />
   <!-- Feed -->
-        <link href="https://connerswann.me/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Conner Swann Full Atom Feed" />
-          <link href="https://connerswann.me/feeds/{slug}.atom.xml" type="application/atom+xml" rel="alternate" title="Conner Swann Categories Atom Feed" />
 
-  <link href="https://connerswann.me/theme/css/style.css" type="text/css" rel="stylesheet" />
+  <link href="/theme/css/style.css" type="text/css" rel="stylesheet" />
 
   <!-- Code highlight color scheme -->
-      <link href="https://connerswann.me/theme/css/code_blocks/monokai.css" rel="stylesheet">
+      <link href="/theme/css/code_blocks/monokai.css" rel="stylesheet">
 
 
   <!-- Custom fonts -->
@@ -56,26 +54,26 @@
 <meta property="og:title" content="Internet of Things: Connecting my WiFi Arduino and PHP"/>
 <meta property="og:description" content="Background In a previous post I discussed the Adafruit CC3000 WiFi shield and how I got the hardware and libraries installed. In this..."/>
 <meta property="og:locale" content="en_US"/>
-<meta property="og:url" content="https://connerswann.me/2015/01/internet-of-things-connecting-my-wifi-arduino-and-php.html"/>
+<meta property="og:url" content="/2015/01/internet-of-things-connecting-my-wifi-arduino-and-php.html"/>
 <meta property="og:type" content="article"/>
 <meta property="article:published_time" content="2015-01-01 21:04:00-08:00"/>
 <meta property="article:modified_time" content=""/>
-<meta property="article:author" content="https://connerswann.me/author/conner-swann">
+<meta property="article:author" content="/author/conner-swann">
 <meta property="article:section" content="Arduino"/>
 <meta property="article:tag" content="Wi-Fi"/>
 <meta property="article:tag" content="Arduino"/>
 <meta property="article:tag" content="PHP"/>
 <meta property="article:tag" content="REST"/>
 <meta property="article:tag" content="API"/>
-<meta property="og:image" content="https://connerswann.me/theme/images/post-bg.jpg">
+<meta property="og:image" content="/theme/images/post-bg.jpg">
 
 <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@yourbuddyconner">
     <meta name="twitter:title" content="Internet of Things: Connecting my WiFi Arduino and PHP">
-    <meta name="twitter:url" content="https://connerswann.me/2015/01/internet-of-things-connecting-my-wifi-arduino-and-php.html">
+    <meta name="twitter:url" content="/2015/01/internet-of-things-connecting-my-wifi-arduino-and-php.html">
 
-        <meta name="twitter:image:src" content="https://connerswann.me/theme/images/post-bg.jpg">
+        <meta name="twitter:image:src" content="/theme/images/post-bg.jpg">
 
       <meta name="twitter:description" content="Background In a previous post I discussed the Adafruit CC3000 WiFi shield and how I got the hardware and libraries installed. In this...">
 
@@ -90,10 +88,10 @@
   "author": {
     "@type": "Person",
     "name": "Conner Swann",
-    "url": "https://connerswann.me/author/conner-swann"
+    "url": "/author/conner-swann"
   },
-  "image": "https://connerswann.me/theme/images/post-bg.jpg",
-  "url": "https://connerswann.me/2015/01/internet-of-things-connecting-my-wifi-arduino-and-php.html",
+  "image": "/theme/images/post-bg.jpg",
+  "url": "/2015/01/internet-of-things-connecting-my-wifi-arduino-and-php.html",
   "description": "Background In a previous post I discussed the Adafruit CC3000 WiFi shield and how I got the hardware and libraries installed. In this..."
 }
 </script>
@@ -107,7 +105,7 @@
     <p class="nav-label">Menu</p>
     <ul>
 
-              <li role="presentation"><a href="https://connerswann.me/pages/about-me/">About Me</a></li>
+              <li role="presentation"><a href="/pages/about-me/">About Me</a></li>
 
     </ul>
   </div>
@@ -123,7 +121,7 @@
       <div class="inner">
         <nav id="navigation">
             <span id="home-button" class="nav-button">
-                <a class="home-button" href="https://connerswann.me/" title="Home"><i class="ic ic-arrow-left"></i> Home</a>
+                <a class="home-button" href="/" title="Home"><i class="ic ic-arrow-left"></i> Home</a>
             </span>
           <span id="menu-button" class="nav-button">
             <a class="menu-button"><i class="ic ic-menu"></i> Menu</a>
@@ -132,7 +130,7 @@
         <h1 class="post-title">Internet of Things: Connecting my WiFi Arduino and PHP</h1>
         <!-- TODO : Proper class for headline -->
         <span class="post-meta">
-                <a href="https://connerswann.me/author/conner-swann">Conner Swann</a>
+                <a href="/author/conner-swann">Conner Swann</a>
             | <time datetime="Thu 01 January 2015">Thu 01 January 2015</time>
         </span>
         <!-- TODO : Modified check -->
@@ -151,7 +149,7 @@
 <p>In a <a href="http://connerswann.me/playing-with-the-adafruit-cc3000-wifi-shield/">previous post</a> I discussed the Adafruit CC3000 WiFi shield and how I got the hardware and libraries installed. In this post I'm going to show you how I got my WiFi Arduino talking to a simple PHP script. </p>
 <p>First, I think it's helpful to visualize exactly what's going on in these sorts of interactions. The handy diagram below is a rough sketch of what's talking to what (it's actually much more complicated, but the code I wrote pertains to these actors):
 </br>
-<img alt="Arduino WiFi Diagram" src="https://connerswann.me/images/2015/internet-of-things-arduino-diagram.png"></p>
+<img alt="Arduino WiFi Diagram" src="/images/2015/internet-of-things-arduino-diagram.png"></p>
 <p>The Arduino first connects to the WiFi access point through the CC3000, piping the credentials and configuration options through one of several pins on the Arduino to the CC3000 hardware. The CC3000 handles the logistics of sending and revieving messages from the router, returning the results to the Arduino. </p>
 <p>Then, through the magic of TCP, these messages that are sent from the Arduino are recieved and interpreted by my server running PHP. For this exercise, I used the <a href="http://www.slimframework.com/">Slim PHP Framework</a> to create two URL Routes (more on that later) that the arduino can send requests to -- one that allows it to set a value and one that simply responds with the current value. These values are collected and stored in a MySQL database that is queried by PHP.  </p>
 <p>Once the initial request is interpreted by the PHP script, a response is generated and sent back via TCP to the Arduino for it to interpret. </p>
@@ -222,62 +220,62 @@ void setup() {
     Serial.println("<strong><em>*</em></strong><strong><em>*</em>* SETUP </strong><strong><em>*</em></strong><strong><em>*</em></strong>");
     // begin the wifi connection using the cc3000 interface
     startConnection(cc3000, WLAN_SSID, WLAN_PASS, WLAN_SECURITY);</p>
-<div class="highlight"><pre><span></span><span class="o">//</span> <span class="k">add</span> <span class="n">a</span> <span class="n">HTTP</span> <span class="n">Response</span> <span class="n">processor</span>
-<span class="o">//</span> <span class="n">this</span> <span class="n">will</span> <span class="n">take</span> <span class="n">the</span> <span class="n">response</span> <span class="n">stream</span> <span class="k">and</span> <span class="n">process</span> <span class="n">it</span> <span class="n">depending</span> <span class="k">on</span>
-<span class="o">//</span> <span class="n">which</span> <span class="n">processor</span> <span class="n">we</span> <span class="n">use</span><span class="p">.</span> <span class="p">(</span><span class="n">i</span><span class="p">.</span><span class="n">e</span><span class="p">.</span> <span class="n">JSON</span> <span class="k">or</span> <span class="n">just</span> <span class="n">a</span> <span class="n">raw</span> <span class="n">buffer</span><span class="p">)</span>
-<span class="o">//</span> <span class="n">http_client</span><span class="p">.</span><span class="n">processors</span><span class="p">.</span><span class="n">add_item</span><span class="p">(</span><span class="o">&amp;</span><span class="n">processor</span><span class="p">);</span>
-<span class="n">http_client</span><span class="p">.</span><span class="n">processors</span><span class="p">.</span><span class="n">add_item</span><span class="p">(</span><span class="o">&amp;</span><span class="n">response_recorder</span><span class="p">);</span>
+<div class="highlight"><pre><span></span>// add a HTTP Response processor
+// this will take the response stream and process it depending on
+// which processor we use. (i.e. JSON or just a raw buffer)
+// http_client.processors.add_item(&amp;amp;processor);
+http_client.processors.add_item(&amp;amp;response_recorder);
 </pre></div>
 
 
 <p>}</p>
 <p>// the loop routine runs over and over again forever:
 void loop() {</p>
-<div class="highlight"><pre><span></span><span class="nv">delay</span><span class="ss">(</span><span class="mi">20000</span><span class="ss">)</span><span class="c1">;</span>
-<span class="nv">Serial</span>.<span class="nv">println</span><span class="ss">(</span><span class="s2">&quot;</span><span class="s">--- SENDING POST---</span><span class="s2">&quot;</span><span class="ss">)</span><span class="c1">;</span>
-<span class="o">//</span><span class="nv">Reset</span> <span class="nv">processors</span> <span class="nv">and</span> <span class="nv">custom</span> <span class="nv">headers</span>
-<span class="nv">http_client</span>.<span class="nv">reset</span><span class="ss">()</span><span class="c1">; </span>
-<span class="o">//</span><span class="nv">We</span> <span class="nv">can</span> <span class="nv">add</span> <span class="nv">custom</span> <span class="nv">headers</span> <span class="nv">to</span> <span class="nv">the</span> <span class="nv">request</span> <span class="k">if</span> <span class="nv">we</span> <span class="nv">wanted</span>
-<span class="o">//</span><span class="nv">http_client</span>.<span class="nv">add_custom_header</span><span class="ss">(</span><span class="s2">&quot;</span><span class="s">Content-Type</span><span class="s2">&quot;</span>, <span class="s2">&quot;</span><span class="s">application/json</span><span class="s2">&quot;</span><span class="ss">)</span><span class="c1">;</span>
+<div class="highlight"><pre><span></span><span class="nt">delay</span><span class="o">(</span><span class="nt">20000</span><span class="o">);</span>
+<span class="nt">Serial</span><span class="p">.</span><span class="nc">println</span><span class="o">(</span><span class="s2">&quot;--- SENDING POST---&quot;</span><span class="o">);</span>
+<span class="o">//</span><span class="nt">Reset</span> <span class="nt">processors</span> <span class="nt">and</span> <span class="nt">custom</span> <span class="nt">headers</span>
+<span class="nt">http_client</span><span class="p">.</span><span class="nc">reset</span><span class="o">();</span> 
+<span class="o">//</span><span class="nt">We</span> <span class="nt">can</span> <span class="nt">add</span> <span class="nt">custom</span> <span class="nt">headers</span> <span class="nt">to</span> <span class="nt">the</span> <span class="nt">request</span> <span class="nt">if</span> <span class="nt">we</span> <span class="nt">wanted</span>
+<span class="o">//</span><span class="nt">http_client</span><span class="p">.</span><span class="nc">add_custom_header</span><span class="o">(</span><span class="s2">&quot;Content-Type&quot;</span><span class="o">,</span> <span class="s2">&quot;application/json&quot;</span><span class="o">);</span>
 
-<span class="o">//</span> <span class="k">Send</span> <span class="nv">an</span> <span class="nv">HTTP</span> <span class="nv">GET</span> <span class="nv">request</span> <span class="k">for</span> <span class="nv">the</span> <span class="nv">value</span>
-<span class="nv">int</span> <span class="nv">sent</span> <span class="o">=</span> <span class="nv">http_client</span>.<span class="nv">get</span><span class="ss">(</span><span class="s2">&quot;</span><span class="s">condejo.org</span><span class="s2">&quot;</span>, <span class="s2">&quot;</span><span class="s">/api/wifitest.php/getvalue</span><span class="s2">&quot;</span>, <span class="mi">80</span><span class="ss">)</span><span class="c1">;</span>
-<span class="o">//</span> <span class="nv">Evaluate</span> <span class="nv">the</span> <span class="k">return</span> <span class="nv">code</span> <span class="nv">from</span> <span class="nv">the</span> <span class="nv">HTTP</span> <span class="nv">response</span>
-<span class="nv">short</span> <span class="nv">int</span> <span class="nv">ret_code</span> <span class="o">=</span> <span class="nv">http_client</span>.<span class="nv">receive</span><span class="ss">()</span><span class="c1">;</span>
-<span class="nv">Serial</span>.<span class="nv">println</span><span class="ss">(</span><span class="nv">ret_code</span><span class="ss">)</span><span class="c1">;</span>
-<span class="k">if</span><span class="ss">(</span><span class="nv">sent</span><span class="ss">)</span>{
-    <span class="k">if</span><span class="ss">(</span><span class="nv">ret_code</span><span class="ss">)</span>{
-        <span class="k">if</span><span class="ss">(</span><span class="nv">ret_code</span> <span class="o">==</span> <span class="mi">200</span><span class="ss">)</span>{
-            <span class="nv">Serial</span>.<span class="nv">println</span><span class="ss">(</span><span class="s2">&quot;</span><span class="s">Code 200 OK!</span><span class="s2">&quot;</span><span class="ss">)</span><span class="c1">;</span>
-            <span class="o">//</span> <span class="k">for</span> <span class="nv">the</span> <span class="nv">JSON</span> <span class="nv">processor</span> <span class="k">if</span> <span class="nv">we</span> <span class="nv">were</span> <span class="nv">using</span> <span class="nv">it</span>
-            <span class="o">//</span> <span class="k">if</span><span class="ss">(</span><span class="nv">processor</span>.<span class="nv">finished</span><span class="ss">())</span>{
-            <span class="o">//</span>     <span class="nv">Serial</span>.<span class="nv">print</span><span class="ss">(</span><span class="s2">&quot;</span><span class="s">Reading ID: </span><span class="s2">&quot;</span><span class="ss">)</span><span class="c1">;</span>
-            <span class="o">//</span>     <span class="nv">Serial</span>.<span class="nv">println</span><span class="ss">(</span><span class="nv">processor</span>.<span class="nv">results</span>[<span class="mi">0</span>]<span class="ss">)</span><span class="c1">;</span>
-            <span class="o">//</span>     <span class="nv">Serial</span>.<span class="nv">print</span><span class="ss">(</span><span class="s2">&quot;</span><span class="s">Reading Value: </span><span class="s2">&quot;</span><span class="ss">)</span><span class="c1">;</span>
-            <span class="o">//</span>     <span class="nv">Serial</span>.<span class="nv">println</span><span class="ss">(</span><span class="nv">processor</span>.<span class="nv">results</span>[<span class="mi">1</span>]<span class="ss">)</span><span class="c1">;</span>
-            <span class="o">//</span>     <span class="nv">Serial</span>.<span class="nv">print</span><span class="ss">(</span><span class="s2">&quot;</span><span class="s">Reason: </span><span class="s2">&quot;</span><span class="ss">)</span><span class="c1">;</span>
-            <span class="o">//</span>     <span class="nv">Serial</span>.<span class="nv">println</span><span class="ss">(</span><span class="nv">processor</span>.<span class="nv">results</span>[<span class="mi">2</span>]<span class="ss">)</span><span class="c1">;</span>
-            <span class="o">//</span> }
-            <span class="o">//</span> <span class="k">else</span>{
-            <span class="o">//</span>     <span class="nv">Serial</span>.<span class="nv">println</span><span class="ss">(</span><span class="s2">&quot;</span><span class="s">Return JSON not detected or queries not found!</span><span class="s2">&quot;</span><span class="ss">)</span><span class="c1">;</span>
-            <span class="o">//</span> }
-            <span class="nv">Serial</span>.<span class="nv">println</span><span class="ss">(</span><span class="nv">response_buffer</span><span class="ss">)</span><span class="c1">;</span>
-        }
-        <span class="k">else</span>{
-            <span class="o">//</span> <span class="nv">PHP</span> <span class="nv">didn</span><span class="s1">&#39;</span><span class="s">t like the request </span>
-            <span class="nv">Serial</span>.<span class="nv">print</span><span class="ss">(</span><span class="s2">&quot;</span><span class="s">Http Error:</span><span class="s2">&quot;</span><span class="ss">)</span><span class="c1">;</span>
-            <span class="nv">Serial</span>.<span class="nv">println</span><span class="ss">(</span><span class="nv">ret_code</span><span class="ss">)</span><span class="c1">;</span>
-        }
-    }
-    <span class="k">else</span>{
-        <span class="o">//</span> <span class="nv">TCP</span> <span class="nv">Broke</span> <span class="nv">and</span> <span class="nv">we</span> <span class="nv">didn</span><span class="s1">&#39;</span><span class="s">t get a response to our request</span>
-        <span class="nv">Serial</span>.<span class="nv">println</span><span class="ss">(</span><span class="s2">&quot;</span><span class="s">Error receiving!</span><span class="s2">&quot;</span><span class="ss">)</span><span class="c1">;</span>
-    }
-}
-<span class="k">else</span>{
-    <span class="o">//</span> <span class="nv">Couldn</span><span class="s1">&#39;</span><span class="s">t send the initial request in the first place</span>
-    <span class="nv">Serial</span>.<span class="nv">println</span><span class="ss">(</span><span class="s2">&quot;</span><span class="s">ERROR CONNECTING... retrying</span><span class="s2">&quot;</span><span class="ss">)</span><span class="c1">;</span>
-}
+<span class="o">//</span> <span class="nt">Send</span> <span class="nt">an</span> <span class="nt">HTTP</span> <span class="nt">GET</span> <span class="nt">request</span> <span class="nt">for</span> <span class="nt">the</span> <span class="nt">value</span>
+<span class="nt">int</span> <span class="nt">sent</span> <span class="o">=</span> <span class="nt">http_client</span><span class="p">.</span><span class="nc">get</span><span class="o">(</span><span class="s2">&quot;condejo.org&quot;</span><span class="o">,</span> <span class="s2">&quot;/api/wifitest.php/getvalue&quot;</span><span class="o">,</span> <span class="nt">80</span><span class="o">);</span>
+<span class="o">//</span> <span class="nt">Evaluate</span> <span class="nt">the</span> <span class="nt">return</span> <span class="nt">code</span> <span class="nt">from</span> <span class="nt">the</span> <span class="nt">HTTP</span> <span class="nt">response</span>
+<span class="nt">short</span> <span class="nt">int</span> <span class="nt">ret_code</span> <span class="o">=</span> <span class="nt">http_client</span><span class="p">.</span><span class="nc">receive</span><span class="o">();</span>
+<span class="nt">Serial</span><span class="p">.</span><span class="nc">println</span><span class="o">(</span><span class="nt">ret_code</span><span class="o">);</span>
+<span class="nt">if</span><span class="o">(</span><span class="nt">sent</span><span class="o">)</span><span class="p">{</span>
+    <span class="err">if(ret_code){</span>
+        <span class="err">if(ret_code</span> <span class="err">==</span> <span class="err">200){</span>
+            <span class="err">Serial.println(&quot;Code</span> <span class="err">200</span> <span class="err">OK!&quot;)</span><span class="p">;</span>
+            <span class="err">//</span> <span class="err">for</span> <span class="err">the</span> <span class="err">JSON</span> <span class="err">processor</span> <span class="err">if</span> <span class="err">we</span> <span class="err">were</span> <span class="err">using</span> <span class="err">it</span>
+            <span class="err">//</span> <span class="err">if(processor.finished()){</span>
+            <span class="err">//</span>     <span class="err">Serial.print(&quot;Reading</span> <span class="n">ID</span><span class="p">:</span> <span class="s2">&quot;);</span>
+<span class="s2">            //     Serial.println(processor.results</span><span class="cp">[</span><span class="mi">0</span><span class="cp">]</span><span class="s2">);</span>
+<span class="s2">            //     Serial.print(&quot;</span><span class="n">Reading</span> <span class="n">Value</span><span class="o">:</span> <span class="s2">&quot;);</span>
+<span class="s2">            //     Serial.println(processor.results</span><span class="cp">[</span><span class="mi">1</span><span class="cp">]</span><span class="s2">);</span>
+<span class="s2">            //     Serial.print(&quot;</span><span class="n">Reason</span><span class="o">:</span> <span class="s2">&quot;);</span>
+<span class="s2">            //     Serial.println(processor.results</span><span class="cp">[</span><span class="mi">2</span><span class="cp">]</span><span class="s2">);</span>
+<span class="s2">            // }</span>
+<span class="s2">            // else{</span>
+<span class="s2">            //     Serial.println(&quot;</span><span class="n">Return</span> <span class="n">JSON</span> <span class="n">not</span> <span class="n">detected</span> <span class="n">or</span> <span class="n">queries</span> <span class="n">not</span> <span class="n">found</span><span class="o">!</span><span class="s2">&quot;);</span>
+<span class="s2">            // }</span>
+<span class="s2">            Serial.println(response_buffer);</span>
+<span class="s2">        }</span>
+<span class="s2">        else{</span>
+<span class="s2">            // PHP didn&#39;t like the request </span>
+<span class="s2">            Serial.print(&quot;</span><span class="n">Http</span> <span class="n">Error</span><span class="o">:</span><span class="s2">&quot;);</span>
+<span class="s2">            Serial.println(ret_code);</span>
+<span class="s2">        }</span>
+<span class="s2">    }</span>
+<span class="s2">    else{</span>
+<span class="s2">        // TCP Broke and we didn&#39;t get a response to our request</span>
+<span class="s2">        Serial.println(&quot;</span><span class="n">Error</span> <span class="n">receiving</span><span class="o">!</span><span class="s2">&quot;);</span>
+<span class="s2">    }</span>
+<span class="s2">}</span>
+<span class="s2">else{</span>
+<span class="s2">    // Couldn&#39;t send the initial request in the first place</span>
+<span class="s2">    Serial.println(&quot;</span><span class="n">ERROR</span> <span class="n">CONNECTING</span><span class="o">...</span> <span class="n">retrying</span><span class="err">&quot;</span><span class="p">);</span>
+<span class="p">}</span>
 </pre></div>
 
 
@@ -354,20 +352,20 @@ $app->run();
 
             <section class="post-info">
                 <div class="post-share">
-                    <a class="twitter" href="https://twitter.com/share?text=Internet of Things: Connecting my WiFi Arduino and PHP&amp;url=https://connerswann.me/2015/01/internet-of-things-connecting-my-wifi-arduino-and-php.html" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <a class="twitter" href="https://twitter.com/share?text=Internet of Things: Connecting my WiFi Arduino and PHP&amp;url=/2015/01/internet-of-things-connecting-my-wifi-arduino-and-php.html" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
                     <i class="ic ic-twitter"></i><span class="hidden">Twitter</span>
                     </a>
-                    <a class="facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://connerswann.me/2015/01/internet-of-things-connecting-my-wifi-arduino-and-php.html" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <a class="facebook" href="https://www.facebook.com/sharer/sharer.php?u=/2015/01/internet-of-things-connecting-my-wifi-arduino-and-php.html" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
                     <i class="ic ic-facebook"></i><span class="hidden">Facebook</span>
                     </a>
-                    <a class="googleplus" href="https://plus.google.com/share?url=https://connerswann.me/2015/01/internet-of-things-connecting-my-wifi-arduino-and-php.html" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <a class="googleplus" href="https://plus.google.com/share?url=/2015/01/internet-of-things-connecting-my-wifi-arduino-and-php.html" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
                     <i class="ic ic-googleplus"></i><span class="hidden">Google+</span>
                     </a>
                     <div class="clear"></div>
                 </div>
 
                 <aside class="post-tags">
-<a href="https://connerswann.me/tag/wi-fi">Wi-Fi</a><a href="https://connerswann.me/tag/arduino">Arduino</a><a href="https://connerswann.me/tag/php">PHP</a><a href="https://connerswann.me/tag/rest">REST</a><a href="https://connerswann.me/tag/api">API</a>                </aside>
+<a href="/tag/wi-fi">Wi-Fi</a><a href="/tag/arduino">Arduino</a><a href="/tag/php">PHP</a><a href="/tag/rest">REST</a><a href="/tag/api">API</a>                </aside>
 
                 <div class="clear"></div>
 
@@ -378,7 +376,7 @@ $app->run();
                             <img src="https://connerswann.me/images/conner-profile-picture.png" alt="Conner Swann" />
                         </figure>
                     <div class="post-author-bio">
-                        <h4 class="post-author-name"><a href="https://connerswann.me/author/conner-swann">Conner Swann</a></h4>
+                        <h4 class="post-author-name"><a href="/author/conner-swann">Conner Swann</a></h4>
                             <p class="post-author-about">Software Engineer, Infrastructure Magician, Architecture Nerd </br> Core Maintainer @ Coda Protocol</p>
                             <span class="post-author-location"><i class="ic ic-location"></i> San Francisco</span>
                             <span class="post-author-website"><a href="https://connerswann.me"><i class="ic ic-link"></i> Website</a></span>
@@ -416,15 +414,7 @@ $app->run();
   </section>
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-  <script type="text/javascript" src="https://connerswann.me/theme/js/script.js"></script>
+  <script type="text/javascript" src="/theme/js/script.js"></script>
 
-    <!-- Global Site Tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-24471866-2"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'UA-24471866-2', { 'anonymize_ip': true });
-    </script>
 </body>
 </html>

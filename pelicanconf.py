@@ -60,7 +60,7 @@ AUTHOR_URL = 'author/{slug}'
 AUTHOR_SAVE_AS = 'author/{slug}/index.html'
 AUTHORS_SAVE_AS = 'authors.html'
 
-THEME = "attila"
+THEME = "/Users/connerswann/code/attila"
 HOME_COVER = 'https://connerswann.me/images/blog-cover.jpg'
 COLOR_SCHEME_CSS = 'monokai.css'
 AUTHORS_BIO = {
