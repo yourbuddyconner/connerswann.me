@@ -38,7 +38,7 @@
 
 
 
-    <meta name="description" content="What's Coda? Coda is a Crypto Protocol that I am working on as part of the O(1) Labs Team. Coda implements a "succinct" blockchain that...">
+    <meta name="description" content="Who is this for? Read this if you would like to monitor one or more Coda Daemons with a minimal level of human interaction....">
 
     <meta name="author" content="Conner Swann">
 
@@ -53,7 +53,7 @@
 <!-- Open Graph -->
 <meta property="og:site_name" content="Conner Swann"/>
 <meta property="og:title" content="Monitoring the Coda Daemon"/>
-<meta property="og:description" content="What's Coda? Coda is a Crypto Protocol that I am working on as part of the O(1) Labs Team. Coda implements a "succinct" blockchain that..."/>
+<meta property="og:description" content="Who is this for? Read this if you would like to monitor one or more Coda Daemons with a minimal level of human interaction...."/>
 <meta property="og:locale" content="en_US"/>
 <meta property="og:url" content="https://connerswann.me/drafts/coda-monitoring-the-daemon.html"/>
 <meta property="og:type" content="article"/>
@@ -75,7 +75,7 @@
 
         <meta name="twitter:image:src" content="https://connerswann.me/images/2019/coda-cover.jpg">
 
-      <meta name="twitter:description" content="What's Coda? Coda is a Crypto Protocol that I am working on as part of the O(1) Labs Team. Coda implements a "succinct" blockchain that...">
+      <meta name="twitter:description" content="Who is this for? Read this if you would like to monitor one or more Coda Daemons with a minimal level of human interaction....">
 
 <script type="application/ld+json">
 {
@@ -92,7 +92,7 @@
   },
   "image": "https://connerswann.me/images/2019/coda-cover.jpg",
   "url": "https://connerswann.me/drafts/coda-monitoring-the-daemon.html",
-  "description": "What's Coda? Coda is a Crypto Protocol that I am working on as part of the O(1) Labs Team. Coda implements a "succinct" blockchain that..."
+  "description": "Who is this for? Read this if you would like to monitor one or more Coda Daemons with a minimal level of human interaction...."
 }
 </script>
 </head>
@@ -146,38 +146,51 @@
         <article class="post">
         <div class="inner">
             <section class="post-content">
-                <h1>What's Coda?</h1>
-<p>Coda is a Crypto Protocol that I am working on as part of the O(1) Labs Team. Coda implements a "succinct" blockchain that effectively "<a href="https://codaprotocol.com/">swaps the traditional blockchain for a tiny cryptographic proof.</a>" </p>
-<p>Practically, this means that in the average Coda node, once a block with transactions is "swapped" for a proof, it gets thrown out to save disk space. </p>
-<p>This gives Coda a great advantage in terms of portability, as the resource requirements to run a consensus node are relatively small when compared with other existing blockchains. </p>
-<h1>The Problem</h1>
-<p>From an infrastructure perspective, It's very easy to view a crypto daemon (or any service for that matter) as a black box. It can either be running, or not, and if it's not running properly there isn't much insight into exactly what could be going wrong besides some CLI commands you can run or a crypic stacktrace in the logs. You restart the process and hope it comes back up successfully, but doing this repeatedly isn't necessarily a great way of running your operation... </p>
+                <h4>Who is this for?</h4>
+<p>Read this if you would like to monitor one or more Coda Daemons with a minimal level of human interaction. </p>
+<p><strong>Prerequisites</strong> - You should have the following knowledge/software installed to get the full benefit of this blog post:</p>
+<ul>
+<li>Basic Understanding of How Coda Works</li>
+<li><a href="https://docs.docker.com/v17.09/engine/installation/">Docker</a> </li>
+<li><a href="https://docs.docker.com/compose/install/">Docker-Compose</a></li>
+</ul>
+<p><strong>Key Takeaways</strong> - By the end of this post, if you follow along, you will: </p>
+<ul>
+<li>Have a basic understanding of Prometheus and how it works</li>
+<li>Understand the role Prometheus plays in monitoring a Coda Daemon</li>
+<li>Have a local Sandbox Prometheus environment</li>
+</ul>
+<h1>The Observability Problem</h1>
+<p>From an infrastructure perspective, it’s often quite difficult to decide what to do when a portion of your system isn’t working. Often, the only thing you know for sure is that users aren’t getting the best experience and someone important wants it fixed. </p>
+<p>It's very easy to view a crypto daemon (or any service for that matter) as a black box. It can either be running, or not, and if it's not running properly there isn't much insight into exactly what could be going wrong. Without deep insight into how your application functions, the next step can often be hard to see. </p>
 <p><img alt="Black Box" src="https://connerswann.me/drafts/blackbox-whitebox.png"></p>
-<p>We had this exact problem initially. Once you are running test networks of more than two or three daemons at a time, it gets hard to go peek at the logs for each instance of the daemon to diagnose an issue. It's much more preferable to have some sort of at-a-glance method of verifying a daemon is functioning properly. In infrastructure land there's really two ways to do this, you could forward logs to a central location like ELK or Google Stackdriver (which we also do), or you can collect application metrics using some system like StatsD or Prometheus. </p>
-<p>This post is going to focus primarily on utilizing the onboard Prometheus endpoint to glean insight and actionable data from a Coda Daemon. </p>
+<p>At O(1) Labs, we identified this observability problem rather quickly at the outset. Once you are running test networks of more than two or three daemons at a time, it gets hard to go peek at the logs for each instance of the daemon to diagnose an issue. It's preferable to have an at-a-glance method of verifying that a daemon is healthy and indicates unambiguously what one should do when the daemon is unhealthy. </p>
+<p>In order to get a holistic view of the system, you’d typically take a multi-layered approach:
+You forward logs to a central location like <a href="https://www.elastic.co/">Elasticsearch</a>, <a href="https://www.splunk.com/">Splunk</a>, or <a href="https://cloud.google.com/stackdriver/">Google Stackdriver</a> and search through them for important indicators like error messages or stack traces. 
+You write your application such that it exposes “application metrics” that can be collected and used to indicate what is happening internal to the application. </p>
+<p>While you would never consider a monitoring system complete without both, this post is going to focus primarily on utilizing the onboard Prometheus endpoint to glean insight and actionable data from a Coda Daemon.</p>
 <h1>Intro to Prometheus</h1>
-<p>First, for the unitiated:</p>
 <blockquote>
 <p><a href="https://prometheus.io/docs/introduction/overview/">Prometheus</a> is an open-source systems monitoring and alerting toolkit originally built at SoundCloud.  Since its inception in 2012, many companies and organizations have adopted Prometheus, and the project has a very active developer and user community. It is now a standalone open source project and maintained independently of any company.</p>
 </blockquote>
-<p>Prometheus has seen massive adoption amongst tech companies both big and small, and the project has been included in the ranks of the <a href="https://www.cncf.io/">Cloud-Native Computing Foundation</a> making it a really good choice for monitoring an open-source project. </p>
-<p>At a high-level, Prometheus is a "pull-based" metrics collection system. A central prometheus server is configured with either a static or dynamic set of targets, and the central server makes HTTP requests to the target's Prometheus endpoint. The target(s) are each presenting their individual application metrics in a standard format via this HTTP interface, allowing the Prometheus server to scrape the same endpoint <em>repeatedly on an interval</em>, building up a timeseries of the exposed metrics. </p>
-<p>Prometheus easily scales to tens of thousands of targets and runs in a Docker container, making it easy to bootstrap a project and quickly ramp up your monitoring system. </p>
+<p>Prometheus is a "pull-based" metrics collection system - a central prometheus server is configured with either a static or dynamic set of monitoring targets and makes HTTP requests to their Prometheus endpoints. The target(s) each present their individual application metrics in a standard format via an HTTP interface, allowing the Prometheus server to scrape the same endpoint <em>repeatedly, on an interval</em>, collecting a time series of the exposed metrics.</p>
+<p>Prometheus has seen massive adoption amongst tech companies both big and small, and the project has been included in the ranks of the <a href="https://www.cncf.io/">Cloud-Native Computing Foundation</a> making it a good choice for monitoring an open-source project.</p>
+<p>Prometheus easily scales to tens of thousands of targets and can be run in a Docker container, making it easy to bootstrap a project and quickly ramp up your monitoring system.</p>
 <p><img alt="Prometheus Architecture" src="https://connerswann.me/drafts/prometheus-architecture.png"></p>
 <h1>Prometheus and Coda</h1>
-<p>Now that you have an idea of how Prometheus works at a high level, lets look at how you can leverage a Prometheus installation to monitor one or more Coda Daemons.</p>
+<p>Now that you have an idea of how Prometheus works at a high level, let's look at how you can leverage a Prometheus installation to monitor one or more Coda Daemons.</p>
 <h2>Run a Daemon with Metrics</h2>
-<p>Note: You can install the Coda Daemon natively (or build it from source), but I usually prefer to run the daemon inside a Docker container. As such all examples will be using Docker, but can be easily translated to a native install. </p>
-<p>To activate the Coda Daemon's onboard Prometheus endpoint, pass <code>-metric-port &lt;PORT&gt;</code> to the CLI at runtime: </p>
-<p><code>docker run -p 10000:10000 codaprotocol/coda-daemon:0.0.11-beta4 daemon -metrics-port 10000</code> </p>
-<p>Lets break this command down: </p>
+<p>Note: Docker provides us a portable, os-agnostic method to run the Coda Daemon, but all examples could be translated to a native installation.</p>
+<p>The Coda Daemon has been outfitted with an optional Prometheus Endpoint -- to activate it you must pass <code>-metrics-port &lt;PORT&gt;</code> to the CLI at runtime:</p>
+<p><code>docker run -p 10000:10000 codaprotocol/coda-daemon:0.0.11-beta4 daemon -metrics-port 10000</code></p>
+<p>Let's break this command down:</p>
 <ul>
 <li><code>docker run</code>: run a docker container</li>
 <li><code>-p 10000:10000</code>: bind Port <code>10000</code> inside the Docker Container to the Docker Host</li>
 <li><code>codaprotocol/coda-daemon:0.0.11-beta4</code>: an official Coda docker image from dockerhub, version <code>0.0.11-beta4</code></li>
 <li><code>daemon -metrics-port 10000</code>: the argument(s) to the <code>coda</code> CLI -- run a daemon and expose prometheus metrics on port <code>10000</code></li>
 </ul>
-<p>Now, if you were to run that command you should see output like the following: </p>
+<p>You should see output like the following:</p>
 <div class="highlight"><pre><span></span>$ docker run -p <span class="m">10000</span>:10000 codaprotocol/coda-daemon:0.0.11-beta4 daemon -metrics-port <span class="m">10000</span>
 <span class="m">2020</span>-01-02 <span class="m">22</span>:33:42 UTC <span class="o">[</span>Info<span class="o">]</span> Coda daemon is booting up<span class="p">;</span> built with commit <span class="s2">&quot;bd5715a3f00754869498083b2506db776a7047e2&quot;</span> on branch <span class="s2">&quot;master&quot;</span>
 <span class="m">2020</span>-01-02 <span class="m">22</span>:33:42 UTC <span class="o">[</span>Info<span class="o">]</span> Daemon will expire at <span class="s2">&quot;2020-01-15 14:00:00-07:00&quot;</span>
@@ -185,7 +198,7 @@
 <span class="m">2020</span>-01-02 <span class="m">22</span>:33:52 UTC <span class="o">[</span>Info<span class="o">]</span> Daemon started process of kind <span class="s2">&quot;Prover&quot;</span> with pid <span class="m">80</span>
 <span class="m">2020</span>-01-02 <span class="m">22</span>:33:53 UTC <span class="o">[</span>Info<span class="o">]</span> Daemon started process of kind <span class="s2">&quot;Verifier&quot;</span> with pid <span class="m">92</span>
 <span class="m">2020</span>-01-02 <span class="m">22</span>:33:54 UTC <span class="o">[</span>Info<span class="o">]</span> libp2p peer ID this session is <span class="nv">$peer_id</span>
-    peer_id: <span class="s2">&quot;12D3KooWRd6oDEwVoKmZnAZWokqTqUjmsypFyGBeLbU4Wp4UjCqE&quot;</span>
+   peer_id: <span class="s2">&quot;12D3KooWRd6oDEwVoKmZnAZWokqTqUjmsypFyGBeLbU4Wp4UjCqE&quot;</span>
 <span class="m">2020</span>-01-02 <span class="m">22</span>:33:54 UTC <span class="o">[</span>Info<span class="o">]</span> Starting Bootstrap Controller phase
 <span class="m">2020</span>-01-02 <span class="m">22</span>:33:54 UTC <span class="o">[</span>Info<span class="o">]</span> Coda daemon is now connecting
 <span class="m">2020</span>-01-02 <span class="m">22</span>:33:54 UTC <span class="o">[</span>Info<span class="o">]</span> Pausing block production <span class="k">while</span> bootstrapping
@@ -195,48 +208,42 @@
 </pre></div>
 
 
-<p>Prometheus metrics will be available at <code>localhost:10000</code> (Note: This assumes you are running docker on the same machine the browser is installed on). </p>
-<p>If you open that in a browser you will see all the metrics encoded in the standard Prometheus format. For example: </p>
+<p>If you open <code>localhost:10000</code> in a browser you will see all the metrics encoded in the standard Prometheus format. Comments begin with a <code>#</code> and Metrics are of the form <code>metric_name metric_value</code>.</p>
+<p>For example, the <code>Coda_Bootstrap_bootstrap_time_ms</code> metric denotes the length of time that elapsed while the Daemon was in the <code>bootstrapping</code> state (in milliseconds):</p>
 <div class="highlight"><pre><span></span>#HELP Coda_Bootstrap_bootstrap_time_ms time elapsed while bootstrapping
 #TYPE Coda_Bootstrap_bootstrap_time_ms gauge
 Coda_Bootstrap_bootstrap_time_ms 377529
-#HELP Coda_Consensus_stake_delegators # of delegators the node is evaluating vrfs for (in addition to evaluations for staking keypairs)
-#TYPE Coda_Consensus_stake_delegators gauge
-Coda_Consensus_stake_delegators 0
-#HELP Coda_Consensus_staking_keypairs # of actively staking keypairs
-#TYPE Coda_Consensus_staking_keypairs gauge
-Coda_Consensus_staking_keypairs 0
 ...
 </pre></div>
 
 
-<p>If you have any questions about a particular <a href="https://prometheus.io/docs/prometheus/latest/querying/basics/#time-series-selectors">time series</a> exposed by the Daemon, checking the help text is a good first place to look. </p>
+<p>If you have any questions about a particular <a href="https://prometheus.io/docs/prometheus/latest/querying/basics/#time-series-selectors">time series</a> exposed by the Daemon, checking the help text (denoted by <code>#HELP</code>) is a good first place to look.</p>
 <h2>Set up Sandbox Prometheus</h2>
-<p>I have set up an example repository located <a href="https://github.com/yourbuddyconner/coda-examples/tree/master/basic-prometheus">here</a>, the important stuff you'll need for a basic local Prometheus + Coda installation is included below: </p>
+<p>I have set up an example repository located <a href="https://github.com/yourbuddyconner/coda-examples/tree/master/basic-prometheus">here</a>, the important stuff you'll need for a basic local Prometheus + Coda installation is included below:</p>
 <p><code>docker-compose.yml</code>
 This project uses <a href="https://docs.docker.com/compose/">docker-compose</a>, a tool for orchestrating multiple docker containers on the same machine. It has an extensive feature-set and I encourage you to check out the documentation should you want to learn more.
 <script src="https://gist-it.appspot.com/https://github.com/yourbuddyconner/coda-examples/blob/master/basic-prometheus/docker-compose.yml?footer=minimal"></script></p>
 <p><code>prometheus.yml</code>
-This is the prometheus configuration file which targets to scrape and how to scrape them.<br>
+This is the prometheus configuration file which targets to scrape and how to scrape them. 
 <script src="https://gist-it.appspot.com/https://github.com/yourbuddyconner/coda-examples/blob/master/basic-prometheus/config/prometheus.yml?footer=minimal"></script></p>
-<p>To run this example, first clone the example repository: </p>
+<p>To run this example, first clone the example repository:</p>
 <p><code>git clone https://github.com/yourbuddyconner/coda-examples.git</code></p>
-<p>Move to the <code>basic-prometheus</code> directory: </p>
-<p><code>cd basic-prometheus</code></p>
-<p>Run docker-compose: </p>
+<p>Move to the <code>basic-prometheus</code> directory:</p>
+<p><code>cd coda-examples/basic-prometheus</code></p>
+<p>Run docker-compose:</p>
 <p><code>docker-compose up</code></p>
-<p>You should now be able to navigate to <code>localhost:9090</code> in your browser to get access to the Prometheus UI. </p>
+<p>You should now be able to navigate to <code>localhost:9090</code> in your browser to get access to the Prometheus UI.</p>
 <p><img alt="Prometheus UI" src="https://connerswann.me/drafts/prometheus-ui.png"></p>
 <h2>Actionable Metrics</h2>
-<p>Note: All graphs are embedded from one of the following public dashboards: </p>
+<p>Note: All graphs are embedded from one of the following public dashboards:</p>
 <ul>
 <li><a href="https://o1testnet.grafana.net/d/qx4y6dfWz/network-overview?orgId=1&amp;refresh=1m">Coda Network Overview Dashboard</a>.</li>
 <li><a href="https://o1testnet.grafana.net/d/Rgo87HhWz/block-producer-dashboard?orgId=1&amp;var-role=blockproducer">Coda Block Producer Dashboard</a></li>
 <li><a href="https://o1testnet.grafana.net/d/scQUGOhWk/snark-worker-dashboard?orgId=1&amp;refresh=1m">Coda SNARK Worker Dashboard</a></li>
 </ul>
-<p>While all of the exposed metrics are useful, only a few produce actionable data from a node operation perspective. The following are useful in normal node operations: </p>
+<p>While all of the exposed metrics are useful, only a few produce actionable data from a node operation perspective. The following are useful in normal node operations:</p>
 <h3>Node Uptime</h3>
-<p>This counter is useful in alerting, as it should never reset to 0. The only scenario in which it would do so would be in the event of the Coda Daemon process reastarting. </p>
+<p>This counter is useful in alerting, as it should never reset to 0. The only scenario in which it would do so would be in the event of the Coda Daemon process restarting.</p>
 <div class="highlight"><pre><span></span>#HELP Coda_Runtime_process_uptime_ms_total Total time the process has been running for in milliseconds.
 #TYPE Coda_Runtime_process_uptime_ms_total counter
 Coda_Runtime_process_uptime_ms_total 1.73959e+08
@@ -248,7 +255,7 @@ Coda_Runtime_process_uptime_ms_total 1.73959e+08
 </div>
 
 <h4>Max Observed Block Length</h4>
-<p>Can be an indicator of forks when compared across several nodes. Reporting this to the Coda Community when in doubt is highly useful. </p>
+<p>Can be an indicator of forks when compared across several nodes. Reporting this to the Coda Community when in doubt is highly useful.</p>
 <div class="highlight"><pre><span></span>#HELP Coda_Transition_frontier_max_blocklength_observed max blocklength observed by the system
 #TYPE Coda_Transition_frontier_max_blocklength_observed gauge
 Coda_Transition_frontier_max_blocklength_observed 11567
@@ -260,8 +267,8 @@ Coda_Transition_frontier_max_blocklength_observed 11567
 </div>
 
 <h4>Blocks Produced</h4>
-<p>While useful on its own as a simple counter, the blocks produced metric is particularly useful when diagnosing block production issues. When combined with Prometheus <a href="https://prometheus.io/docs/prometheus/latest/querying/functions/">query functions</a> like <code>sum</code> and <code>increase</code>, we can derive a running rate of block production. </p>
-<p>Example query: 
+<p>While blocks produced is useful on its own as a simple counter, it is particularly useful when diagnosing block production issues. By combining it with Prometheus <a href="https://prometheus.io/docs/prometheus/latest/querying/functions/">query functions</a> like <code>sum</code> and <code>increase</code>, we can derive a running rate of block production.</p>
+<p>Example query:
 <code>sum(increase(Coda_Proposer_blocks_proposed{testnet="$testnet"}[1h]))</code></p>
 <div class="highlight"><pre><span></span>#HELP Coda_Proposer_blocks_proposed blocks produced and submitted by the proposer
 #TYPE Coda_Proposer_blocks_proposed counter
@@ -274,7 +281,7 @@ Coda_Proposer_blocks_proposed 0
 </div>
 
 <h4>Banned Peers</h4>
-<p>When taken alone, this metric is only useful in indicating that individual nodes are misbehaving, however when cross-examined against other metrics (Ex. Max Observed Block Height) it can be an indicator of systematic network-level bugs/forks.</p>
+<p>When taken alone, banned peers is only useful for indicating that individual nodes are misbehaving, however when analyzed alongside other metrics (e.g. Max Observed Block Height) it can be an indicator of systematic network-level bugs/forks.</p>
 <div class="highlight"><pre><span></span>#HELP Coda_Trust_system_banned_peers # of banned ip addresses
 #TYPE Coda_Trust_system_banned_peers gauge
 Coda_Trust_system_banned_peers 1
@@ -286,8 +293,8 @@ Coda_Trust_system_banned_peers 1
 </div>
 
 <h4>Coda SNARK Work Fee Breakdown</h4>
-<p>Useful in helping to tune SNARK Worker fee selection. </p>
-<p>ex. If there is a lot of low-fee SNARK work in the pool, an automated system could turn off SNARK work compute until it is more economical to resume. </p>
+<p>Useful in helping to tune SNARK Worker fee selection.</p>
+<p>ex. If there is a lot of low-fee SNARK work in the pool, an automated system could turn off SNARK work compute until it is more economical to resume.</p>
 <div class="highlight"><pre><span></span>#HELP Coda_Snark_work_snark_fee A histogram for snark fees
 #TYPE Coda_Snark_work_snark_fee histogram
 Coda_Snark_work_snark_fee_sum 5933
@@ -308,19 +315,19 @@ Coda_Snark_work_snark_fee_bucket{le=&quot;9&quot;} 5512
 <p>The Coda Protocol is still <em>very much</em> in active development, and the O(1) Team is constantly pushing out features like this -- there's so many ways to get involved:</p>
 <ul>
 <li>
-<p><em>Have an idea for some other <strong>cool thing</strong> I haven't mentioned?</em> 
+<p><em>Have an idea for some other <strong>cool thing</strong> I haven't mentioned?</em>
 </br>Join the <a href="http://bit.ly/CodaDiscord">Coda Community</a>, and lets talk about it!</p>
 </li>
 <li>
-<p><em>Want to operate a Node on the Coda Network?</em> 
+<p><em>Want to operate a Node on the Coda Network?</em>
 </br>There are regular <a href="https://codaprotocol.com/docs/coda-testnet/">Testnets</a> that are designed to help us surface bugs and teach the community how to use Coda. Come join us!</p>
 </li>
 <li>
-<p><em>Want to spend some time building something useful to the Coda Community?</em> 
-</br>Check out the <a href="https://github.com/CodaProtocol/coda-grants">Coda Grant Proposal Repository</a> for a list of projects O(1) Labs is sponsoring. </p>
+<p><em>Want to spend some time building something useful to the Coda Community?</em>
+</br>Check out the <a href="https://github.com/CodaProtocol/coda-grants">Coda Grant Proposal Repository</a> for a list of projects O(1) Labs is sponsoring.</p>
 </li>
 </ul>
-<p>Lastly, if you decide to make something cool with this let me know on <a href="https://twitter.com/yourbuddyconner">Twitter</a> or the <a href="http://bit.ly/CodaDiscord">Coda Discord Server</a> -- you can find me with <code>@conner</code>! </p>
+<p>Lastly, if you decide to make something cool with this let me know on <a href="https://twitter.com/yourbuddyconner">Twitter</a> or the <a href="http://bit.ly/CodaDiscord">Coda Discord Server</a> -- you can find me with <code>@conner</code>!</p>
             </section>
 
             <section class="post-info">
