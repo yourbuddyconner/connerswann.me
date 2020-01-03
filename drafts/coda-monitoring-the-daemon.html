@@ -162,12 +162,14 @@
 </ul>
 <h1>The Observability Problem</h1>
 <p>From an infrastructure perspective, it’s often quite difficult to decide what to do when a portion of your system isn’t working. Often, the only thing you know for sure is that users aren’t getting the best experience and someone important wants it fixed. </p>
-<p>It's very easy to view a crypto daemon (or any service for that matter) as a black box. It can either be running, or not, and if it's not running properly there isn't much insight into exactly what could be going wrong. Without deep insight into how your application functions, the next step can often be hard to see. </p>
+<p>It's very easy to view a crypto daemon (or any service for that matter) as a black box. It can either be running, or not, and if it's not running properly there isn't much insight into exactly what could be going wrong. Without deep understand of how your application functions, the next step towards resolution can often be hard to see. </p>
 <p><img alt="Black Box" src="https://connerswann.me/drafts/blackbox-whitebox.png"></p>
 <p>At O(1) Labs, we identified this observability problem rather quickly at the outset. Once you are running test networks of more than two or three daemons at a time, it gets hard to go peek at the logs for each instance of the daemon to diagnose an issue. It's preferable to have an at-a-glance method of verifying that a daemon is healthy and indicates unambiguously what one should do when the daemon is unhealthy. </p>
-<p>In order to get a holistic view of the system, you’d typically take a multi-layered approach:
-You forward logs to a central location like <a href="https://www.elastic.co/">Elasticsearch</a>, <a href="https://www.splunk.com/">Splunk</a>, or <a href="https://cloud.google.com/stackdriver/">Google Stackdriver</a> and search through them for important indicators like error messages or stack traces. 
-You write your application such that it exposes “application metrics” that can be collected and used to indicate what is happening internal to the application. </p>
+<p>In order to get a holistic view of the system, you’d typically take a multi-layered approach:</p>
+<ul>
+<li>You forward logs to a central location like <a href="https://www.elastic.co/">Elasticsearch</a>, <a href="https://www.splunk.com/">Splunk</a>, or <a href="https://cloud.google.com/stackdriver/">Google Stackdriver</a> and search through them for important indicators like error messages or stack traces. </li>
+<li>You write your application such that it exposes “application metrics” that can be collected and used to indicate what is happening internal to the application. </li>
+</ul>
 <p>While you would never consider a monitoring system complete without both, this post is going to focus primarily on utilizing the onboard Prometheus endpoint to glean insight and actionable data from a Coda Daemon.</p>
 <h1>Intro to Prometheus</h1>
 <blockquote>
