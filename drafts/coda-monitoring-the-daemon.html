@@ -222,11 +222,11 @@ Coda_Bootstrap_bootstrap_time_ms 377529
 <p>If you have any questions about a particular <a href="https://prometheus.io/docs/prometheus/latest/querying/basics/#time-series-selectors">time series</a> exposed by the Daemon, checking the help text (denoted by <code>#HELP</code>) is a good first place to look.</p>
 <h2>Set up Sandbox Prometheus</h2>
 <p>I have set up an example repository located <a href="https://github.com/yourbuddyconner/coda-examples/tree/master/basic-prometheus">here</a>, the important stuff you'll need for a basic local Prometheus + Coda installation is included below:</p>
-<p><code>docker-compose.yml</code>
-This project uses <a href="https://docs.docker.com/compose/">docker-compose</a>, a tool for orchestrating multiple docker containers on the same machine. It has an extensive feature-set and I encourage you to check out the documentation should you want to learn more.
+<p><code>docker-compose.yml</code></p>
+<p>This project uses <a href="https://docs.docker.com/compose/">docker-compose</a>, a tool for orchestrating multiple docker containers on the same machine. It has an extensive feature-set and I encourage you to check out the documentation should you want to learn more.
 <script src="https://gist-it.appspot.com/https://github.com/yourbuddyconner/coda-examples/blob/master/basic-prometheus/docker-compose.yml?footer=minimal"></script></p>
-<p><code>prometheus.yml</code>
-This is the prometheus configuration file which targets to scrape and how to scrape them. 
+<p><code>prometheus.yml</code></p>
+<p>This is the prometheus configuration file which specifies targets to scrape and how to scrape them. 
 <script src="https://gist-it.appspot.com/https://github.com/yourbuddyconner/coda-examples/blob/master/basic-prometheus/config/prometheus.yml?footer=minimal"></script></p>
 <p>To run this example, first clone the example repository:</p>
 <p><code>git clone https://github.com/yourbuddyconner/coda-examples.git</code></p>
