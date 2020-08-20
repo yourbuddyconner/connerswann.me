@@ -168,7 +168,14 @@
 <p>Check out the <a href="https://github.com/CodaProtocol/coda-automation/tree/master/helm/block-producer">Block Producer Helm Chart</a> on Github. </p>
 <h2>SNARK Worker</h2>
 <p>SNARK Workers are unique to Coda Protocol, and are relatively easy to operate. SNARK Workers, and by extension the "Parallel Scan State" have interesting properties that allow the Coda Protocol to function while still producing proofs for all the blocks and transactions being generated. To learn more about how Transactions are "SNARKed" and the recursive nature of the Scan State, see the Coda Docs <a href="https://codaprotocol.com/docs/architecture/snark-workers#snarking-transactions">here</a></p>
-<p>Simply put, you can think of a single SNARK Worker process as a simple work queue, retrieving a job that has not been completed locally, producing a SNARK for the job, and returning the completed SNARK to be broadcast to the network. Like a normal work queue, workers retrieve work over the network via the <a href="https://github.com/janestreet/bin_prot">bin_prot</a> RPC Protocol, and can be positioned remotely from the job queue itself. Structuring the workers like this is advantageous because this worker process is stateless and can easily be scaled horizontally, with work assignment being offloaded to this central actor, referred to as the "SNARK Coordinator."</p>
+<p>Simply put, you can think of a group of SNARK Workers as a simple <a href="https://en.wikipedia.org/wiki/Job_queue">job queue</a>. When workers come online, they do the following:  </p>
+<ol>
+<li>Retrieve a job that has not been completed from the queue</li>
+<li>Produce a "proof bundle" consisting of one or more SNARK Proofs for the job</li>
+<li>Return the completed bundle to be broadcast to the network </li>
+<li>Start at 1</li>
+</ol>
+<p>Like a normal job queue, workers retrieve work over the network via the <a href="https://github.com/janestreet/bin_prot">bin_prot</a> RPC Protocol, and can be positioned remotely from the queue itself. Structuring the workers like this is advantageous because this worker process is stateless and can easily be scaled horizontally, with work assignment being offloaded to this central actor, referred to as the "SNARK Coordinator."</p>
 <p>In a simple, default deployment, the Coda CLI will start a daemon process to act as "coordinator" for a single worker process, but it is possible to start multiple worker processes. For more details on how this can be achieved, Check out the <a href="https://github.com/CodaProtocol/coda-automation/tree/master/helm/snark-worker">SNARK Coordinator Helm Chart</a> on Github. </p>
 <h1>The Tools</h1>
 <h2>Containers and Kubernetes</h2>
@@ -201,9 +208,14 @@
 <h3>The Faucet</h3>
 <p>Bots are often used to automate transactions being sent around the network. Often, these require special consideration in the genesis ledger, so it's worth keeping them in mind when setting up a new network. For example, the O(1) Discord Faucet is a simple sidecar bot that runs against a Coda Daemon's GraphQL Port and responds to requests for funds in the Coda Protocol Discord server.</p>
 <h3>The Archive Node</h3>
+<p>Because the Coda Protocol is succinct, block history is SNARKed away through the recursive process of extending the Coda blockchain. Obviously, for any financial system it is very important for organizations and individuals to be able to keep a record of blocks that have been observed for compliance purposes. The "Archive Node" is a solution for this problem, a simple process that listens for updates from the Coda Daemon and persists them to a PostgreSQL Database.  </p>
 <h3>The GraphQL Proxy</h3>
-<h2>Monitoring the Testnet</h2>
-<h2>Extending the Deployment</h2>
+<p>While it's pretty easy to launch a Coda Daemon and join it to the blockchain, sometimes it's acceptable to simply communicate with the Daemon via GraphQL. To enable applications which require some level of blockchain awareness but don't require a full node, we at O(1) produced a simple proxy that would enable only the read-only parts of the GraphQL API.</p>
+<h3>More to Come</h3>
+<p>Because each deployable is encapsulated as a Helm Chart, it is exceedingly easy to roll out new products and services that attach to a Coda Testnet. I personally see this as being an incredibly compelling model for introducing blockchain-aware applications into existing cloud infrastructure. </p>
+<h2>Next Time...</h2>
+<h3>Monitoring the Testnet</h3>
+<p>The next post in this series will discuss the different ways to monitor a Coda Daemon and how that can extend to monitoring a whole fleet of Daemons.</p>
             </section>
 
             <section class="post-info">
