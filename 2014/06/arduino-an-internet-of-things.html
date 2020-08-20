@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+
+  <title>Arduino - An Internet of Things</title>
+
+
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="referrer" content="origin" />
+  <meta name="generator" content="Pelican" />
+<link href="https://connerswann.me/2014/06/arduino-an-internet-of-things.html" rel="canonical" />
+  <!-- Feed -->
+        <link href="https://connerswann.me/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Conner Swann Full Atom Feed" />
+          <link href="https://connerswann.me/feeds/{slug}.atom.xml" type="application/atom+xml" rel="alternate" title="Conner Swann Categories Atom Feed" />
+
+  <link href="https://connerswann.me/theme/css/style.css" type="text/css" rel="stylesheet" />
+
+  <!-- Code highlight color scheme -->
+      <link href="https://connerswann.me/theme/css/code_blocks/monokai.css" rel="stylesheet">
+
+
+  <!-- Custom fonts -->
+  <link href='https://fonts.googleapis.com/css?family=Montserrat:400,300' rel='stylesheet' type='text/css' />
+  <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css" />
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+
+
+
+    <meta name="description" content="Recently I got an Arduino Uno, a small, versatile microcontroller that has been adopted by the "Maker" community as the controller of...">
+
+    <meta name="author" content="Conner Swann">
+
+    <meta name="tags" content="Arduino">
+    <meta name="tags" content="IOT">
+    <meta name="tags" content="REST">
+    <meta name="tags" content="API">
+    <meta name="tags" content="Javascript">
+
+
+
+
+<!-- Open Graph -->
+<meta property="og:site_name" content="Conner Swann"/>
+<meta property="og:title" content="Arduino - An Internet of Things"/>
+<meta property="og:description" content="Recently I got an Arduino Uno, a small, versatile microcontroller that has been adopted by the "Maker" community as the controller of..."/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:url" content="https://connerswann.me/2014/06/arduino-an-internet-of-things.html"/>
+<meta property="og:type" content="article"/>
+<meta property="article:published_time" content="2014-06-24 20:51:00-07:00"/>
+<meta property="article:modified_time" content=""/>
+<meta property="article:author" content="https://connerswann.me/author/conner-swann">
+<meta property="article:section" content="Arduino"/>
+<meta property="article:tag" content="Arduino"/>
+<meta property="article:tag" content="IOT"/>
+<meta property="article:tag" content="REST"/>
+<meta property="article:tag" content="API"/>
+<meta property="article:tag" content="Javascript"/>
+<meta property="og:image" content="https://connerswann.me/theme/images/post-bg.jpg">
+
+<!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@yourbuddyconner">
+    <meta name="twitter:title" content="Arduino - An Internet of Things">
+    <meta name="twitter:url" content="https://connerswann.me/2014/06/arduino-an-internet-of-things.html">
+
+        <meta name="twitter:image:src" content="https://connerswann.me/theme/images/post-bg.jpg">
+
+      <meta name="twitter:description" content="Recently I got an Arduino Uno, a small, versatile microcontroller that has been adopted by the "Maker" community as the controller of...">
+
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Article",
+  "name": "Arduino - An Internet of Things",
+  "headline": "Arduino - An Internet of Things",
+  "datePublished": "2014-06-24 20:51:00-07:00",
+  "dateModified": "",
+  "author": {
+    "@type": "Person",
+    "name": "Conner Swann",
+    "url": "https://connerswann.me/author/conner-swann"
+  },
+  "image": "https://connerswann.me/theme/images/post-bg.jpg",
+  "url": "https://connerswann.me/2014/06/arduino-an-internet-of-things.html",
+  "description": "Recently I got an Arduino Uno, a small, versatile microcontroller that has been adopted by the "Maker" community as the controller of..."
+}
+</script>
+</head>
+<!-- TODO : Body class -->
+<body class="home-template">
+
+<nav id="menu">
+  <a class="close-button">Close</a>
+  <div class="nav-wrapper">
+    <p class="nav-label">Menu</p>
+    <ul>
+
+              <li role="presentation"><a href="https://connerswann.me/pages/about-me/">About Me</a></li>
+
+    </ul>
+  </div>
+</nav>
+    <!-- Progressbar -->
+    <div class="progress-container">
+        <span class="progress-bar"></span>
+    </div>
+
+    <!-- Page Header -->
+    <!-- Set your background image for this header on the line below. -->
+    <header id="post-header" >
+      <div class="inner">
+        <nav id="navigation">
+            <span id="home-button" class="nav-button">
+                <a class="home-button" href="https://connerswann.me/" title="Home"><i class="ic ic-arrow-left"></i> Home</a>
+            </span>
+          <span id="menu-button" class="nav-button">
+            <a class="menu-button"><i class="ic ic-menu"></i> Menu</a>
+          </span>
+        </nav>
+        <h1 class="post-title">Arduino - An Internet of Things</h1>
+        <!-- TODO : Proper class for headline -->
+        <span class="post-meta">
+                <a href="https://connerswann.me/author/conner-swann">Conner Swann</a>
+            | <time datetime="Tue 24 June 2014">Tue 24 June 2014</time>
+        </span>
+        <!-- TODO : Modified check -->
+      </div>
+    </header>
+
+  <section id="wrapper">
+    <a class="hidden-close"></a>
+
+    <!-- Post content -->
+    <main class="content" role="main">
+        <article class="post">
+        <div class="inner">
+            <section class="post-content">
+                <p>Recently I got an Arduino Uno, a small, versatile microcontroller that has been adopted by the "Maker" community as the controller of choice for hobby electronics, and for good reason.</p>
+<p>In my limited experience so far, Arduino is a real joy to deal with, having a very simplistic interface while preserving a very robbust "skillset" if you will. The first thing I did was spend a day playing with a box of components, learning how to read sensors and analog components with the board and reacting to those readings, whether it be just reporting back to the computer via serial or prehaps turning on/off an LED.</p>
+<p>I've heard the term "Internet of Things" thrown around a lot, but never really quite understood what all the hype was about. However, after screwing around with an internet-equipped Arduino for a day, I can finally appreciate the power of being able to take your physical sensors and hardware and grant them a voice on the great forum that is "The Internet".</p>
+<p>To demonstrate this idea, I wired up a photoresistor to my Arduino to take readings of the ambient light, and had it report the values to a Meteor.js server every ten seconds. The code is below, if you get lost or confused, leave a comment, but it's pretty heavily commented and (hopefully) easy to follow.</p>
+<p><img alt="Photo Of Project" src="https://connerswann.me/2014/06/arduino-1.jpg"></p>
+<p>Disclaimer: This is super-hacked together, I'm not claiming to be a guru. With that said, it works, so I have that going for me.</p>
+<pre class="line-numbers">
+<code class="language-c">
+#include < SPI.h >
+#include < Ethernet.h >
+
+// For ethernet shield
+byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };// MAC Address  
+char server[] = "arduinotest.meteor.com";            // Server to connect to  
+// IP Address in case we don't get one from DCHP
+IPAddress ip(192,168,0,177);    
+
+EthernetClient client;
+
+// Last time we connected to the server, in milliseconds
+unsigned long lastConnectionTime = 0;  
+// State of the connection last time through the main loop                
+boolean lastConnected = false;  
+// Delay between updates, in milliseconds
+const unsigned long postingInterval = 5000;        
+
+void setup() {  
+    // Open the serial connection
+    Serial.begin(9600);
+    Serial.println("Initializing Ethernet Shield...");
+
+    if (Ethernet.begin(mac) == 0){
+        // DCHP config has failed
+        Serial.println("Failed to configure Ethernet using DHCP");
+        // Set it up manually
+        Ethernet.begin(mac, ip);  
+    }
+    // Give it a second
+    delay(1000);
+    Serial.print("IP: ");
+    Serial.println(Ethernet.localIP());
+}
+
+void loop() {  
+    // In case we ever get a response, log it to serial
+    // commented out because unnecessary
+    // if (client.available()) {
+    //  char c = client.read();
+    //  Serial.println("RESPONSE INCOMING CAPTAIN!");
+    //  Serial.println("==========================");
+    //  Serial.print(c);
+    //  Serial.println("==========================");
+    // }
+
+    // If it's not connected but we've connected recently
+    if (!client.connected() && lastConnected) {
+        //Serial.println();
+        Serial.println("trouble in paradise... disconnecting.");
+        client.stop();
+    }
+    // if you're not connected, and ten seconds have passed since
+    // your last connection, then connect again and send data:
+    if(!client.connected() && (millis() - lastConnectionTime > postingInterval)) {
+        httpRequest();
+    }
+    // store the state of the connection for next time through
+    // the loop:
+    lastConnected = client.connected();
+}
+
+int httpRequest() {  
+    // if there's a successful connection:
+    // String postData = String("v=" + analogRead(0));
+    if (client.connect(server, 80)) {
+        Serial.println("connecting...");
+        // send the HTTP POST request:
+        client.println(constructRequest());
+        client.println("Host: arduinotest.meteor.com");
+        client.println("User-Agent: jetpack-rinocerous");
+        client.println("Connection: close");
+        client.println();
+
+
+        // let us know it sent
+        Serial.println("Sent!");
+        // note the time that the connection was made:
+        lastConnectionTime = millis();
+    } 
+    else {
+        // if you couldn't make a connection:
+        Serial.println("connection failed");
+        Serial.println("disconnecting.");
+        client.stop();
+    }
+    return 1;
+}
+
+String constructRequest(){  
+    String post = "POST ";
+    String location = "/yolo?v=";
+    int val = analogRead(0);
+    String type = " HTTP/1.1";
+
+    return post + location + val + type;
+}
+</code>
+</pre>
+
+<p>In english, the Arduino initializes the Ethernet shield and requests an IP address via DCHP. Assuming that's successful, it enters the loop and periodically tries to connect to my server at arduinotest.meteor.com.</p>
+<p>Once connected, about every ten seconds (depending on if the last connection attempt was sucessful or not) it reads the photoresistor and sends a request to the server with the value as a url parameter. It then loops again. The algorithm's also got contingencies for what happens if it can't connect, if you're interested take a look at the code.</p>
+<p>That's it for the Arduino code. Once I've added to the Meteor.js server-side code a little bit, I'll make a post about how I accomplished that.</p>
+            </section>
+
+            <section class="post-info">
+                <div class="post-share">
+                    <a class="twitter" href="https://twitter.com/share?text=Arduino - An Internet of Things&amp;url=https://connerswann.me/2014/06/arduino-an-internet-of-things.html" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <i class="ic ic-twitter"></i><span class="hidden">Twitter</span>
+                    </a>
+                    <a class="facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://connerswann.me/2014/06/arduino-an-internet-of-things.html" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <i class="ic ic-facebook"></i><span class="hidden">Facebook</span>
+                    </a>
+                    <a class="googleplus" href="https://plus.google.com/share?url=https://connerswann.me/2014/06/arduino-an-internet-of-things.html" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <i class="ic ic-googleplus"></i><span class="hidden">Google+</span>
+                    </a>
+                    <div class="clear"></div>
+                </div>
+
+                <aside class="post-tags">
+<a href="https://connerswann.me/tag/arduino">Arduino</a><a href="https://connerswann.me/tag/iot">IOT</a><a href="https://connerswann.me/tag/rest">REST</a><a href="https://connerswann.me/tag/api">API</a><a href="https://connerswann.me/tag/javascript">Javascript</a>                </aside>
+
+                <div class="clear"></div>
+
+                <aside class="post-author">
+
+
+                        <figure class="post-author-avatar">
+                            <img src="https://connerswann.me/images/conner-profile-picture.png" alt="Conner Swann" />
+                        </figure>
+                    <div class="post-author-bio">
+                        <h4 class="post-author-name"><a href="https://connerswann.me/author/conner-swann">Conner Swann</a></h4>
+                            <p class="post-author-about">Software Engineer, Infrastructure Magician, Architecture Nerd </br> Core Maintainer @ Coda Protocol</p>
+                            <span class="post-author-location"><i class="ic ic-location"></i> San Francisco</span>
+                            <span class="post-author-website"><a href="https://connerswann.me"><i class="ic ic-link"></i> Website</a></span>
+                        <!-- Social linkes in alphabet order. -->
+                            <span class="post-author-github"><a target="_blank" href="https://github.com/yourbuddyconner"><i class="ic ic-link"></i> GitHub</a></span>
+                            <span class="post-author-linkedin"><a target="_blank" href="https://www.linkedin.com/in/connerswann"><i class="ic ic-link"></i> LinkedIn</a></span>
+                            <span class="post-author-twitter"><a target="_blank" href="https://twitter.com/yourbuddyconner"><i class="ic ic-twitter"></i> Twitter</a></span>
+                    </div>
+                    <div class="clear"></div>
+                </aside>
+
+                </section>
+
+
+                <aside class="post-nav">
+                    <div class="clear"></div>
+                </aside>
+
+            </div>
+        </article>
+    </main>
+      <!-- TODO : Body class -->
+    <div id="body-class" style="display: none;" class=""></div>
+
+    <footer id="footer">
+      <div class="inner">
+        <section class="credits">
+
+
+          <span class="credits-theme">Theme <a href="https://github.com/arulrajnet/attila" rel="nofollow">Attila</a></span>
+          <span class="credits-software">Published with <a href="https://github.com/getpelican/pelican" rel="nofollow">Pelican</a></span>
+        </section>
+      </div>
+    </footer>
+  </section>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script type="text/javascript" src="https://connerswann.me/theme/js/script.js"></script>
+
+    <!-- Global Site Tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-24471866-2"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-24471866-2', { 'anonymize_ip': true });
+    </script>
+</body>
+</html>

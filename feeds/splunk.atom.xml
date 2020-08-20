@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Conner Swann - Splunk</title><link href="https://connerswann.me/" rel="alternate"></link><link href="https://connerswann.me/feeds/splunk.atom.xml" rel="self"></link><id>https://connerswann.me/</id><updated>2015-11-30T00:00:00-08:00</updated><subtitle>Reliability Engineer</subtitle><entry><title>You've Got Junk In Your Splunk (Part 2) - An Examination of Real-World Use-Cases for Splunk</title><link href="https://connerswann.me/2015/11/youve-got-junk-in-your-splunk-part-2.html" rel="alternate"></link><published>2015-11-30T00:00:00-08:00</published><updated>2015-11-30T00:00:00-08:00</updated><author><name>Conner Swann</name></author><id>tag:connerswann.me,2015-11-30:/2015/11/youve-got-junk-in-your-splunk-part-2.html</id><summary type="html">&lt;p&gt;&lt;small&gt;This is Part 2 of a multi-part post about the amazing software that is Splunk, if you haven't already, head over to &lt;a href="http://connerswann.me/youve-got-junk-in-your-splunk-an-introduction-to-splunk-and-it-data-analysis/"&gt;Part 1&lt;/a&gt; and check it out.&lt;/small&gt;&lt;/p&gt;
+&lt;h2&gt;Case Studies&lt;/h2&gt;
+&lt;p&gt;There is a virtually limitless set of problems that Splunk easily solves. From the usual IT systems analysis to advanced …&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;small&gt;This is Part 2 of a multi-part post about the amazing software that is Splunk, if you haven't already, head over to &lt;a href="http://connerswann.me/youve-got-junk-in-your-splunk-an-introduction-to-splunk-and-it-data-analysis/"&gt;Part 1&lt;/a&gt; and check it out.&lt;/small&gt;&lt;/p&gt;
+&lt;h2&gt;Case Studies&lt;/h2&gt;
+&lt;p&gt;There is a virtually limitless set of problems that Splunk easily solves. From the usual IT systems analysis to advanced visualization of business trends and statistics, you'd be hard-pressed to find a decently-sized analytics task that Splunk would preform poorly with. &lt;/p&gt;
+&lt;p&gt;To illustrate the vast array of &lt;em&gt;things&lt;/em&gt; Splunk can do, in this and subsequent posts, I'm going to examine two different use-cases for Splunk. This one looks at it from a Business-Analytics perspective and the next one will be from a more traditional IT Intrusion Prevention perspective. &lt;/p&gt;
+&lt;h1&gt;7/11 - Indonesia&lt;/h1&gt;
+&lt;p&gt;&lt;img alt="7/11 Logo" src="https://connerswann.me/images/2015/7-Eleven-Logo.PNG"&gt;&lt;/p&gt;
+&lt;h2&gt;Pre-Splunk&lt;/h2&gt;
+&lt;p&gt;In 2009 7/11, the US gas station and convenience store chain, decided to expand to Indonesia, a new and foreign market to them. This obviously required them to come up with new promotions, sell new products, and predict when customers were going to want a particular product so they were sure to have it in stock.&lt;/p&gt;
+&lt;p&gt;To be successful in the new region, the company had to compete with pre-existing &lt;a href="https://en.wikipedia.org/wiki/Warung"&gt;"warungs"&lt;/a&gt; -- small casual cafes and shops that are ubiquitous across the island nation. To do this, 7/11 stores in the country sold local foods along with the usual soft drinks and convenience store items. In addition, stores also provide amenities like outdoor seating, WiFi, and music to customers to make them more hospitable to a younger middle-class clientele. This allowed them to not only establish a foothold in the country, but thrive and expand to 100+ stores nationwide.&lt;/p&gt;
+&lt;p&gt;In order to maintain a healthy revenue stream and stay on top of their competition, 7/11 set up information-gathering infrastructure in order to identify trends in their Point of Sale data. However, this system was designed and built on top of their legacy IT systems and was markedly rigid in its processes. As a result, while they were able to glean insights from their data, the process required actual people to manually analyze data for significant portions of the process. From the moment they decided to process data in a time range, it could take as long as 3 months to organize and execute a marketing campaign. While the data &lt;em&gt;was&lt;/em&gt; available to them and provided useful insights on what their customers wanted at a particular time, the process was far from real-time analysis and ultimately could be improved. &lt;/p&gt;
+&lt;h2&gt;Post-Splunk&lt;/h2&gt;
+&lt;p&gt;In 2014, the company began searching for another data analysis platform to give them an edge in Indonesia, and after vetting several other competitors in the space, ended up choosing Splunk. By forwarding logs from Point of Sale systems in each location to a central Splunk cluster and taking advantage of the real-time nature of Splunk's data analytics, 7/11 was able to drastically increase the efficiency of its marketing and promotions machine. &lt;/p&gt;
+&lt;p&gt;By adopting Splunk, the company cut their time-to-promotions by over 80%. Whereas before it took over three months to plan and prepare a marketing campaign, after Splunk it only takes them two week's time from the moment they decide to put together a campaign to the point where the campaign is live. In addition, Splunk allows 7/11 to take other data sources into account when deciding what products to stock at any particular time. By consuming weather forecasts from the &lt;a href="https://developer.yahoo.com/weather/"&gt;Yahoo! Weather API&lt;/a&gt;, they are able to predict when certain products will be in high demand days or weeks in advance. &lt;/p&gt;
+&lt;p&gt;As I hope you can see, Splunk is immensely useful when collecting data from IT resources to affect business decisions. The next post in this series will examine how I personally used Splunk at work for a proof-of-concept in Information Security. I leveraged Splunk by collecting data from a series of Raspberry Pi SSH HoneyPots and creating Splunk Alerts when potentially malicious activity appears elsewhere in our system. Stay Tuned!&lt;/p&gt;
+&lt;p&gt;Source: 
+&lt;a href="http://www.splunk.com/view/7-eleven-indonesia/SP-CAAAN92"&gt;Splunk Success Story - 7/11&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Do you use Splunk? Have some good ideas about creating value through aggregate data? Hit me up on Twitter and let's talk! &lt;a href="http://twitter.com/yourbuddyconner"&gt;@YourBuddyConner&lt;/a&gt;&lt;/p&gt;</content><category term="Splunk"></category><category term="Splunk"></category><category term="Case Study"></category></entry><entry><title>You've Got Junk In Your Splunk (Part 1) - An Introduction to Splunk and IT Data Analysis</title><link href="https://connerswann.me/2015/11/youve-got-junk-in-your-splunk-part-1.html" rel="alternate"></link><published>2015-11-20T22:17:00-08:00</published><updated>2015-11-20T22:17:00-08:00</updated><author><name>Conner Swann</name></author><id>tag:connerswann.me,2015-11-20:/2015/11/youve-got-junk-in-your-splunk-part-1.html</id><summary type="html">&lt;p&gt;If you've read some of my older posts, you might have seen &lt;a href="http://connerswann.me/splunk-analyzing-text-messages/"&gt;this one&lt;/a&gt; about my personal analytics project project where I used Splunk to index 50,000+ text messages and preform analysis on them. &lt;/p&gt;
+&lt;p&gt;Keeping with the Splunk theme, early this fall I put together a classroom presentation on …&lt;/p&gt;</summary><content type="html">&lt;p&gt;If you've read some of my older posts, you might have seen &lt;a href="http://connerswann.me/splunk-analyzing-text-messages/"&gt;this one&lt;/a&gt; about my personal analytics project project where I used Splunk to index 50,000+ text messages and preform analysis on them. &lt;/p&gt;
+&lt;p&gt;Keeping with the Splunk theme, early this fall I put together a classroom presentation on the Splunk to introduce students at Northern Arizona University to the software and help them understand the sorts of use-cases it is really useful for. Today, I decided to take the general information contained within the presentation and turn it into a handy blog post for those people who might be googling "What the heck is Splunk?!" or something similar. &lt;/p&gt;
+&lt;p&gt;This is part one in a multi-part post. Today I'll discuss the multitude of problems Splunk is targeting and how it uniquely solves them in a way that is capable of affecting how an entire business handles their day-to-day workflow. ~~Stay tuned for~~ &lt;a href="http://connerswann.me/youve-got-junk-in-your-splunk-part-2-an-examination-of-real-world-use-cases-for-splunk/"&gt;Here's the next post&lt;/a&gt; where I'll put the Splunk workflow into context with real-world use cases!&lt;/p&gt;
+&lt;h2&gt;The Problem&lt;/h2&gt;
+&lt;p&gt;In this day and age, the majority of "Enterprise Data" is generated by machines preforming a variety of different functions at any given time. Often-times, this data that's generated and saved to log files is not human-readable, and when it &lt;em&gt;is&lt;/em&gt; human-readable there's often too much of it to process manually. &lt;/p&gt;
+&lt;p&gt;This data comes from tens, hundreds, or even thousands of different applications, all of whom potentially output their logs in as many different formats as there are applications. &lt;/p&gt;
+&lt;p&gt;Splunk has a multitude of use-cases, from IT Analytics to planning marketing campaigns. The following are some problems people in varying positions of might use Splunk to solve:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Dan the developer is asked to help figure out why his code is crashing on Sundays at Midnight&lt;/li&gt;
+&lt;li&gt;Sally the SysAdmin has no idea why users from one office location can’t log in to their computers&lt;/li&gt;
+&lt;li&gt;Ivan the InfoSec Analyst has no idea a hacker in Bulgaria is sending spam from his servers&lt;/li&gt;
+&lt;li&gt;Billy the Business Analyst needs to figure out what localities are using his company’s applications&lt;/li&gt;
+&lt;li&gt;Molly the Marketing Executive needs to analyze her affiliate marketing campaigns to see if improvements can be made&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Machine Data is the most rapidly growing segment of the arena experts call "&lt;a href="https://en.wikipedia.org/wiki/Big_data"&gt;Big Data&lt;/a&gt;." This stuff gets generated 24 hours a day, 7 days a week, 365 days a year and will continue to be generated forever. This set of data contains a categorical record of everything a user does online (and oftentimes offline). The main problem is that the value from this data is, for the most part, untapped -- the data sits on a server until it gets deleted to make room for more data that rarely (or never) gets looked at. &lt;/p&gt;
+&lt;h2&gt;What Does Machine Data Look Like?&lt;/h2&gt;
+&lt;p&gt;When talking about how difficult "Machine Data" is to process manually, it's really important to be able to visualize exactly why it's so difficult to process. Below are some examples text that Splunk might consume: &lt;/p&gt;
+&lt;h4&gt;HoneyPot Logs:&lt;/h4&gt;
+&lt;p&gt;&lt;pre class="language-accesslog"&gt;
+&lt;code class="language-accesslog" data-language="Honeypot Log"&gt;
+2015-10-17 13:08:51-0700 [SSHService ssh-userauth on HoneyPotTransport,2323,93.158.203.167] login attempt [root/12345] succeeded
+&lt;/code&gt;
+&lt;/pre&gt;&lt;/p&gt;
+&lt;h4&gt;Webserver Logs:&lt;/h4&gt;
+&lt;p&gt;&lt;pre class="language-accesslog"&gt;
+&lt;code class="language-accesslog" data-language="Apache Access Log"&gt;
+64.242.88.10 - - [07/Mar/2004:16:05:49 -0800] "GET /twiki/bin/edit/Main/Double_bounce_sender?topicparent=Main.ConfigurationVariables HTTP/1.1" 401 12846
+&lt;/code&gt;
+&lt;/pre&gt;&lt;/p&gt;
+&lt;h4&gt;Tweets:&lt;/h4&gt;
+&lt;p&gt;&lt;pre class="line-numbers language-json"&gt;
+&lt;code class="language-json" data-language="json"&gt;
+{
+    "created_at":"Mon Sep 28 19:39:04 +0000 2015”, 
+    ”user”:”yourbuddyconner", 
+    "id":648582717068587000, 
+    "id_str":"648582717068587009", 
+    "text":"The amount of local news stations treating the Facebook outage as news is too damn high. #FacebookDown #TwitterIsUp #Facebook”, 
+    "entities": {
+        "hashtags":[
+            {
+                "text":"FacebookDown",
+                "indices":[89,102]
+            }, 
+            {
+                "text":"TwitterIsUp", 
+                "indices":[103,115]
+            }, 
+            {
+                "text":"Facebook", 
+                "indices":[116,125]
+            }
+        ], 
+        "symbols":[], 
+        "user_mentions":[], 
+        "urls":[]
+    }
+}
+&lt;/code&gt;
+&lt;/pre&gt;&lt;/p&gt;
+&lt;h4&gt;Text Messages:&lt;/h4&gt;
+&lt;pre class="language-accesslog"&gt;
+&lt;code class="language-accesslog" data-language="text-message"&gt;
+message_id=53088 
+timestamp="2015-02-03 20:30:06" 
+date_read="2015-02-03 20:29:20" 
+is_from_me=1 
+is_read=1 
+handle=+9999999999 
+service=iMessage 
+message="I mean, I can, those pancakes were so good"
+&lt;/code&gt; 
+&lt;/pre&gt;
+
+&lt;p&gt;As I hope you can see, the data above is incredibly dense and hard to parse by the human eye unless you're trained to know what to look for. Even to the untrained eye though, if you look closely, there's a &lt;em&gt;lot&lt;/em&gt; of data contained in these short excerpts -- there's timestamps, hashtags, messages, HTTP Methods, IDs and more!&lt;/p&gt;
+&lt;p&gt;When you think about it, it might be possible to connect these discrete events together, timestamp to timestamp, username to username, etc. If only you had a platform that could read and understand these disparate formats!&lt;/p&gt;
+&lt;h2&gt;Enter Splunk&lt;/h2&gt;
+&lt;p&gt;Well, lucky for you, Splunk does just that! Splunk fills several roles when it comes to &lt;a href="https://en.wikipedia.org/wiki/Operational_intelligence"&gt;"Operational Intelligence"&lt;/a&gt;. &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The &lt;a href="http://docs.splunk.com/Splexicon:Universalforwarder"&gt;Splunk Universal Forwarder&lt;/a&gt; collects lines from log files as they are added to end-systems and forwards them to the Splunk Indexer.&lt;/li&gt;
+&lt;li&gt;The &lt;a href="http://docs.splunk.com/Splexicon:Indexer"&gt;Splunk Indexer&lt;/a&gt; parses log events sent to it from the Universal Forwarder or by other means, splits them into key-value fields, and stores them for safe-keeping&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Now, this may not seem  too groundbreaking, however, when you consider that this interaction occurs constantly and that old data gets saved in Splunk's data warehouse, there's a lot of power to be had. &lt;/p&gt;
+&lt;h3&gt;Business Reactivity&lt;/h3&gt;
+&lt;p&gt;&lt;img alt="Business Reactivity Graph" src="https://connerswann.me/images/2015/business-reactivity.png"&gt;&lt;/p&gt;
+&lt;p&gt;The diagram above describes different stages of "Reactivity" in a business. At the lower left we have, "Search and Investigate." A business at this stage finds out things are broken hours or sometimes days after-the fact. Fixing a problem a business like this might be facing often requires a person to manually read over days of log files to figure out what went wrong. &lt;/p&gt;
+&lt;p&gt;The two intermediate states "Proactive Monitoring and Alerting" and "Operational Visibility" describe a business who has some good practices in place that allow them to be less reactive. Operational Visibility is the ability to &lt;em&gt;see&lt;/em&gt; how each part of your system is communicating with one another, usually in one place, a dashboard for example. (As an aside, Netflix has a really good &lt;a href="http://techblog.netflix.com/2014/01/improving-netflixs-operational.html"&gt;Blog Post&lt;/a&gt; about how they use real-time data analysis to improve their Operational Visibility.) This entails knowing when and what sorts of data is being passed around at any discrete point in time. This is immensely useful when a piece of a distributed system is acting up and someone needs to get down to fixing it. &lt;/p&gt;
+&lt;p&gt;The upper-right state is "Real-Time Business Insights." A business who has processes in place to achieve this is in the best shape of all when it comes to being proactive. It implies that the business has both historical and real-time data to analyze and make up-to-the-minute decisions with. Splunk takes businesses immediately to this stage if well thought-out and implemented.&lt;/p&gt;
+&lt;h3&gt;Splunk Helps You to be "Proactive"&lt;/h3&gt;
+&lt;p&gt;By storing historical data, Splunk allows a user to determine baselines in activity and look at how those baselines have changed over time. With a little help from someone who knows the Splunk query language, it can identify what is considered to be "normal" behavior and also anomalous events that might affect business decisions. &lt;/p&gt;
+&lt;p&gt;In addition, Splunk enables the IT Professional to share their complex data with people who might not be as versed in it as they are. This is done through the use of visualizations and graphs which can then be inserted into &lt;a href="http://docs.splunk.com/Splexicon:Dashboard"&gt;Splunk Dashboards&lt;/a&gt; for repeated use. This removed the overhead of having to know what the data looks like, and instead digesting insights in aggregate through pictures. &lt;/p&gt;
+&lt;p&gt;By implementing a Splunk Cluster on-site, many successful and well-known companies have leveraged the power of Splunk to increase the value of the company as a whole and provide value to pre-existing business decision-making processes.&lt;/p&gt;
+&lt;p&gt;In my &lt;a href="http://connerswann.me/youve-got-junk-in-your-splunk-part-2-an-examination-of-real-world-use-cases-for-splunk/"&gt;next post&lt;/a&gt;, I'll be going over some real use-cases for Splunk and case-studies that examine Splunk use in the wild. Stay tuned! &lt;/p&gt;
+&lt;p&gt;Do you use Splunk? Hit me up on Twitter and let's talk! &lt;a href="http://twitter.com/yourbuddyconner"&gt;@yourbuddyconner&lt;/a&gt;&lt;/p&gt;</content><category term="Splunk"></category><category term="Splunk"></category><category term="Case Study"></category></entry><entry><title>Personal Analytics: Gleaning Metadata from Text Messages With Splunk</title><link href="https://connerswann.me/2015/02/personal-analytics-gleaning-metadata-from-text-messages-with-splunk.html" rel="alternate"></link><published>2015-02-06T05:58:00-08:00</published><updated>2015-02-06T05:58:00-08:00</updated><author><name>Conner Swann</name></author><id>tag:connerswann.me,2015-02-06:/2015/02/personal-analytics-gleaning-metadata-from-text-messages-with-splunk.html</id><summary type="html">&lt;p&gt;&lt;img alt="Splunk Logo" src="https://connerswann.me/images/2015/personal-analytics-splunk-logo.gif"&gt;
+&lt;/hr&gt;
+I've been using &lt;a href="http://www.splunk.com/"&gt;Splunk&lt;/a&gt; a lot at work. According to their website: &lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;You see servers and devices, apps and logs, traffic and clouds. We see data—everywhere. Splunk® offers the leading platform for Operational Intelligence. It enables the curious to look closely at what others ignore—machine data—and find …&lt;/p&gt;&lt;/blockquote&gt;</summary><content type="html">&lt;p&gt;&lt;img alt="Splunk Logo" src="https://connerswann.me/images/2015/personal-analytics-splunk-logo.gif"&gt;
+&lt;/hr&gt;
+I've been using &lt;a href="http://www.splunk.com/"&gt;Splunk&lt;/a&gt; a lot at work. According to their website: &lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;You see servers and devices, apps and logs, traffic and clouds. We see data—everywhere. Splunk® offers the leading platform for Operational Intelligence. It enables the curious to look closely at what others ignore—machine data—and find what others never see: insights that can help make your company more productive, profitable, competitive and secure. What can Splunk do for you? Just ask.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;My team uses the software to index and search through wide-ranging, potentially disparate datasources like server logs, google logins, data from our honeypot, and more. It fills so many use-cases, from tracking down users who have had their passwords phished to allowing us to pinpoint machines which are being tampered with (thanks to the wonder that is &lt;a href="http://www.ossec.net/"&gt;OSSEC&lt;/a&gt;). It's got a &lt;em&gt;really&lt;/em&gt; steep learning curve, but once you get the hang of it, administering a distributed Splunk environment is actually pretty fun. &lt;/p&gt;
+&lt;p&gt;Since I've been using Splunk so much, I wanted to give it a spin on a personal project. I had read at some point that iOS's text messages are stored in a SQLite database, so I decided to try and pull that data out and do some analysis on it. &lt;/p&gt;
+&lt;p&gt;SQLite has the advantage of being a flat file, making it perfectly suited for applications where network access either isn't needed or isn't readily available. Luckily for me, the &lt;a href="https://apps.splunk.com/app/958/"&gt;Splunk DB Connect&lt;/a&gt; app can natively parse SQLite and index the data as key-value pairs. &lt;/p&gt;
+&lt;p&gt;As it turns out, the iOS text messaging database has been pretty heavily documented in the past, and by using the information &lt;a href="https://theiphonewiki.com/wiki/Messages#Indexes"&gt;here&lt;/a&gt; I was able to extract the text message database from a backup of my iPhone. There were a lot of entries in this 37MB database, the messages table has over 50,000 entries, each one representing either an outgoing or incoming text message. &lt;/p&gt;
+&lt;p&gt;The database also has a 'Handles' table, which stores information about the phone number the user is communicating with. Without joining the two tables, the data is incomplete, so I  crafted a SQL query to grab the data I wanted to index from the table. This query is fed to the Splunk DB Connect app which then takes care of parsing out all 53,024 rows and splitting them up into indivudual events.  &lt;/p&gt;
+&lt;pre class="line-numbers"&gt;
+&lt;code class="language-sql"&gt;
+SELECT message.ROWID as message_id,
+    datetime(message.date,'unixepoch', '+31 years', '-6 hours') as timestamp, 
+    datetime(message.date_read, 'unixepoch', '+31 years', '-6 hours') as date_read, 
+    message.is_from_me as is_from_me,
+    message.is_read as is_read,
+    handle.id as handle, 
+    message.service as service, 
+    message.text as message FROM message, 
+    handle 
+WHERE message.handle_id = handle.ROWID;
+&lt;/code&gt;
+&lt;/pre&gt;
+
+&lt;p&gt;&lt;small&gt;The SQL Query to create complete events&lt;/small&gt;&lt;/p&gt;
+&lt;p&gt;Once Splunk has digested the data, heading to the Search &amp;amp; Reporting app and typing &lt;code&gt;index=text_messages&lt;/code&gt; into the search box gives me a nice frequency graph and a list of events: &lt;/p&gt;
+&lt;p&gt;&lt;img alt="Splunk Screenshot" src="https://connerswann.me/images/2015/personal-analytics-screenshot-1.png"&gt;&lt;/p&gt;
+&lt;p&gt;Each text message event is just a line of text that looks like this:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;message_id=53091 timestamp="2015-02-03 20:31:38" date_read="2015-02-03 20:31:28" is_from_me=1 is_read=1 handle=+xxxxxxxxxx service=iMessage message="I know, haha"&lt;/code&gt;&lt;/p&gt;
+&lt;hr&gt;
+
+&lt;p&gt;Using Splunk's powerful search tools and some apps created by the Splunk community, I could begin doing some batch processing of all the events. &lt;/p&gt;
+&lt;p&gt;Since I have so much text, the first thing I did was download a &lt;a href="https://apps.splunk.com/app/1179/"&gt;Sentiment Analysis&lt;/a&gt; app. Doing so adds a couple dashboards and the "sentiment" search command which will evaluate one field in every event you give it, assigning the event a positive or negative value. &lt;/p&gt;
+&lt;p&gt;Armed with this new field, I can now create some inferential data about the contents of the database as a whole. &lt;/p&gt;
+&lt;p&gt;For example, I can chart average sentiment over time. To do this, you chain together multiple splunk search commands until the desired output is reached:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;index=text_messages  is_from_me=1 | sentiment twitter message | timechart avg(sentiment) as sentiment span=1mon&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;In english, it says:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;In index &lt;code&gt;text_messages&lt;/code&gt;, search for events which have &lt;code&gt;is_from_me&lt;/code&gt; equal to 1.&lt;/li&gt;
+&lt;li&gt;After that, run a sentiment analysis on the results' &lt;code&gt;message&lt;/code&gt; field. &lt;/li&gt;
+&lt;li&gt;Then use the results to chart the average of the &lt;code&gt;sentiment&lt;/code&gt; field over time spans of one month."&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The resulting graph looks like this:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="sentiment over time" src="https://connerswann.me/images/2015/personal-analytics-screenshot-2.png"&gt;&lt;/p&gt;
+&lt;p&gt;By chaining together more complex series of commands, you can get some pretty cool results! &lt;/p&gt;
+&lt;p&gt;The next graph is created by finding the average sentiment and forming a baseline sentiment value, allowing good and bad sentiment to cancel each other out, leaving only a remainder. &lt;/p&gt;
+&lt;p&gt;Looking at the blue sentiment portion of the graph, zero is this baseline. Any column that falls below this has a "below average" sentiment while columns that are greater than zero posess an "above average" sentiment as compared with the rest of the events. &lt;/p&gt;
+&lt;p&gt;The second yellow line simply charts the number of events in each period. &lt;/p&gt;
+&lt;p&gt;&lt;code&gt;index=text_messages  is_from_me=1 | sentiment twitter message |eval diff=sentiment-0.788400| eval count=count|  timechart avg(diff) as sentiment, count span=14d&lt;/code&gt;
+&lt;/br&gt;
+&lt;img alt="Splunk Screenshot" src="https://connerswann.me/images/2015/personal-analytics-screenshot-3.png"&gt;&lt;/p&gt;
+&lt;p&gt;This last one is my favorite. It overlays the sentiment of incoming messages over the sentiment of outgoing messages. This was to test the hypothesis that the sentiment of incoming texts could affect the sentiment of outgouing texts. While correlation doesn't imply causation, I still think it's interesting that the graphs follow each other in so many places! &lt;/p&gt;
+&lt;p&gt;&lt;code&gt;index=text_messages  is_from_me=0 |  sentiment twitter message |  eval diff=sentiment-0.788400 | timechart avg(diff) as sentiment_from span=1mon | appendcols [search index=text_messages  is_from_me=1 |  sentiment twitter message |  eval diff2=sentiment-0.788400 | timechart avg(diff2) as sentiment_me span=1mon]&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Splunk Screenshot" src="https://connerswann.me/images/2015/personal-analytics-screenshot-4.png"&gt;&lt;/p&gt;
+&lt;p&gt;It's truly fascinating how each of these events are pretty useless by themselves, however when you take them all into account some interesting information can be gleaned. I plan to continue on with this little Personal Analytics project by incorporating more data sources like sleep analysis, stay tuned! &lt;/p&gt;
+&lt;p&gt;If you're interested in this sort of thing, shoot me a tweet &lt;a href="http://twitter.com/yourbuddyconner"&gt;@YourBuddyConner&lt;/a&gt;, I'd love to hear what you think!&lt;/p&gt;</content><category term="Splunk"></category><category term="Splunk"></category><category term="Analytics"></category><category term="Sentiment Analysis"></category><category term="Text Message"></category><category term="iOS"></category></entry></feed>

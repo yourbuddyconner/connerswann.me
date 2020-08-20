@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+
+  <title>Coda Testnets on Kubernetes</title>
+
+
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="referrer" content="origin" />
+  <meta name="generator" content="Pelican" />
+<link href="https://connerswann.me/drafts/coda-testnets-kubernetes.html" rel="canonical" />
+  <!-- Feed -->
+        <link href="https://connerswann.me/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Conner Swann Full Atom Feed" />
+          <link href="https://connerswann.me/feeds/{slug}.atom.xml" type="application/atom+xml" rel="alternate" title="Conner Swann Categories Atom Feed" />
+
+  <link href="https://connerswann.me/theme/css/style.css" type="text/css" rel="stylesheet" />
+
+  <!-- Code highlight color scheme -->
+      <link href="https://connerswann.me/theme/css/code_blocks/monokai.css" rel="stylesheet">
+
+
+  <!-- Custom fonts -->
+  <link href='https://fonts.googleapis.com/css?family=Montserrat:400,300' rel='stylesheet' type='text/css' />
+  <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css" />
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+
+
+
+    <meta name="description" content="Who is this for? Read this if you think operating Blockchain Testnets in a highly-automatable, repeatable way is super rad!...">
+
+    <meta name="author" content="Conner Swann">
+
+    <meta name="tags" content="Coda">
+    <meta name="tags" content="Blockchain">
+    <meta name="tags" content="Google Cloud">
+    <meta name="tags" content="Kubernetes">
+
+
+
+
+<!-- Open Graph -->
+<meta property="og:site_name" content="Conner Swann"/>
+<meta property="og:title" content="Coda Testnets on Kubernetes"/>
+<meta property="og:description" content="Who is this for? Read this if you think operating Blockchain Testnets in a highly-automatable, repeatable way is super rad!..."/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:url" content="https://connerswann.me/drafts/coda-testnets-kubernetes.html"/>
+<meta property="og:type" content="article"/>
+<meta property="article:published_time" content="2020-01-05 00:00:00-08:00"/>
+<meta property="article:modified_time" content=""/>
+<meta property="article:author" content="https://connerswann.me/author/conner-swann">
+<meta property="article:section" content="Coda Protocol"/>
+<meta property="article:tag" content="Coda"/>
+<meta property="article:tag" content="Blockchain"/>
+<meta property="article:tag" content="Google Cloud"/>
+<meta property="article:tag" content="Kubernetes"/>
+<meta property="og:image" content="https://connerswann.me/images/2019/coda-cover.jpg">
+
+<!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@yourbuddyconner">
+    <meta name="twitter:title" content="Coda Testnets on Kubernetes">
+    <meta name="twitter:url" content="https://connerswann.me/drafts/coda-testnets-kubernetes.html">
+
+        <meta name="twitter:image:src" content="https://connerswann.me/images/2019/coda-cover.jpg">
+
+      <meta name="twitter:description" content="Who is this for? Read this if you think operating Blockchain Testnets in a highly-automatable, repeatable way is super rad!...">
+
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Article",
+  "name": "Coda Testnets on Kubernetes",
+  "headline": "Coda Testnets on Kubernetes",
+  "datePublished": "2020-01-05 00:00:00-08:00",
+  "dateModified": "",
+  "author": {
+    "@type": "Person",
+    "name": "Conner Swann",
+    "url": "https://connerswann.me/author/conner-swann"
+  },
+  "image": "https://connerswann.me/images/2019/coda-cover.jpg",
+  "url": "https://connerswann.me/drafts/coda-testnets-kubernetes.html",
+  "description": "Who is this for? Read this if you think operating Blockchain Testnets in a highly-automatable, repeatable way is super rad!..."
+}
+</script>
+</head>
+<!-- TODO : Body class -->
+<body class="home-template">
+
+<nav id="menu">
+  <a class="close-button">Close</a>
+  <div class="nav-wrapper">
+    <p class="nav-label">Menu</p>
+    <ul>
+
+              <li role="presentation"><a href="https://connerswann.me/pages/about-me/">About Me</a></li>
+
+    </ul>
+  </div>
+</nav>
+    <!-- Progressbar -->
+    <div class="progress-container">
+        <span class="progress-bar"></span>
+    </div>
+
+    <!-- Page Header -->
+    <!-- Set your background image for this header on the line below. -->
+    <header id="post-header" class="has-cover">
+      <div class="inner">
+        <nav id="navigation">
+            <span id="home-button" class="nav-button">
+                <a class="home-button" href="https://connerswann.me/" title="Home"><i class="ic ic-arrow-left"></i> Home</a>
+            </span>
+          <span id="menu-button" class="nav-button">
+            <a class="menu-button"><i class="ic ic-menu"></i> Menu</a>
+          </span>
+        </nav>
+        <h1 class="post-title">Coda Testnets on Kubernetes</h1>
+        <!-- TODO : Proper class for headline -->
+        <span class="post-meta">
+                <a href="https://connerswann.me/author/conner-swann">Conner Swann</a>
+            | <time datetime="Sun 05 January 2020">Sun 05 January 2020</time>
+        </span>
+        <!-- TODO : Modified check -->
+            <div class="post-cover cover" style="background-image: url('https://connerswann.me/images/2019/coda-cover.jpg')">
+      </div>
+    </header>
+
+  <section id="wrapper">
+    <a class="hidden-close"></a>
+
+    <!-- Post content -->
+    <main class="content" role="main">
+        <article class="post">
+        <div class="inner">
+            <section class="post-content">
+                <h4>Who is this for?</h4>
+<p>Read this if you think operating Blockchain Testnets in a highly-automatable, repeatable way is super rad!</p>
+<p><strong>Prerequisites</strong> - You should have the following knowledge/software installed to get the full benefit of this blog post:</p>
+<ul>
+<li><a href="https://kubernetes.io/docs/concepts/overview/what-is-kubernetes/">Basic Understanding of Kubernetes</a></li>
+<li><a href="https://cloud.google.com/sdk/docs/#install_the_latest_cloud_tools_version_cloudsdk_current_version">Google Cloud SDK</a></li>
+<li><a href="https://kubernetes.io/docs/tasks/tools/install-kubectl/">kubectl</a></li>
+</ul>
+<p><strong>Key Takeaways</strong> - By the end of this post, you will: </p>
+<ul>
+<li>Understand the parts of a O(1) Labs QA Testnet</li>
+<li>Build a high-level appreciation for the tools involved and their interfaces</li>
+</ul>
+<h1>Quick Background: Coda Node Types</h1>
+<p>Since this particular post is about the high-level operation of a testnet, we will only briefly touch on the various node roles and what they do. However, if you have a burning desire for more information on the protocol and consensus algorithm, the <a href="https://codaprotocol.com/docs/architecture">Coda Docs</a> has a wonderful overview video and plenty of details for you to absorb.</p>
+<p>My preferred way to deploy a Coda Daemon is via Docker Container, and (for reasons we will get to later) the best way to deploy containers these days is with <a href="https://kubernetes.io/">Kubernetes</a>. </p>
+<h2>Block Producer</h2>
+<p>As in any blockchain, Coda has a class of node that participates in consensus and produces blocks. Often, these can be referred to as Validators, or Miners, but other protocols have fun names to refer to them. (ex. Tezos calls their consensus nodes "Bakers")</p>
+<p>As far as deployment is concerned, the only major piece of information that must be passed to a Block Producer is one or more private keys corresponding to accounts with stake. </p>
+<p>Check out the <a href="https://github.com/CodaProtocol/coda-automation/tree/master/helm/block-producer">Block Producer Helm Chart</a> on Github. </p>
+<h2>SNARK Worker</h2>
+<p>SNARK Workers are unique to Coda Protocol, and are relatively easy to operate. SNARK Workers, and by extension the "Parallel Scan State" have interesting properties that allow the Coda Protocol to function while still producing proofs for all the blocks and transactions being generated. To learn more about how Transactions are "SNARKed" and the recursive nature of the Scan State, see the Coda Docs <a href="https://codaprotocol.com/docs/architecture/snark-workers#snarking-transactions">here</a></p>
+<p>Simply put, you can think of a single SNARK Worker process as a simple work queue, retrieving a job that has not been completed locally, producing a SNARK for the job, and returning the completed SNARK to be broadcast to the network. Like a normal work queue, workers retrieve work over the network via the <a href="https://github.com/janestreet/bin_prot">bin_prot</a> RPC Protocol, and can be positioned remotely from the job queue itself. Structuring the workers like this is advantageous because this worker process is stateless and can easily be scaled horizontally, with work assignment being offloaded to this central actor, referred to as the "SNARK Coordinator."</p>
+<p>In a simple, default deployment, the Coda CLI will start a daemon process to act as "coordinator" for a single worker process, but it is possible to start multiple worker processes. For more details on how this can be achieved, Check out the <a href="https://github.com/CodaProtocol/coda-automation/tree/master/helm/snark-worker">SNARK Coordinator Helm Chart</a> on Github. </p>
+<h1>The Tools</h1>
+<h2>Containers and Kubernetes</h2>
+<p>Since there are a lot of moving parts in any cloud infrastructure, it makes a ton of sense to automate as much as possible. This is why thousands of organizations have recognized the power of kubernetes and the time-savings it brings. Because Kubernetes is just a set of APIs you can call at its core, it follows that a higher-order abstraction can be used to bring cookie-cutter deployments to Kubernetes, enter <a href="https://helm.sh/">Helm</a>, the "Package Manager for Kubernetes".</p>
+<h2>Helm</h2>
+<p>At O(1), we have leveraged Helm charts to encapsulate the various configuration that is required for running a Coda Daemon in a Development context. Deploying a daemon is as simple as running <code>helm install</code>, and the helm variables (referred to a <code>values.yaml</code>) expose a multitude of low-level configuration options, such as the genesis ledger and runtime constants which control the properties of the network as a whole. </p>
+<h2>Terraform</h2>
+<p>Now, once you have a single testnet working and deployed with Helm, you will immediately realize it wasn't as easy as you thought. Despite all the possibilities Helm gives you, deploying a Blockchain Testnet <em>perfectly</em> such that it bootstraps is still a very small target to hit, and Coda is no exception. Each node must receive the exact same Runtime Constants and Ledger, and it can be easy to botch a deployment if you are just operating at the Helm layer. </p>
+<p>Logically, as before, you can introduce another layer of abstraction here. You could use Helm itself to achieve this, but I personally find it frustrating working on Helm charts that have surpassed a certain level of complexity, simply due to the fact that Go Templates are a bad (if fast and simple) way to handle composable templates like deployment configuration. </p>
+<p>We ended up starting this project just as Helm 3 and the Helm 3 Terraform provider were coming out which was a huge godsend, because with the removal of "Tiller" from the architecture, Helm 3 uses Kubernetes directly to store deployment metadata as well as to deal with permissions and access control. (For more details on the Helm 2 -&gt; 3 transition, check out the docs <a href="https://helm.sh/docs/topics/v2_v3_migration/">here</a>) </p>
+<p>Helm 3 + Terraform is the best of both worlds because you can use Helm natively for what it's good at, namely deploying things to Kubernetes. You can then leverage Terraform do what <em>it's</em> good at, which is API dependency resolution and management. Put succinctly, Terraform can be used to manage multiple testnet deployments at once, passing all the required configuration to Helm, where appropriate, and managing the entire lifecycle of a deployment. </p>
+<h1>Anatomy of a Coda Testnet</h1>
+<p><img alt="Testnet Architecture Diagram" src="../images/2020/Testnet-Overview.png"></p>
+<p>Now that we've gone over the tools involved, we can now discuss the deployment itself and the neat properties of a Kubernetes-based Testnet. </p>
+<h2>Ledger and Runtime Configuration</h2>
+<p>The ledger is arguably the most important thing to get right, because this single point of failure can bork an entire deployment. There are several key points that have to be configured correctly for a network to bootstrap as expected:</p>
+<ul>
+<li>Proper amount of keypairs generated for various node roles</li>
+<li>Offline keys delegated to online keys</li>
+<li>Proper balances and currency encoding</li>
+<li>Proper formatting of ledger itself</li>
+</ul>
+<p>However, once you are confident your configuration is perfect, this is the least-likely part to break. </p>
+<h2>Whale and Fish Block Producers</h2>
+<p>In order to simulate our Public Testnets which have many users (200+) that have each been delegated some small amount of stake, and O(1) Labs-controlled block producers with a significant amount of stake, we leveraged Helm to introduce the concept of multiple "classes" of Block Producer that can be deployed with varying configuration. The only major difference between a "Whale" and a "Fish" block producer is the number of them that get deployed and the expected block rate for that particular Coda Daemon. This is particularly useful because we can deploy essentially any configuration of different block producers in order to test hypothesis about block production. </p>
+<h2>The SNARK Coordinator</h2>
+<p>For each Testnet, O(1) Labs will operate <em>at least</em> one SNARK Coordinator. This is simply to ensure there is a baseline amount of SNARK Work being completed so the network does not halt. The Work is generally priced high, with room to undercut prices to encourage community members to run their own SNARK Workers. </p>
+<h2>Testnet Services</h2>
+<p>The MVP Testnet Deployment consists of only Block Producers and SNARK Workers, but there are other blockchain-adjacent services that can be deployed to augment the Testnet and add functionality. </p>
+<h3>The Faucet</h3>
+<p>Bots are often used to automate transactions being sent around the network. Often, these require special consideration in the genesis ledger, so it's worth keeping them in mind when setting up a new network. For example, the O(1) Discord Faucet is a simple sidecar bot that runs against a Coda Daemon's GraphQL Port and responds to requests for funds in the Coda Protocol Discord server.</p>
+<h3>The Archive Node</h3>
+<h3>The GraphQL Proxy</h3>
+<h2>Monitoring the Testnet</h2>
+<h2>Extending the Deployment</h2>
+            </section>
+
+            <section class="post-info">
+                <div class="post-share">
+                    <a class="twitter" href="https://twitter.com/share?text=Coda Testnets on Kubernetes&amp;url=https://connerswann.me/drafts/coda-testnets-kubernetes.html" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <i class="ic ic-twitter"></i><span class="hidden">Twitter</span>
+                    </a>
+                    <a class="facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://connerswann.me/drafts/coda-testnets-kubernetes.html" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <i class="ic ic-facebook"></i><span class="hidden">Facebook</span>
+                    </a>
+                    <a class="googleplus" href="https://plus.google.com/share?url=https://connerswann.me/drafts/coda-testnets-kubernetes.html" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <i class="ic ic-googleplus"></i><span class="hidden">Google+</span>
+                    </a>
+                    <div class="clear"></div>
+                </div>
+
+                <aside class="post-tags">
+<a href="https://connerswann.me/tag/coda">Coda</a><a href="https://connerswann.me/tag/blockchain">Blockchain</a><a href="https://connerswann.me/tag/google-cloud">Google Cloud</a><a href="https://connerswann.me/tag/kubernetes">Kubernetes</a>                </aside>
+
+                <div class="clear"></div>
+
+                <aside class="post-author">
+
+
+                        <figure class="post-author-avatar">
+                            <img src="https://connerswann.me/images/conner-profile-picture.png" alt="Conner Swann" />
+                        </figure>
+                    <div class="post-author-bio">
+                        <h4 class="post-author-name"><a href="https://connerswann.me/author/conner-swann">Conner Swann</a></h4>
+                            <p class="post-author-about">Software Engineer, Infrastructure Magician, Architecture Nerd </br> Core Maintainer @ Coda Protocol</p>
+                            <span class="post-author-location"><i class="ic ic-location"></i> San Francisco</span>
+                            <span class="post-author-website"><a href="https://connerswann.me"><i class="ic ic-link"></i> Website</a></span>
+                        <!-- Social linkes in alphabet order. -->
+                            <span class="post-author-github"><a target="_blank" href="https://github.com/yourbuddyconner"><i class="ic ic-link"></i> GitHub</a></span>
+                            <span class="post-author-linkedin"><a target="_blank" href="https://www.linkedin.com/in/connerswann"><i class="ic ic-link"></i> LinkedIn</a></span>
+                            <span class="post-author-twitter"><a target="_blank" href="https://twitter.com/yourbuddyconner"><i class="ic ic-twitter"></i> Twitter</a></span>
+                    </div>
+                    <div class="clear"></div>
+                </aside>
+
+                </section>
+
+
+                <aside class="post-nav">
+                    <div class="clear"></div>
+                </aside>
+
+            </div>
+        </article>
+    </main>
+      <!-- TODO : Body class -->
+    <div id="body-class" style="display: none;" class=""></div>
+
+    <footer id="footer">
+      <div class="inner">
+        <section class="credits">
+
+
+          <span class="credits-theme">Theme <a href="https://github.com/arulrajnet/attila" rel="nofollow">Attila</a></span>
+          <span class="credits-software">Published with <a href="https://github.com/getpelican/pelican" rel="nofollow">Pelican</a></span>
+        </section>
+      </div>
+    </footer>
+  </section>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script type="text/javascript" src="https://connerswann.me/theme/js/script.js"></script>
+
+    <!-- Global Site Tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-24471866-2"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-24471866-2', { 'anonymize_ip': true });
+    </script>
+</body>
+</html>

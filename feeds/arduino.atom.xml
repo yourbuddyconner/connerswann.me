@@ -1,0 +1,430 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Conner Swann - Arduino</title><link href="https://connerswann.me/" rel="alternate"></link><link href="https://connerswann.me/feeds/arduino.atom.xml" rel="self"></link><id>https://connerswann.me/</id><updated>2015-01-01T21:04:00-08:00</updated><subtitle>Reliability Engineer</subtitle><entry><title>Internet of Things: Connecting my WiFi Arduino and PHP</title><link href="https://connerswann.me/2015/01/internet-of-things-connecting-my-wifi-arduino-and-php.html" rel="alternate"></link><published>2015-01-01T21:04:00-08:00</published><updated>2015-01-01T21:04:00-08:00</updated><author><name>Conner Swann</name></author><id>tag:connerswann.me,2015-01-01:/2015/01/internet-of-things-connecting-my-wifi-arduino-and-php.html</id><summary type="html">&lt;h2&gt;Background&lt;/h2&gt;
+&lt;p&gt;In a &lt;a href="http://connerswann.me/playing-with-the-adafruit-cc3000-wifi-shield/"&gt;previous post&lt;/a&gt; I discussed the Adafruit CC3000 WiFi shield and how I got the hardware and libraries installed. In this post I'm going to show you how I got my WiFi Arduino talking to a simple PHP script. &lt;/p&gt;
+&lt;p&gt;First, I think it's helpful to visualize exactly what's …&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Background&lt;/h2&gt;
+&lt;p&gt;In a &lt;a href="http://connerswann.me/playing-with-the-adafruit-cc3000-wifi-shield/"&gt;previous post&lt;/a&gt; I discussed the Adafruit CC3000 WiFi shield and how I got the hardware and libraries installed. In this post I'm going to show you how I got my WiFi Arduino talking to a simple PHP script. &lt;/p&gt;
+&lt;p&gt;First, I think it's helpful to visualize exactly what's going on in these sorts of interactions. The handy diagram below is a rough sketch of what's talking to what (it's actually much more complicated, but the code I wrote pertains to these actors):
+&lt;/br&gt;
+&lt;img alt="Arduino WiFi Diagram" src="https://connerswann.me/images/2015/internet-of-things-arduino-diagram.png"&gt;&lt;/p&gt;
+&lt;p&gt;The Arduino first connects to the WiFi access point through the CC3000, piping the credentials and configuration options through one of several pins on the Arduino to the CC3000 hardware. The CC3000 handles the logistics of sending and revieving messages from the router, returning the results to the Arduino. &lt;/p&gt;
+&lt;p&gt;Then, through the magic of TCP, these messages that are sent from the Arduino are recieved and interpreted by my server running PHP. For this exercise, I used the &lt;a href="http://www.slimframework.com/"&gt;Slim PHP Framework&lt;/a&gt; to create two URL Routes (more on that later) that the arduino can send requests to -- one that allows it to set a value and one that simply responds with the current value. These values are collected and stored in a MySQL database that is queried by PHP.  &lt;/p&gt;
+&lt;p&gt;Once the initial request is interpreted by the PHP script, a response is generated and sent back via TCP to the Arduino for it to interpret. &lt;/p&gt;
+&lt;p&gt;As I hope you can see, this sort of interaction is highly extensible and can be leveraged to preform all sorts of duties. For example, you could report values to a server and have the server catch them and store them in a database or periodically check for messages and display any that it recieves. Also, with a WiFi shield the communication is totally wireless!&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2&gt;The Arduino Code&lt;/h2&gt;
+&lt;p&gt;Now it's time for the code, however it does require a little explanation. I used an command line application called &lt;a href="https://www.biicode.com/"&gt;"bii"&lt;/a&gt; to do this project. It's a dependancy manager that keeps all your libraries in one place and fetches them from the internet if they're not there locally.  At compile time, bii reads your main C++ file, collects all of the includes, and links them. It's very handy at the expense of having random includes in your file. It is also capable of compiling your Arduino source files and uploading them to your board, a definite plus.&lt;/p&gt;
+&lt;p&gt;I did this because doing advanced interactions via HTTP on the Arduino is actually really hard and requires a lot of string manipulation. HTTP responses in this context are all plain text streams and the CC3000 library doesn't have any capability to parse out any information in the responses it recieves. The Bii repository had a &lt;a href="https://www.biicode.com/lasote/lasote/arduino_http/master/25/readme.md"&gt;nice library created by a guy named "Lasote"&lt;/a&gt; that did just that, so I decided to roll with it. &lt;/p&gt;
+&lt;p&gt;Here's an example HTTP Response so you have an idea of what you need to parse through and why this client interface is necessary: &lt;/p&gt;
+&lt;pre&gt;
+&lt;code class="language-http"&gt;
+Date: Thu, 01 Jan 2015 21:27:23 GMT
+Server: Apache/2.4.7 (Ubuntu)
+X-Powered-By: PHP/5.5.9-1ubuntu4.5
+Vary: Accept-Encoding
+Content-Encoding: gzip
+Content-Length: 87
+Keep-Alive: timeout=5, max=100
+Connection: Keep-Alive
+Content-Type: text/html
+{"id":"4","value":"99","reason":"To test if the arduino can decode json"}
+&lt;/code&gt;
+&lt;/pre&gt;
+
+&lt;p&gt;Being able to print out &lt;code&gt;ret_code&lt;/code&gt; and the raw response body in &lt;code&gt;response_buffer&lt;/code&gt; (both variables populated by this interface) as opposed to having to parse through the entire string above is pretty handy.&lt;/p&gt;
+&lt;p&gt;Now, without further ado, here's my C++ code for the arduino:
+&lt;pre class="line-numbers"&gt;
+&lt;code class="language-c"&gt;
+// Arduino symbols and Bindings&lt;/p&gt;
+&lt;h1&gt;include "Arduino.h"&lt;/h1&gt;
+&lt;h1&gt;include "ntruchsess/arduino_uip/uipethernet.h"&lt;/h1&gt;
+&lt;p&gt;// client interface for HTTP communication&lt;/p&gt;
+&lt;h1&gt;include "lasote/arduino_http/http_client.h"&lt;/h1&gt;
+&lt;p&gt;// a processor to decode JSON&lt;/p&gt;
+&lt;h1&gt;include "lasote/stream_processor/stream_json_processor.h"&lt;/h1&gt;
+&lt;h1&gt;include "lasote/stream_recorder/stream_recorder.h"&lt;/h1&gt;
+&lt;p&gt;//For cc3000 adapter&lt;/p&gt;
+&lt;h1&gt;include &lt;adafruit/cc3000_library/adafruit_cc3000.h&gt;&lt;/h1&gt;
+&lt;h1&gt;include "diego/ardunet/cc3000client.h"&lt;/h1&gt;
+&lt;h1&gt;include "diego/ardunet/cc3000utils.h"&lt;/h1&gt;
+&lt;h1&gt;define WLAN_SSID       "Atlantis"        // cannot be longer than 32 characters!&lt;/h1&gt;
+&lt;p&gt;//#define WLAN_PASS       "xxxxxxxx"
+char WLAN_PASS[] = {0x69, 0x69, 0x69, 0x69, 0x69, 0x00}; 
+// Security can be WLAN_SEC_UNSEC, WLAN_SEC_WEP, WLAN_SEC_WPA or WLAN_SEC_WPA2&lt;/p&gt;
+&lt;h1&gt;define WLAN_SECURITY   WLAN_SEC_WEP&lt;/h1&gt;
+&lt;p&gt;// These are the interrupt and control pins&lt;/p&gt;
+&lt;h1&gt;define ADAFRUIT_CC3000_IRQ   3  // MUST be an interrupt pin!&lt;/h1&gt;
+&lt;p&gt;// These can be any two pins&lt;/p&gt;
+&lt;h1&gt;define ADAFRUIT_CC3000_VBAT  5&lt;/h1&gt;
+&lt;h1&gt;define ADAFRUIT_CC3000_CS    10&lt;/h1&gt;
+&lt;p&gt;using namespace lasote;&lt;/p&gt;
+&lt;p&gt;//create CC3000 instance, and an SDK compatible Client
+Adafruit_CC3000 cc3000 = Adafruit_CC3000(ADAFRUIT_CC3000_CS,
+        ADAFRUIT_CC3000_IRQ, ADAFRUIT_CC3000_VBAT, SPI_CLOCK_DIVIDER);&lt;/p&gt;
+&lt;p&gt;CC3000Client client(cc3000);&lt;/p&gt;
+&lt;p&gt;char response_buffer[150];
+// This processor simply writes the response to a buffer
+StreamRecorderProcessor response_recorder(response_buffer, 150); 
+HttpClient http_client(client, Serial);&lt;/p&gt;
+&lt;p&gt;// the keys of the values I'd like to fetch from the response
+//const char&lt;em&gt; queries[] = {"id", "value", "reason"};
+//                  processor(ArrayofQueries, nQueries, MaxNameSize, MaxValueSize, MaxTraceSize)
+//StreamJsonProcessor processor(queries, 3, 10, 10, 10);
+// the setup routine runs once when you press reset:
+void setup() {
+    // open the serial connection to report messages
+    Serial.begin(9600);
+    Serial.println("&lt;/em&gt;&lt;strong&gt;&lt;em&gt;*&lt;/em&gt;&lt;/strong&gt;&lt;strong&gt;&lt;em&gt;*&lt;/em&gt; SETUP &lt;/strong&gt;&lt;strong&gt;&lt;em&gt;*&lt;/em&gt;&lt;/strong&gt;&lt;strong&gt;&lt;em&gt;*&lt;/em&gt;&lt;/strong&gt;");
+    // begin the wifi connection using the cc3000 interface
+    startConnection(cc3000, WLAN_SSID, WLAN_PASS, WLAN_SECURITY);&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;// add a HTTP Response processor&lt;/span&gt;
+&lt;span class="err"&gt;// this will take the response stream and process it depending on&lt;/span&gt;
+&lt;span class="err"&gt;// which processor we use. (i.e. JSON or just a raw buffer)&lt;/span&gt;
+&lt;span class="err"&gt;// http_client.processors.add_item(&amp;amp;processor);&lt;/span&gt;
+&lt;span class="err"&gt;http_client.processors.add_item(&amp;amp;response_recorder);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;}&lt;/p&gt;
+&lt;p&gt;// the loop routine runs over and over again forever:
+void loop() {&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nt"&gt;delay&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nt"&gt;20000&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+&lt;span class="nt"&gt;Serial&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;println&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;--- SENDING POST---&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+&lt;span class="o"&gt;//&lt;/span&gt;&lt;span class="nt"&gt;Reset&lt;/span&gt; &lt;span class="nt"&gt;processors&lt;/span&gt; &lt;span class="nt"&gt;and&lt;/span&gt; &lt;span class="nt"&gt;custom&lt;/span&gt; &lt;span class="nt"&gt;headers&lt;/span&gt;
+&lt;span class="nt"&gt;http_client&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;reset&lt;/span&gt;&lt;span class="o"&gt;();&lt;/span&gt; 
+&lt;span class="o"&gt;//&lt;/span&gt;&lt;span class="nt"&gt;We&lt;/span&gt; &lt;span class="nt"&gt;can&lt;/span&gt; &lt;span class="nt"&gt;add&lt;/span&gt; &lt;span class="nt"&gt;custom&lt;/span&gt; &lt;span class="nt"&gt;headers&lt;/span&gt; &lt;span class="nt"&gt;to&lt;/span&gt; &lt;span class="nt"&gt;the&lt;/span&gt; &lt;span class="nt"&gt;request&lt;/span&gt; &lt;span class="nt"&gt;if&lt;/span&gt; &lt;span class="nt"&gt;we&lt;/span&gt; &lt;span class="nt"&gt;wanted&lt;/span&gt;
+&lt;span class="o"&gt;//&lt;/span&gt;&lt;span class="nt"&gt;http_client&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;add_custom_header&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Content-Type&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;application/json&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+
+&lt;span class="o"&gt;//&lt;/span&gt; &lt;span class="nt"&gt;Send&lt;/span&gt; &lt;span class="nt"&gt;an&lt;/span&gt; &lt;span class="nt"&gt;HTTP&lt;/span&gt; &lt;span class="nt"&gt;GET&lt;/span&gt; &lt;span class="nt"&gt;request&lt;/span&gt; &lt;span class="nt"&gt;for&lt;/span&gt; &lt;span class="nt"&gt;the&lt;/span&gt; &lt;span class="nt"&gt;value&lt;/span&gt;
+&lt;span class="nt"&gt;int&lt;/span&gt; &lt;span class="nt"&gt;sent&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nt"&gt;http_client&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;get&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;condejo.org&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;/api/wifitest.php/getvalue&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="nt"&gt;80&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+&lt;span class="o"&gt;//&lt;/span&gt; &lt;span class="nt"&gt;Evaluate&lt;/span&gt; &lt;span class="nt"&gt;the&lt;/span&gt; &lt;span class="nt"&gt;return&lt;/span&gt; &lt;span class="nt"&gt;code&lt;/span&gt; &lt;span class="nt"&gt;from&lt;/span&gt; &lt;span class="nt"&gt;the&lt;/span&gt; &lt;span class="nt"&gt;HTTP&lt;/span&gt; &lt;span class="nt"&gt;response&lt;/span&gt;
+&lt;span class="nt"&gt;short&lt;/span&gt; &lt;span class="nt"&gt;int&lt;/span&gt; &lt;span class="nt"&gt;ret_code&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nt"&gt;http_client&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;receive&lt;/span&gt;&lt;span class="o"&gt;();&lt;/span&gt;
+&lt;span class="nt"&gt;Serial&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;println&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nt"&gt;ret_code&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+&lt;span class="nt"&gt;if&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nt"&gt;sent&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="err"&gt;if(ret_code){&lt;/span&gt;
+        &lt;span class="err"&gt;if(ret_code&lt;/span&gt; &lt;span class="err"&gt;==&lt;/span&gt; &lt;span class="err"&gt;200){&lt;/span&gt;
+            &lt;span class="err"&gt;Serial.println(&amp;quot;Code&lt;/span&gt; &lt;span class="err"&gt;200&lt;/span&gt; &lt;span class="err"&gt;OK!&amp;quot;)&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+            &lt;span class="err"&gt;//&lt;/span&gt; &lt;span class="err"&gt;for&lt;/span&gt; &lt;span class="err"&gt;the&lt;/span&gt; &lt;span class="err"&gt;JSON&lt;/span&gt; &lt;span class="err"&gt;processor&lt;/span&gt; &lt;span class="err"&gt;if&lt;/span&gt; &lt;span class="err"&gt;we&lt;/span&gt; &lt;span class="err"&gt;were&lt;/span&gt; &lt;span class="err"&gt;using&lt;/span&gt; &lt;span class="err"&gt;it&lt;/span&gt;
+            &lt;span class="err"&gt;//&lt;/span&gt; &lt;span class="err"&gt;if(processor.finished()){&lt;/span&gt;
+            &lt;span class="err"&gt;//&lt;/span&gt;     &lt;span class="err"&gt;Serial.print(&amp;quot;Reading&lt;/span&gt; &lt;span class="n"&gt;ID&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;);&lt;/span&gt;
+&lt;span class="s2"&gt;            //     Serial.println(processor.results&lt;/span&gt;&lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt;&lt;span class="s2"&gt;);&lt;/span&gt;
+&lt;span class="s2"&gt;            //     Serial.print(&amp;quot;&lt;/span&gt;&lt;span class="n"&gt;Reading&lt;/span&gt; &lt;span class="n"&gt;Value&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;);&lt;/span&gt;
+&lt;span class="s2"&gt;            //     Serial.println(processor.results&lt;/span&gt;&lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt;&lt;span class="s2"&gt;);&lt;/span&gt;
+&lt;span class="s2"&gt;            //     Serial.print(&amp;quot;&lt;/span&gt;&lt;span class="n"&gt;Reason&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;);&lt;/span&gt;
+&lt;span class="s2"&gt;            //     Serial.println(processor.results&lt;/span&gt;&lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt;&lt;span class="s2"&gt;);&lt;/span&gt;
+&lt;span class="s2"&gt;            // }&lt;/span&gt;
+&lt;span class="s2"&gt;            // else{&lt;/span&gt;
+&lt;span class="s2"&gt;            //     Serial.println(&amp;quot;&lt;/span&gt;&lt;span class="n"&gt;Return&lt;/span&gt; &lt;span class="n"&gt;JSON&lt;/span&gt; &lt;span class="n"&gt;not&lt;/span&gt; &lt;span class="n"&gt;detected&lt;/span&gt; &lt;span class="n"&gt;or&lt;/span&gt; &lt;span class="n"&gt;queries&lt;/span&gt; &lt;span class="n"&gt;not&lt;/span&gt; &lt;span class="n"&gt;found&lt;/span&gt;&lt;span class="o"&gt;!&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;);&lt;/span&gt;
+&lt;span class="s2"&gt;            // }&lt;/span&gt;
+&lt;span class="s2"&gt;            Serial.println(response_buffer);&lt;/span&gt;
+&lt;span class="s2"&gt;        }&lt;/span&gt;
+&lt;span class="s2"&gt;        else{&lt;/span&gt;
+&lt;span class="s2"&gt;            // PHP didn&amp;#39;t like the request &lt;/span&gt;
+&lt;span class="s2"&gt;            Serial.print(&amp;quot;&lt;/span&gt;&lt;span class="n"&gt;Http&lt;/span&gt; &lt;span class="n"&gt;Error&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;);&lt;/span&gt;
+&lt;span class="s2"&gt;            Serial.println(ret_code);&lt;/span&gt;
+&lt;span class="s2"&gt;        }&lt;/span&gt;
+&lt;span class="s2"&gt;    }&lt;/span&gt;
+&lt;span class="s2"&gt;    else{&lt;/span&gt;
+&lt;span class="s2"&gt;        // TCP Broke and we didn&amp;#39;t get a response to our request&lt;/span&gt;
+&lt;span class="s2"&gt;        Serial.println(&amp;quot;&lt;/span&gt;&lt;span class="n"&gt;Error&lt;/span&gt; &lt;span class="n"&gt;receiving&lt;/span&gt;&lt;span class="o"&gt;!&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;);&lt;/span&gt;
+&lt;span class="s2"&gt;    }&lt;/span&gt;
+&lt;span class="s2"&gt;}&lt;/span&gt;
+&lt;span class="s2"&gt;else{&lt;/span&gt;
+&lt;span class="s2"&gt;    // Couldn&amp;#39;t send the initial request in the first place&lt;/span&gt;
+&lt;span class="s2"&gt;    Serial.println(&amp;quot;&lt;/span&gt;&lt;span class="n"&gt;ERROR&lt;/span&gt; &lt;span class="n"&gt;CONNECTING&lt;/span&gt;&lt;span class="o"&gt;...&lt;/span&gt; &lt;span class="n"&gt;retrying&lt;/span&gt;&lt;span class="err"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;}
+&lt;/code&gt;
+&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;On first run, this program runs a subroutine that initializes critical objects and connects to the configures WiFi access point (in this example, it's called Atlantis). &lt;/p&gt;
+&lt;p&gt;It then enters a loop, making a request to the server once every ten seconds. I simply have the arduino report this response over Serial, however you can do much more with it. For example, the response can be programmatically used as a trigger to preform advanced functions like turning LED's on/off, sending a text message, or even sending a new HTTP request to a different server. &lt;/p&gt;
+&lt;hr&gt;
+&lt;h2&gt;The PHP Code&lt;/h2&gt;
+&lt;p&gt;As I already discussed above, the PHP is designed to recieve, interpret, and respond to the Arduino's HTTP requests. &lt;/p&gt;
+&lt;p&gt;For this exercise, I decided to work with &lt;a href="http://www.slimframework.com/"&gt;Slim PHP Framework&lt;/a&gt; because it makes doing this sort of thing trivial, whereas with raw PHP it would be much more involved (read: more code). In this context I'm only utilizing Slim's easy-to-use URL router, however there's plenty more to be had including a templating system and a debugging interface (this last one is immensely useful). &lt;/p&gt;
+&lt;p&gt;Here's the code: &lt;/p&gt;
+&lt;pre class="line-numbers"&gt;
+&lt;code class="language-php"&gt;
+&lt; ?php
+
+require 'libs/Slim/Slim.php';
+require_once 'dbHandler.php';
+
+\Slim\Slim::registerAutoloader();
+
+$app = new \Slim\Slim();
+
+// create a route at wifitest.php/getvalue
+// when someone makes an HTTP GET request here, this function will be called
+$app-&gt;get('/getvalue', function() {
+    // dbHandler is a piece of code I picked up along the way that encapsulates
+    // often repeated SQL commands. I've modified it pretty heavily, and it's probably
+    // its own post at this point.
+    $db = new DbHandler();
+    // grab the record with the highest ID
+    $record = $db-&gt;getOneRecord("SELECT * FROM wifitest ORDER BY reading_id DESC");
+    // create a new response object and populate it
+    $response["id"] = $record["reading_id"];
+    $response["value"] = $record["reading_value"];
+    $response["reason"] = "To test if the arduino can decode json"; 
+    // convert it to JSON and send it back to the client
+    echo json_encode($response);
+}); 
+
+// create a route at wifitest.php/setvalue
+$app-&gt;get('/setvalue', function() use ($app){
+    // grab the request parameter from the Slim app object
+    $value = $app-&gt;request()-&gt;params('value');
+    $db = new DbHandler();
+    if ($value){
+        // create a new data object
+        $newvalue["reading_value"] = $value;
+        // insert that ish to the DB 
+        $result = $db-&gt;insertIntoTable($newvalue, array('reading_value'), 'wifitest');
+        if ($result != NULL) {
+            // let the client know the insert was a success
+            $response["message"] = "Value saved!";
+            $response["code"] = 1;
+            echo json_encode($response);
+        }
+        else{
+            // let the user know the insert failed
+            $response["message"] = "Value not saved.";
+            $response["code"] = 0;
+            echo json_encode($response);
+        }
+    }
+});
+
+$app-&gt;run();
+?&gt;
+&lt;/code&gt;
+&lt;/pre&gt;
+
+&lt;p&gt;If you've got any questions or comments about how this works, feel free to shoot me an email or Tweet! Thanks for reading. &lt;/p&gt;</content><category term="Arduino"></category><category term="Wi-Fi"></category><category term="Arduino"></category><category term="PHP"></category><category term="REST"></category><category term="API"></category></entry><entry><title>Arduino: Introducing The Adafruit CC3000 WiFi Shield</title><link href="https://connerswann.me/2014/12/arduino-introducing-the-adafruit-cc3000-wifi-shield.html" rel="alternate"></link><published>2014-12-29T00:45:00-08:00</published><updated>2014-12-29T00:45:00-08:00</updated><author><name>Conner Swann</name></author><id>tag:connerswann.me,2014-12-29:/2014/12/arduino-introducing-the-adafruit-cc3000-wifi-shield.html</id><summary type="html">&lt;p&gt;I recently got my hands on an &lt;a href="http://www.adafruit.com/product/1491"&gt;Adafruit CC3000 WiFi Shield&lt;/a&gt;. From the Adafruit product page: &lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;"The CC3000 hits that sweet spot of usability, price and capability. It uses SPI for communication (not UART!) so you can push data as fast as you want or as slow as you want …&lt;/p&gt;&lt;/blockquote&gt;</summary><content type="html">&lt;p&gt;I recently got my hands on an &lt;a href="http://www.adafruit.com/product/1491"&gt;Adafruit CC3000 WiFi Shield&lt;/a&gt;. From the Adafruit product page: &lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;"The CC3000 hits that sweet spot of usability, price and capability. It uses SPI for communication (not UART!) so you can push data as fast as you want or as slow as you want. It has a proper interrupt system with IRQ pin so you can have asynchronous connections. It supports 802.11b/g, open/WEP/WPA/WPA2 security, TKIP &amp;amp; AES. A built in TCP/IP stack with a "BSD socket" interface. TCP and UDP in both client and server mode, up to 4 concurrent sockets."&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;In not so many words, it's a piece of hardware that can be used to connect your Arduino to a WiFi access point to send and recieve data wirelessly. It's a pretty robust piece of hardware, and it's perfect to connect my "Internet of Things" projects to the internet. &lt;/p&gt;
+&lt;p&gt;To get my setup working, I stepped through the &lt;a href="https://learn.adafruit.com/adafruit-cc3000-wifi"&gt;Adafruit Documentation on the CC3000&lt;/a&gt; which is complete and very thorough. &lt;/p&gt;
+&lt;p&gt;Before you can start using this board, you have to solder on the headers so you can plug it directly into the Arduino. &lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Since I'm more of a software guy, I won't detail the actual process of soldering the headers, but if you're looking for instructions &lt;a href="https://learn.adafruit.com/adafruit-cc3000-wifi/assembly-and-wiring"&gt;Adafruit has you covered&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Arduino with WiFi Shield" src="https://connerswann.me/2014/12/arduino-wifi-shield-1.jpg"&gt;&lt;/p&gt;
+&lt;p&gt;To get it running, you have to add the shield's code libraries to your &lt;code&gt;arduino_sketch_location/libraries/&lt;/code&gt; folder, the library is available for download along with installation instructions &lt;a href="https://learn.adafruit.com/adafruit-cc3000-wifi/cc3000-library-software"&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;From there, all I did was pop the shield into place on top of the Arduino and load up the 'buildtest' example file [1]. &lt;/p&gt;
+&lt;p&gt;I got an output that looked like this: 
+&lt;pre&gt;
+&lt;code class="language-none"&gt;
+Hello, CC3000!&lt;/p&gt;
+&lt;p&gt;RX Buffer : 131 bytes
+TX Buffer : 131 bytes
+Free RAM: 1221&lt;/p&gt;
+&lt;p&gt;Initialising the CC3000 ...
+Firmware V. : 1.24
+MAC Address : 0x08 0x00 0x28 0x57 0xA4 0xF5
+Networks found: 10
+================================================
+SSID Name    : AtlantisBack
+RSSI         : 63
+Security Mode: 1&lt;/p&gt;
+&lt;p&gt;SSID Name    : DIRECT-c0[BD]EM59
+RSSI         : 55
+Security Mode: 3&lt;/p&gt;
+&lt;p&gt;SSID Name    : Someone's Wi-Fi Network
+RSSI         : 37
+Security Mode: 3&lt;/p&gt;
+&lt;p&gt;SSID Name    : Atlantis
+RSSI         : 55
+Security Mode: 1&lt;/p&gt;
+&lt;p&gt;================================================&lt;/p&gt;
+&lt;p&gt;Deleting old connection profiles&lt;/p&gt;
+&lt;p&gt;Attempting to connect to Atlantis
+Connected!
+Request DHCP&lt;/p&gt;
+&lt;p&gt;IP Addr: 192.168.1.134
+Netmask: 255.255.255.0
+Gateway: 192.168.1.1
+DHCPsrv: 192.168.1.1
+DNSserv: 76.14.0.8
+www.adafruit.com -&amp;gt; 207.58.139.247&lt;/p&gt;
+&lt;p&gt;Pinging 207.58.139.247...5 replies
+Ping successful!&lt;/p&gt;
+&lt;p&gt;Closing the connection
+&lt;/code&gt;
+&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;This is just a really basic example so I could prove to myself that I could get the shield working. However, my end-goal is to get the board speaking to a server and reporting some values, similarly to what I did in a &lt;a href="http://connerswann.me/arduino-an-internet-of-things/"&gt;previous post with an Ethernet shield&lt;/a&gt;. &lt;/p&gt;
+&lt;p&gt;Stay tuned!&lt;/p&gt;
+&lt;div class="footnote"&gt;
+&lt;hr&gt;
+&lt;ol&gt;
+&lt;li id="fn:1"&gt;
+&lt;p&gt;The documentation actually says that you shouldn't be able to run the Arduino and the CC3000 shield off of your computer's USB port due to power consumption being too high, however I wasn't able to verify this. It might be a problem as you get into more advanced things and require more of the Arduino's pins to be powered.&amp;#160;&lt;a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;</content><category term="Arduino"></category><category term="Arduino"></category><category term="IOT"></category><category term="HTTP"></category><category term="Ethernet Shield"></category></entry><entry><title>An Internet of Things (Part 2): Calling Meteor.js Functions Externally</title><link href="https://connerswann.me/2014/06/an-internet-of-things-part-2-calling-meteorjs-functions-externally.html" rel="alternate"></link><published>2014-06-24T20:54:00-07:00</published><updated>2014-06-24T20:54:00-07:00</updated><author><name>Conner Swann</name></author><id>tag:connerswann.me,2014-06-24:/2014/06/an-internet-of-things-part-2-calling-meteorjs-functions-externally.html</id><summary type="html">&lt;p&gt;In a previous post I talked about my simple Arduino sketch that contacts a Meteor.js server and feeds it a value read from a Photoresistor. Now I'm going to detail how I hacked together the server. Just an advanced warning, I'm not an expert with Meteor and I'm going …&lt;/p&gt;</summary><content type="html">&lt;p&gt;In a previous post I talked about my simple Arduino sketch that contacts a Meteor.js server and feeds it a value read from a Photoresistor. Now I'm going to detail how I hacked together the server. Just an advanced warning, I'm not an expert with Meteor and I'm going to be refining this implementation as I go. With that said, it works, so I've got that going for me.&lt;/p&gt;
+&lt;p&gt;First, it's probably pertinent to go into a little detail as to what "Meteor.js" is. According to them:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Meteor is an open-source platform for building top-quality web apps in a fraction of the time, whether you're an expert developer or just getting started.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;In a nutshell, it's a javascript framework for writing web apps. One attribute that makes sets it apart is the ability to write both the client-side and server-side applications entirely in Javascript using the handy Meteor library. I think it adds an element of fun/coding/computer-science-ness to (what I consider to be) the drudgery of classic HTML and CSS.&lt;/p&gt;
+&lt;p&gt;I created a simple Meteor application to interface with my Arduino. The page is tracking a database table called "reads" and whenever another item is added it updates itself with the value from that item's "value" entry in the database. All of this logic happens on the client-side and is contained the following code.&lt;/p&gt;
+&lt;pre class="line-numbers"&gt;
+&lt;code class="language-javascript"&gt;
+Reads = new Meteor.Collection("reads");
+
+if (Meteor.isClient) {  
+    // Fills in Templates
+    Template.temperature.val = function () {
+        val = Reads.find({}, {sort:{timestamp: -1}}, {limit: 1}).fetch()[0];
+        if(val){
+            Session.set("currentValue", val.value);
+        }
+        return val;
+    };
+    Template.temperature.message = function(){
+        if(Session.get("currentValue") &lt; 200){
+            return "Hey, who turned out the lights?";
+        }
+      else{
+            return "It's totally bright enough to see..."
+        }
+    };
+}
+&lt;/code&gt;
+&lt;/pre&gt;
+
+&lt;p&gt;So far, this is all simple out-of-the-box meteor behavior, but since I wanted to play around with calling Meteor functions externally, I added Iron Router to my Meteor app. Iron Router is a "client and server-side router built for use with Meteor." It allows you to route traffic to URLs on your server (or client) to arbitrary templates or even trigger meteor functions.&lt;/p&gt;
+&lt;p&gt;The code is super uninvolved, simply create a new Iron Router route on the server have it store the URL parameters that have been passed in a database. Meteor handles the ordeal of shuttling that data down to the client, something I find to be very powerful.&lt;/p&gt;
+&lt;pre class="line-numbers"&gt;
+&lt;code class="language-javascript"&gt;
+if (Meteor.isServer) {  
+    Router.map(function () {
+        this.route('yolo', {
+            where: 'server',
+            action: function () {
+            time = new Date().getTime();
+            Reads.insert({value: this.request.query.v, timestamp: time})
+        }
+    });
+    });
+}
+&lt;/code&gt;
+&lt;/pre&gt;
+
+&lt;p&gt;I created a route at &lt;code&gt;http://arduinotest.meteor.com/yolo&lt;/code&gt;. You can see that it works for yourself, just copy this: &lt;code&gt;http://arduinotest.meteor.com/yolo?v=9001&lt;/code&gt; into your url bar and then visit &lt;code&gt;http://arduinotest.meteor.com&lt;/code&gt;. Assuming the previous value wasn't already "9001", the page should have updated to reflect the changes.&lt;/p&gt;
+&lt;p&gt;The page actually reacts to the values that are passed, but you'll have to play with it to figure out exactly what makes the text change!&lt;/p&gt;</content><category term="Arduino"></category><category term="Arduino"></category><category term="IOT"></category><category term="REST"></category><category term="API"></category><category term="MeteorJS"></category><category term="Javascript"></category></entry><entry><title>Arduino - An Internet of Things</title><link href="https://connerswann.me/2014/06/arduino-an-internet-of-things.html" rel="alternate"></link><published>2014-06-24T20:51:00-07:00</published><updated>2014-06-24T20:51:00-07:00</updated><author><name>Conner Swann</name></author><id>tag:connerswann.me,2014-06-24:/2014/06/arduino-an-internet-of-things.html</id><summary type="html">&lt;p&gt;Recently I got an Arduino Uno, a small, versatile microcontroller that has been adopted by the "Maker" community as the controller of choice for hobby electronics, and for good reason.&lt;/p&gt;
+&lt;p&gt;In my limited experience so far, Arduino is a real joy to deal with, having a very simplistic interface while …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Recently I got an Arduino Uno, a small, versatile microcontroller that has been adopted by the "Maker" community as the controller of choice for hobby electronics, and for good reason.&lt;/p&gt;
+&lt;p&gt;In my limited experience so far, Arduino is a real joy to deal with, having a very simplistic interface while preserving a very robbust "skillset" if you will. The first thing I did was spend a day playing with a box of components, learning how to read sensors and analog components with the board and reacting to those readings, whether it be just reporting back to the computer via serial or prehaps turning on/off an LED.&lt;/p&gt;
+&lt;p&gt;I've heard the term "Internet of Things" thrown around a lot, but never really quite understood what all the hype was about. However, after screwing around with an internet-equipped Arduino for a day, I can finally appreciate the power of being able to take your physical sensors and hardware and grant them a voice on the great forum that is "The Internet".&lt;/p&gt;
+&lt;p&gt;To demonstrate this idea, I wired up a photoresistor to my Arduino to take readings of the ambient light, and had it report the values to a Meteor.js server every ten seconds. The code is below, if you get lost or confused, leave a comment, but it's pretty heavily commented and (hopefully) easy to follow.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Photo Of Project" src="https://connerswann.me/2014/06/arduino-1.jpg"&gt;&lt;/p&gt;
+&lt;p&gt;Disclaimer: This is super-hacked together, I'm not claiming to be a guru. With that said, it works, so I have that going for me.&lt;/p&gt;
+&lt;pre class="line-numbers"&gt;
+&lt;code class="language-c"&gt;
+#include &lt; SPI.h &gt;
+#include &lt; Ethernet.h &gt;
+
+// For ethernet shield
+byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };// MAC Address  
+char server[] = "arduinotest.meteor.com";            // Server to connect to  
+// IP Address in case we don't get one from DCHP
+IPAddress ip(192,168,0,177);    
+
+EthernetClient client;
+
+// Last time we connected to the server, in milliseconds
+unsigned long lastConnectionTime = 0;  
+// State of the connection last time through the main loop                
+boolean lastConnected = false;  
+// Delay between updates, in milliseconds
+const unsigned long postingInterval = 5000;        
+
+void setup() {  
+    // Open the serial connection
+    Serial.begin(9600);
+    Serial.println("Initializing Ethernet Shield...");
+
+    if (Ethernet.begin(mac) == 0){
+        // DCHP config has failed
+        Serial.println("Failed to configure Ethernet using DHCP");
+        // Set it up manually
+        Ethernet.begin(mac, ip);  
+    }
+    // Give it a second
+    delay(1000);
+    Serial.print("IP: ");
+    Serial.println(Ethernet.localIP());
+}
+
+void loop() {  
+    // In case we ever get a response, log it to serial
+    // commented out because unnecessary
+    // if (client.available()) {
+    //  char c = client.read();
+    //  Serial.println("RESPONSE INCOMING CAPTAIN!");
+    //  Serial.println("==========================");
+    //  Serial.print(c);
+    //  Serial.println("==========================");
+    // }
+
+    // If it's not connected but we've connected recently
+    if (!client.connected() &amp;&amp; lastConnected) {
+        //Serial.println();
+        Serial.println("trouble in paradise... disconnecting.");
+        client.stop();
+    }
+    // if you're not connected, and ten seconds have passed since
+    // your last connection, then connect again and send data:
+    if(!client.connected() &amp;&amp; (millis() - lastConnectionTime &gt; postingInterval)) {
+        httpRequest();
+    }
+    // store the state of the connection for next time through
+    // the loop:
+    lastConnected = client.connected();
+}
+
+int httpRequest() {  
+    // if there's a successful connection:
+    // String postData = String("v=" + analogRead(0));
+    if (client.connect(server, 80)) {
+        Serial.println("connecting...");
+        // send the HTTP POST request:
+        client.println(constructRequest());
+        client.println("Host: arduinotest.meteor.com");
+        client.println("User-Agent: jetpack-rinocerous");
+        client.println("Connection: close");
+        client.println();
+
+
+        // let us know it sent
+        Serial.println("Sent!");
+        // note the time that the connection was made:
+        lastConnectionTime = millis();
+    } 
+    else {
+        // if you couldn't make a connection:
+        Serial.println("connection failed");
+        Serial.println("disconnecting.");
+        client.stop();
+    }
+    return 1;
+}
+
+String constructRequest(){  
+    String post = "POST ";
+    String location = "/yolo?v=";
+    int val = analogRead(0);
+    String type = " HTTP/1.1";
+
+    return post + location + val + type;
+}
+&lt;/code&gt;
+&lt;/pre&gt;
+
+&lt;p&gt;In english, the Arduino initializes the Ethernet shield and requests an IP address via DCHP. Assuming that's successful, it enters the loop and periodically tries to connect to my server at arduinotest.meteor.com.&lt;/p&gt;
+&lt;p&gt;Once connected, about every ten seconds (depending on if the last connection attempt was sucessful or not) it reads the photoresistor and sends a request to the server with the value as a url parameter. It then loops again. The algorithm's also got contingencies for what happens if it can't connect, if you're interested take a look at the code.&lt;/p&gt;
+&lt;p&gt;That's it for the Arduino code. Once I've added to the Meteor.js server-side code a little bit, I'll make a post about how I accomplished that.&lt;/p&gt;</content><category term="Arduino"></category><category term="Arduino"></category><category term="IOT"></category><category term="REST"></category><category term="API"></category><category term="Javascript"></category></entry></feed>

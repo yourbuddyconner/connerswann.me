@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Conner Swann - MacOS</title><link href="https://connerswann.me/" rel="alternate"></link><link href="https://connerswann.me/feeds/macos.atom.xml" rel="self"></link><id>https://connerswann.me/</id><updated>2017-11-14T00:00:00-08:00</updated><subtitle>Reliability Engineer</subtitle><entry><title>My Mac Keeps Dropping Wi-Fi - How I Fixed It</title><link href="https://connerswann.me/2017/11/my-mac-keeps-dropping-wi-fi-how-i-fixed-it.html" rel="alternate"></link><published>2017-11-14T00:00:00-08:00</published><updated>2017-11-14T00:00:00-08:00</updated><author><name>Conner Swann</name></author><id>tag:connerswann.me,2017-11-14:/2017/11/my-mac-keeps-dropping-wi-fi-how-i-fixed-it.html</id><summary type="html">&lt;p&gt;I run a lot of things on my Desktop Mac Pro at home -- from basic stuff like a Plex media server to more custom projects like web servers or a VPN gateway. It's pretty important that these semi-critical services stay online as much as possible, however in furtherance of this …&lt;/p&gt;</summary><content type="html">&lt;p&gt;I run a lot of things on my Desktop Mac Pro at home -- from basic stuff like a Plex media server to more custom projects like web servers or a VPN gateway. It's pretty important that these semi-critical services stay online as much as possible, however in furtherance of this goal I ran into one major issue: the shape of my house. &lt;/p&gt;
+&lt;p&gt;My computer is upstairs and the cable modem is ~200 feet away, through multiple floors, in the basement. I obviously have in-home Wi-Fi, but occasionally the Mac would disconnect from the network with no warning, and the only way to get it back on was to physically be there at the keyboard. Not Optimal! &lt;/p&gt;
+&lt;p&gt;It's not a gigantic issue because simply sitting down, logging in, and cycling the Wi-Fi power is all that's needed to reconnect. However, this is really inconvenient if I'm not physically there but still want to consume the media on the machine -- so I set out to fix the problem for good. &lt;/p&gt;
+&lt;p&gt;Luckily for me, Apple is really good about providing command-line control over hardware functionality in most circumstances, and Wi-Fi is no exception. There is a handy program on all OS X Machines called &lt;code&gt;networksetup&lt;/code&gt;. Here's an excerpt from the man page entry: &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;NAME&lt;/span&gt;
+     &lt;span class="n"&gt;networksetup&lt;/span&gt; &lt;span class="c1"&gt;-- configuration tool for network settings in System Preferences.&lt;/span&gt;
+
+&lt;span class="n"&gt;DESCRIPTION&lt;/span&gt;
+     &lt;span class="n"&gt;The&lt;/span&gt; &lt;span class="n"&gt;networksetup&lt;/span&gt; &lt;span class="n"&gt;command&lt;/span&gt; &lt;span class="k"&gt;is&lt;/span&gt; &lt;span class="n"&gt;used&lt;/span&gt; &lt;span class="k"&gt;to&lt;/span&gt; &lt;span class="n"&gt;configure&lt;/span&gt; &lt;span class="n"&gt;network&lt;/span&gt; &lt;span class="n"&gt;settings&lt;/span&gt; &lt;span class="n"&gt;typically&lt;/span&gt; &lt;span class="n"&gt;configured&lt;/span&gt; &lt;span class="k"&gt;in&lt;/span&gt; &lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="k"&gt;System&lt;/span&gt; &lt;span class="n"&gt;Preferences&lt;/span&gt; &lt;span class="n"&gt;application&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;  &lt;span class="n"&gt;The&lt;/span&gt; &lt;span class="n"&gt;networksetup&lt;/span&gt; &lt;span class="n"&gt;command&lt;/span&gt;
+     &lt;span class="n"&gt;requires&lt;/span&gt; &lt;span class="k"&gt;at&lt;/span&gt; &lt;span class="n"&gt;least&lt;/span&gt; &lt;span class="ss"&gt;&amp;quot;admin&amp;quot;&lt;/span&gt; &lt;span class="k"&gt;privileges&lt;/span&gt; &lt;span class="k"&gt;to&lt;/span&gt; &lt;span class="n"&gt;run&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt; &lt;span class="n"&gt;Most&lt;/span&gt; &lt;span class="k"&gt;of&lt;/span&gt; &lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="k"&gt;set&lt;/span&gt; &lt;span class="n"&gt;commands&lt;/span&gt; &lt;span class="n"&gt;require&lt;/span&gt; &lt;span class="ss"&gt;&amp;quot;root&amp;quot;&lt;/span&gt; &lt;span class="k"&gt;privileges&lt;/span&gt; &lt;span class="k"&gt;to&lt;/span&gt; &lt;span class="n"&gt;run&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;
+
+     &lt;span class="k"&gt;Any&lt;/span&gt; &lt;span class="n"&gt;flag&lt;/span&gt; &lt;span class="n"&gt;that&lt;/span&gt; &lt;span class="n"&gt;takes&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="n"&gt;password&lt;/span&gt; &lt;span class="n"&gt;will&lt;/span&gt; &lt;span class="n"&gt;accept&lt;/span&gt; &lt;span class="ss"&gt;&amp;quot;-&amp;quot;&lt;/span&gt; &lt;span class="k"&gt;in&lt;/span&gt; &lt;span class="n"&gt;place&lt;/span&gt; &lt;span class="k"&gt;of&lt;/span&gt; &lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="n"&gt;password&lt;/span&gt; &lt;span class="k"&gt;to&lt;/span&gt; &lt;span class="n"&gt;indicate&lt;/span&gt; &lt;span class="n"&gt;it&lt;/span&gt; &lt;span class="n"&gt;should&lt;/span&gt; &lt;span class="k"&gt;read&lt;/span&gt; &lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="n"&gt;password&lt;/span&gt; &lt;span class="k"&gt;from&lt;/span&gt; &lt;span class="k"&gt;stdin&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Knowing that &lt;code&gt;networksetup&lt;/code&gt; exists and how it works, I set out to whip up a little BASH script that can be run with cron and can check for internet connectivity and cycle the Wi-Fi if necessary. Below is what I came up with: &lt;/p&gt;
+&lt;script src="https://gist.github.com/yourbuddyconner/22c37e5246b041fd5c6e4d1e89db0d34.js"&gt;&lt;/script&gt;
+
+&lt;p&gt;After the script was written, it was trivial to add it to my crontab to be executed once every couple minutes. I also set up external monitoring Namecheap's Dynamic DNS service and UptimeRobot.com, but that's a topic for a future post. &lt;/p&gt;</content><category term="MacOS"></category><category term="Wi-Fi"></category><category term="cron"></category><category term="MacOS"></category></entry><entry><title>A Quick Script to Make Your SSH-ing Easier</title><link href="https://connerswann.me/2015/01/a-quick-script-to-make-your-ssh-ing-easier.html" rel="alternate"></link><published>2015-01-21T15:50:00-08:00</published><updated>2015-01-21T15:50:00-08:00</updated><author><name>Conner Swann</name></author><id>tag:connerswann.me,2015-01-21:/2015/01/a-quick-script-to-make-your-ssh-ing-easier.html</id><summary type="html">&lt;p&gt;At work, I find myself SSH-ing into at least five different machines a day. I use a password manager, so my workflow looks like this:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;ol&gt;
+&lt;li&gt;ssh conner@myserver.com &lt;/li&gt;
+&lt;li&gt;Grab my password from password manager&lt;/li&gt;
+&lt;li&gt;paste password into terminal&lt;/li&gt;
+&lt;li&gt;if you messed up GOTO 1&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;This gets really tedious after …&lt;/p&gt;</summary><content type="html">&lt;p&gt;At work, I find myself SSH-ing into at least five different machines a day. I use a password manager, so my workflow looks like this:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;ol&gt;
+&lt;li&gt;ssh conner@myserver.com &lt;/li&gt;
+&lt;li&gt;Grab my password from password manager&lt;/li&gt;
+&lt;li&gt;paste password into terminal&lt;/li&gt;
+&lt;li&gt;if you messed up GOTO 1&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;This gets really tedious after the 20th time, so I wrote a quick Bash script that leverages the handy &lt;a href="http://manpages.ubuntu.com/manpages/precise/man1/ssh-copy-id.1.html"&gt;ssh-copy-id&lt;/a&gt; command. &lt;/p&gt;
+&lt;pre class="line-numbers"&gt;
+&lt;code class="language-bash"&gt;
+##########################################
+# This script relies on the package "ssh-copy-id". It's on all your major package 
+# managers. This script was written for an OSX environment, but there's no reason 
+# why it wouldn't work on other unix-ey platforms. 
+#
+# WARNING: Use this at your own risk, I'm not responsible if you break something by running it.
+#
+#   The following happens when this script runs.
+#   .5. Data is gathered.
+#   1. Keys are generated and named based on the short name you supply in ~/.ssh/.
+#   2. The private key is sent to the server with ssh-copy-key using the port specified. 
+#   3. The pertinent information is added to your ssh-config (if you haven't made one, it'll make one for you).
+#   
+#   You can now ssh into your server using "ssh server_short_name"!
+#
+# 08/20/2014 http://connerswann.me
+
+server_host_name=""
+server_short_name=""
+server_user=""
+server_port=""
+ssh_config=~/.ssh/config
+
+clear 
+
+if [ -z "$(which ssh-copy-id)" ]; then
+    echo "Dude, you need 'ssh-copy-id' installed. Dying..."
+    exit 1
+fi
+
+echo "Sup, let's save some SSH keys."
+
+while [[ ! $confirm =~ ^([yY][eE][sS]|[yY])$ || $confirm == "" ]]; do
+    echo 
+    echo "Enter the server host name: "
+    read server_host_name
+    echo "Enter a short name for the server: "
+    read server_short_name
+    echo "Enter your username on the external server: "
+    read server_user
+    echo "Which port should I connect to? (just hit ENTER for default port 22)"
+    read server_port
+    if [ -z "$server_port" ] ; then server_port=22; fi #map empty server_port -&gt; 22
+
+    echo "Please verify that this is correct."
+    echo "Short Name -&gt; $server_short_name"
+    echo "Host Name -&gt; $server_host_name"
+    echo "Server User -&gt; $server_user"
+    echo "Server Port -&gt; $server_port"
+    echo "Confirm? (Y/n)"
+    read confirm 
+    if [ -z "$confirm" ] ; then confirm="Y"; fi #map empty string to -&gt; "Y"
+done
+
+clear
+echo "Passing to ssh-keygen..."
+ssh-keygen -t rsa -f ~/.ssh/$server_short_name 
+
+echo "I hope that worked "
+echo "Press ENTER to continue."
+read confirm
+
+cd ~/.ssh/
+
+ssh-copy-id -p $server_port -i $server_short_name.pub $server_user@$server_host_name
+
+touch $ssh_config
+
+echo &gt;&gt;$ssh_config
+echo "Host $server_short_name" &gt;&gt;$ssh_config
+echo "Hostname $server_host_name" &gt;&gt;$ssh_config
+echo "User $server_user" &gt;&gt;$ssh_config
+echo "Port $server_port" &gt;&gt;$ssh_config
+echo "IdentityFile ~/.ssh/$server_short_name" &gt;&gt;$ssh_config
+
+echo "Contents of SSH Config File:"
+echo 
+cat $ssh_config
+echo 
+&lt;/code&gt;
+&lt;/pre&gt;
+
+&lt;p&gt;The comments really say it all, but here's the TL;DR:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;It collects information about the server you're configuring&lt;/li&gt;
+&lt;li&gt;It generates RSA keys for password-less identification with ssh-keygen&lt;/li&gt;
+&lt;li&gt;It sends those keys to the server using ssh-copy-id and saves all the information to your SSH profile&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Now, my workflow looks like this: &lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&gt; ssh myserver&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;There you have it! If you've got any questions as to how this works or implementing it, shoot me a &lt;a href="http://twitter.com/yourbuddyconner"&gt;tweet&lt;/a&gt;!&lt;/p&gt;</content><category term="MacOS"></category><category term="MacOS"></category><category term="BASH"></category><category term="Script"></category><category term="Fixes"></category></entry></feed>
