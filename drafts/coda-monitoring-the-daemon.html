@@ -223,8 +223,9 @@
 <h2>Set up Sandbox Prometheus</h2>
 <p>I have set up an example repository located <a href="https://github.com/yourbuddyconner/coda-examples/tree/master/basic-prometheus">here</a>, the important stuff you'll need for a basic local Prometheus + Coda installation is included below:</p>
 <p><code>docker-compose.yml</code></p>
-<p>This project uses <a href="https://docs.docker.com/compose/">docker-compose</a>, a tool for orchestrating multiple docker containers on the same machine. It has an extensive feature-set and I encourage you to check out the documentation should you want to learn more.
-<script src="https://gist-it.appspot.com/https://github.com/yourbuddyconner/coda-examples/blob/master/basic-prometheus/docker-compose.yml?footer=minimal"></script></p>
+<p>This project uses <a href="https://docs.docker.com/compose/">docker-compose</a>, a tool for orchestrating multiple docker containers on the same machine. It has an extensive feature-set and I encourage you to check out the documentation should you want to learn more.</p>
+<script src="https://gist-it.appspot.com/https://github.com/yourbuddyconner/coda-examples/blob/master/basic-prometheus/docker-compose.yml?footer=minimal"></script>
+
 <p><code>prometheus.yml</code></p>
 <p>This is the prometheus configuration file which specifies targets to scrape and how to scrape them. 
 <script src="https://gist-it.appspot.com/https://github.com/yourbuddyconner/coda-examples/blob/master/basic-prometheus/config/prometheus.yml?footer=minimal"></script></p>
@@ -237,7 +238,7 @@
 <p>You should now be able to navigate to <code>localhost:9090</code> in your browser to get access to the Prometheus UI.</p>
 <p><img alt="Prometheus UI" src="https://connerswann.me/drafts/prometheus-ui.png"></p>
 <h2>Actionable Metrics</h2>
-<p>Note: All graphs are embedded from one of the following public dashboards:</p>
+<p>Note: All graphs are snipped from the following public dashboards:</p>
 <ul>
 <li><a href="https://o1testnet.grafana.net/d/qx4y6dfWz/network-overview?orgId=1&amp;refresh=1m">Coda Network Overview Dashboard</a>.</li>
 <li><a href="https://o1testnet.grafana.net/d/Rgo87HhWz/block-producer-dashboard?orgId=1&amp;var-role=blockproducer">Coda Block Producer Dashboard</a></li>
@@ -246,9 +247,9 @@
 <p>While all of the exposed metrics are useful, only a few produce actionable data from a node operation perspective. The following are useful in normal node operations:</p>
 <h3>Node Uptime</h3>
 <p>This counter is useful in alerting, as it should never reset to 0. The only scenario in which it would do so would be in the event of the Coda Daemon process restarting.</p>
-<div class="highlight"><pre><span></span><code><span class="err">#HELP Coda_Runtime_process_uptime_ms_total Total time the process has been running for in milliseconds.</span>
-<span class="err">#TYPE Coda_Runtime_process_uptime_ms_total counter</span>
-<span class="err">Coda_Runtime_process_uptime_ms_total 1.73959e+08</span>
+<div class="highlight"><pre><span></span><code>#HELP Coda_Runtime_process_uptime_ms_total Total time the process has been running for in milliseconds.
+#TYPE Coda_Runtime_process_uptime_ms_total counter
+Coda_Runtime_process_uptime_ms_total 1.73959e+08
 </code></pre></div>
 
 
