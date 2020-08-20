@@ -267,11 +267,12 @@ Coda_Runtime_process_uptime_ms_total 1.73959e+08
 <p>While blocks produced is useful on its own as a simple counter, it is particularly useful when diagnosing block production issues. By combining it with Prometheus <a href="https://prometheus.io/docs/prometheus/latest/querying/functions/">query functions</a> like <code>sum</code> and <code>increase</code>, we can derive a running rate of block production.</p>
 <p>Example query:</p>
 <p><code>sum(increase(Coda_Proposer_blocks_proposed{testnet="$testnet"}[1h]))</code></p>
-<p><code></p>
-<h1>HELP Coda_Proposer_blocks_proposed blocks produced and submitted by the proposer</h1>
-<h1>TYPE Coda_Proposer_blocks_proposed counter</h1>
-<p>Coda_Proposer_blocks_proposed 0
-&lt;/code</p>
+<div class="highlight"><pre><span></span><code><span class="err">#HELP Coda_Proposer_blocks_proposed blocks produced and submitted by the proposer</span>
+<span class="err">#TYPE Coda_Proposer_blocks_proposed counter</span>
+<span class="err">Coda_Proposer_blocks_proposed 0</span>
+</code></pre></div>
+
+
 <p><img alt="Blocks Produced by Node" src="../images/2020/blocks-produced-by-node.png"></p>
 <h4>Banned Peers and Peer Count</h4>
 <p>When taken alone, banned peers is only useful for indicating that individual nodes are misbehaving, however when analyzed alongside other metrics (e.g. Total Peers, Max Observed Block Height) it can be an indicator of systematic network-level bugs/forks.</p>
