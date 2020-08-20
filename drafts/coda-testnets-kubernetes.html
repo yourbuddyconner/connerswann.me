@@ -200,7 +200,8 @@
 </ul>
 <p>However, once you are confident your configuration is perfect, this is the least-likely part to break. </p>
 <h2>Whale and Fish Block Producers</h2>
-<p>In order to simulate our Public Testnets which have many users (200+) that have each been delegated some small amount of stake, and O(1) Labs-controlled block producers with a significant amount of stake, we leveraged Helm to introduce the concept of multiple "classes" of Block Producer that can be deployed with varying configuration. The only major difference between a "Whale" and a "Fish" block producer is the number of them that get deployed and the expected block rate for that particular Coda Daemon. This is particularly useful because we can deploy essentially any configuration of different block producers in order to test hypothesis about block production. </p>
+<p>In order to simulate our Public Testnets which have many users (200+) that have each been delegated some small amount of stake, and O(1) Labs-controlled block producers with a significant amount of stake, we leveraged Helm to introduce the concept of multiple "classes" of Block Producer that can be deployed with varying configuration. </p>
+<p>The only major difference between a "Whale" and a "Fish" block producer is the number of them that get deployed and the expected block rate for that particular Coda Daemon. This is particularly useful because we can deploy essentially any configuration of different block producers in order to test hypothesis about block production. </p>
 <h2>The SNARK Coordinator</h2>
 <p>For each Testnet, O(1) Labs will operate <em>at least</em> one SNARK Coordinator. This is simply to ensure there is a baseline amount of SNARK Work being completed so the network does not halt. The Work is generally priced high, with room to undercut prices to encourage community members to run their own SNARK Workers. </p>
 <h2>Testnet Services</h2>
