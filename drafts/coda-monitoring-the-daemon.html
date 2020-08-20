@@ -253,32 +253,25 @@ Coda_Runtime_process_uptime_ms_total 1.73959e+08
 </code></pre></div>
 
 
-<div class="grafana-container">
-<iframe src="https://o1testnet.grafana.net/d-solo/Rgo87HhWz/block-producer-dashboard?orgId=1&var-testnet=rising-phoenix&var-role=blockproducer&from=1578013877048&to=1578035477049&panelId=10" width="450" height="200" frameborder="0"></iframe>
-</div>
-
-<h4>Max Observed Block Length</h4>
-<p>Can be an indicator of forks when compared across several nodes. Reporting this to the Coda Community when in doubt is highly useful.</p>
+<p><img alt="Node Uptime" src="../images/2020/node-uptime.png"></p>
+<h4>Block Rate</h4>
+<p>Can be an indicator of malfunctioning nodes, especially once you have established a baseline normal rate and can easily detect deviations. </p>
 <div class="highlight"><pre><span></span><code><span class="err">#HELP Coda_Transition_frontier_max_blocklength_observed max blocklength observed by the system</span>
 <span class="err">#TYPE Coda_Transition_frontier_max_blocklength_observed gauge</span>
 <span class="err">Coda_Transition_frontier_max_blocklength_observed 11567</span>
 </code></pre></div>
 
 
-<div class="grafana-container">
-<iframe src="https://o1testnet.grafana.net/d-solo/qx4y6dfWz/network-overview?orgId=1&refresh=1m&from=1578012003609&to=1578033603609&var-testnet=rising-phoenix&panelId=2" width="550" height="350" frameborder="0"></iframe>
-</div>
-
+<p><img alt="Block Rate" src="../images/2020/block-rate.png"></p>
 <h4>Blocks Produced</h4>
 <p>While blocks produced is useful on its own as a simple counter, it is particularly useful when diagnosing block production issues. By combining it with Prometheus <a href="https://prometheus.io/docs/prometheus/latest/querying/functions/">query functions</a> like <code>sum</code> and <code>increase</code>, we can derive a running rate of block production.</p>
-<p>Example query:
-<code>sum(increase(Coda_Proposer_blocks_proposed{testnet="$testnet"}[1h]))</code></p>
-<div class="highlight"><pre><span></span><code><span class="err">#HELP Coda_Proposer_blocks_proposed blocks produced and submitted by the proposer</span>
-<span class="err">#TYPE Coda_Proposer_blocks_proposed counter</span>
-<span class="err">Coda_Proposer_blocks_proposed 0</span>
-</code></pre></div>
-
-
+<p>Example query:</p>
+<p><code>sum(increase(Coda_Proposer_blocks_proposed{testnet="$testnet"}[1h]))</code></p>
+<p><code></p>
+<h1>HELP Coda_Proposer_blocks_proposed blocks produced and submitted by the proposer</h1>
+<h1>TYPE Coda_Proposer_blocks_proposed counter</h1>
+<p>Coda_Proposer_blocks_proposed 0
+&lt;/code</p>
 <p><img alt="Blocks Produced by Node" src="../images/2020/blocks-produced-by-node.png"></p>
 <h4>Banned Peers and Peer Count</h4>
 <p>When taken alone, banned peers is only useful for indicating that individual nodes are misbehaving, however when analyzed alongside other metrics (e.g. Total Peers, Max Observed Block Height) it can be an indicator of systematic network-level bugs/forks.</p>
