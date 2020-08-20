@@ -212,6 +212,7 @@
 <p>Because the Coda Protocol is succinct, block history is SNARKed away through the recursive process of extending the Coda blockchain. Obviously, for any financial system it is very important for organizations and individuals to be able to keep a record of blocks that have been observed for compliance purposes. The "Archive Node" is a solution for this problem, a simple process that listens for updates from the Coda Daemon and persists them to a PostgreSQL Database.  </p>
 <h3>The GraphQL Proxy</h3>
 <p>While it's pretty easy to launch a Coda Daemon and join it to the blockchain, sometimes it's acceptable to simply communicate with the Daemon via GraphQL. To enable applications which require some level of blockchain awareness but don't require a full node, we at O(1) produced a simple proxy that would enable only the read-only parts of the GraphQL API.</p>
+<p>Link to <a href="https://github.com/CodaProtocol/coda-automation/tree/0b50b73ac6c2a2ffb4febfa0caf74a673d52dc57/services/graphql-public-proxy">Repository</a></p>
 <h3>More to Come</h3>
 <p>Because each deployable is encapsulated as a Helm Chart, it is exceedingly easy to roll out new products and services that attach to a Coda Testnet. I personally see this as being an incredibly compelling model for introducing blockchain-aware applications into existing cloud infrastructure. </p>
 <h2>Next Time...</h2>

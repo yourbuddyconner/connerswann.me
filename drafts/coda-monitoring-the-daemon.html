@@ -278,22 +278,19 @@
 </code></pre></div>
 
 
-<div class="grafana-container">
-<iframe src="https://o1testnet.grafana.net/d-solo/Rgo87HhWz/block-producer-dashboard?orgId=1&var-testnet=rising-phoenix&var-role=blockproducer&panelId=8&from=1578013175410&to=1578034775411" width="450" height="200" frameborder="0"></iframe>
-</div>
-
-<h4>Banned Peers</h4>
-<p>When taken alone, banned peers is only useful for indicating that individual nodes are misbehaving, however when analyzed alongside other metrics (e.g. Max Observed Block Height) it can be an indicator of systematic network-level bugs/forks.</p>
+<p><img alt="Blocks Produced by Node" src="../images/2020/blocks-produced-by-node.png"></p>
+<h4>Banned Peers and Peer Count</h4>
+<p>When taken alone, banned peers is only useful for indicating that individual nodes are misbehaving, however when analyzed alongside other metrics (e.g. Total Peers, Max Observed Block Height) it can be an indicator of systematic network-level bugs/forks.</p>
 <div class="highlight"><pre><span></span><code><span class="err">#HELP Coda_Trust_system_banned_peers # of banned ip addresses</span>
 <span class="err">#TYPE Coda_Trust_system_banned_peers gauge</span>
 <span class="err">Coda_Trust_system_banned_peers 1</span>
 </code></pre></div>
 
 
-<div class="grafana-container">
-<iframe src="https://o1testnet.grafana.net/d-solo/Rgo87HhWz/block-producer-dashboard?panelId=15&orgId=1&var-testnet=rising-phoenix&var-role=blockproducer&from=1578014339796&to=1578035939797" width="450" height="200" frameborder="0"></iframe>
-</div>
-
+<p>Banned Peers 
+<img alt="Banned Peers" src="../images/2020/banned-peers.png"></p>
+<p>Peer Count
+<img alt="Peer Count" src="../images/2020/peer-count.png"></p>
 <h4>Coda SNARK Work Fee Breakdown</h4>
 <p>Useful in helping to tune SNARK Worker fee selection.</p>
 <p>ex. If there is a lot of low-fee SNARK work in the pool, an automated system could turn off SNARK work compute until it is more economical to resume.</p>
@@ -307,10 +304,7 @@
 </code></pre></div>
 
 
-<div class="grafana-container">
-<iframe src="https://o1testnet.grafana.net/d-solo/qx4y6dfWz/network-overview?orgId=1&refresh=1m&from=1578012954848&to=1578034554848&var-testnet=rising-phoenix&panelId=8" width="450" height="200" frameborder="0"></iframe>
-</div>
-
+<p><img alt="Fee Breakdown" src="../images/2020/fee-breakdown.png"></p>
 <h2>Next Time: Production GKE Setup</h2>
 <p>In the next blog post in this series, I'll show you how to set up a Coda node on Google Kubernetes Engine!</p>
 <h4>Get Involved With Coda!</h4>
