@@ -247,9 +247,9 @@
 <p>While all of the exposed metrics are useful, only a few produce actionable data from a node operation perspective. The following are useful in normal node operations:</p>
 <h3>Node Uptime</h3>
 <p>This counter is useful in alerting, as it should never reset to 0. The only scenario in which it would do so would be in the event of the Coda Daemon process restarting.</p>
-<div class="highlight"><pre><span></span><code>#HELP Coda_Runtime_process_uptime_ms_total Total time the process has been running for in milliseconds.
-#TYPE Coda_Runtime_process_uptime_ms_total counter
-Coda_Runtime_process_uptime_ms_total 1.73959e+08
+<div class="highlight"><pre><span></span><code><span class="err">#HELP Coda_Runtime_process_uptime_ms_total Total time the process has been running for in milliseconds.</span>
+<span class="err">#TYPE Coda_Runtime_process_uptime_ms_total counter</span>
+<span class="err">Coda_Runtime_process_uptime_ms_total 1.73959e+08</span>
 </code></pre></div>
 
 
@@ -265,8 +265,8 @@ Coda_Runtime_process_uptime_ms_total 1.73959e+08
 <p><img alt="Block Rate" src="../images/2020/block-rate.png"></p>
 <h4>Blocks Produced</h4>
 <p>While blocks produced is useful on its own as a simple counter, it is particularly useful when diagnosing block production issues. By combining it with Prometheus <a href="https://prometheus.io/docs/prometheus/latest/querying/functions/">query functions</a> like <code>sum</code> and <code>increase</code>, we can derive a running rate of block production.</p>
-<p>Example query:</p>
-<p><code>sum(increase(Coda_Proposer_blocks_proposed{testnet="$testnet"}[1h]))</code></p>
+<p>Example query:
+<code>sum(increase(Coda_Proposer_blocks_proposed{testnet="$testnet"}[1h]))</code></p>
 <div class="highlight"><pre><span></span><code><span class="err">#HELP Coda_Proposer_blocks_proposed blocks produced and submitted by the proposer</span>
 <span class="err">#TYPE Coda_Proposer_blocks_proposed counter</span>
 <span class="err">Coda_Proposer_blocks_proposed 0</span>
