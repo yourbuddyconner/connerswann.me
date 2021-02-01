@@ -254,7 +254,6 @@ String constructRequest(){
 }
 </code>
 </pre>
-
 <p>In english, the Arduino initializes the Ethernet shield and requests an IP address via DCHP. Assuming that's successful, it enters the loop and periodically tries to connect to my server at arduinotest.meteor.com.</p>
 <p>Once connected, about every ten seconds (depending on if the last connection attempt was sucessful or not) it reads the photoresistor and sends a request to the server with the value as a url parameter. It then loops again. The algorithm's also got contingencies for what happens if it can't connect, if you're interested take a look at the code.</p>
 <p>That's it for the Arduino code. Once I've added to the Meteor.js server-side code a little bit, I'll make a post about how I accomplished that.</p>
@@ -325,9 +324,7 @@ String constructRequest(){
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script type="text/javascript" src="https://connerswann.me/theme/js/script.js"></script>
-  <link rel="stylesheet"
-      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.2/styles/default.min.css">
-  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.2/highlight.min.js"></script>
+
     <!-- Global Site Tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-24471866-2"></script>
     <script>

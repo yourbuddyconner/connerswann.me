@@ -50,7 +50,7 @@
 &lt;h1&gt;Putting it Together&lt;/h1&gt;
 &lt;p&gt;To demonstrate the power of this CI system, I made a quick little example project that I've thrown up on Github. It's a little flask app that returns "Hello World!" when you make a GET request to it. &lt;/p&gt;
 &lt;p&gt;It's hosted here. But here's some of the juicy code so you don't have to go so far. &lt;/p&gt;
-&lt;p&gt;This is the &lt;code&gt;.drone.yml&lt;/code&gt; file, which is basically where all the magic happens:
+&lt;p&gt;This is the &lt;code&gt;.drone.yml&lt;/code&gt; file, which is basically where all the magic happens:&lt;/p&gt;
 &lt;pre class="line-numbers"&gt;
 &lt;code class="language-python"&gt;
 pipeline:
@@ -83,7 +83,7 @@ pipeline:
     image: plugins/slack
     webhook: https://hooks.slack.com/services/...
     recipient: conner
-    template: &amp;gt;
+    template: &gt;
       {{#success build.status}}
         Build {{build.number}}  for {{repo.name}}/{{build.branch}} succeeded. Good job.
       {{else}}
@@ -91,6 +91,7 @@ pipeline:
       {{/success}}
       Build Link: {{build.link}}
 &lt;/code&gt;
-&lt;/pre&gt;&lt;/p&gt;
+&lt;/pre&gt;
+
 &lt;p&gt;This setup makes it ridiculously easy for me to launch a large number of containers running homebrew software with minimal interference from me. I can push code, go make coffee, and come back knowing that there's a new build of my code online. Well... either that or I messed up somewhere and I'm going to have a lead on how to fix it when I sit down.&lt;/p&gt;
 &lt;p&gt;If you have any questions or comments about this blog post, feel free to tweet me &lt;a href="http://twitter.com/yourbuddyconner"&gt;@Yourbuddyconner&lt;/a&gt;!&lt;/p&gt;</content><category term="Infrastructure"></category><category term="continuous integration"></category><category term="rancher"></category><category term="docker"></category><category term="drone-ci"></category></entry></feed>

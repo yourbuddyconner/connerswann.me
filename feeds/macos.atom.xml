@@ -13,7 +13,6 @@
      &lt;span class="k"&gt;Any&lt;/span&gt; &lt;span class="n"&gt;flag&lt;/span&gt; &lt;span class="n"&gt;that&lt;/span&gt; &lt;span class="n"&gt;takes&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="n"&gt;password&lt;/span&gt; &lt;span class="n"&gt;will&lt;/span&gt; &lt;span class="n"&gt;accept&lt;/span&gt; &lt;span class="ss"&gt;&amp;quot;-&amp;quot;&lt;/span&gt; &lt;span class="k"&gt;in&lt;/span&gt; &lt;span class="n"&gt;place&lt;/span&gt; &lt;span class="k"&gt;of&lt;/span&gt; &lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="n"&gt;password&lt;/span&gt; &lt;span class="k"&gt;to&lt;/span&gt; &lt;span class="n"&gt;indicate&lt;/span&gt; &lt;span class="n"&gt;it&lt;/span&gt; &lt;span class="n"&gt;should&lt;/span&gt; &lt;span class="k"&gt;read&lt;/span&gt; &lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="n"&gt;password&lt;/span&gt; &lt;span class="k"&gt;from&lt;/span&gt; &lt;span class="k"&gt;stdin&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;Knowing that &lt;code&gt;networksetup&lt;/code&gt; exists and how it works, I set out to whip up a little BASH script that can be run with cron and can check for internet connectivity and cycle the Wi-Fi if necessary. Below is what I came up with: &lt;/p&gt;
 &lt;script src="https://gist.github.com/yourbuddyconner/22c37e5246b041fd5c6e4d1e89db0d34.js"&gt;&lt;/script&gt;
 

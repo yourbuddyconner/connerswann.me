@@ -1,14 +1,5 @@
 /*! normalize.css v3.0.1 | MIT License | git.io/normalize */
 
-.grafana-container {
-    text-align: center;
-    width: 100%;
-}
-.grafana-container iframe {
-    width: 100%;
-    height: 250px;
-}
-
 html {
     font-family: sans-serif;
     -ms-text-size-adjust: 100%;
@@ -977,7 +968,7 @@ img {
 }
 
 .inner {
-    max-width: 40em;
+    max-width: 32em;
     margin: 0 auto;
     padding: 0 2em
 }

@@ -177,113 +177,122 @@ Content-Type: text/html
 </pre>
 
 <p>Being able to print out <code>ret_code</code> and the raw response body in <code>response_buffer</code> (both variables populated by this interface) as opposed to having to parse through the entire string above is pretty handy.</p>
-<p>Now, without further ado, here's my C++ code for the arduino:
+<p>Now, without further ado, here's my C++ code for the arduino:</p>
 <pre class="line-numbers">
 <code class="language-c">
-// Arduino symbols and Bindings</p>
-<h1>include "Arduino.h"</h1>
-<h1>include "ntruchsess/arduino_uip/uipethernet.h"</h1>
-<p>// client interface for HTTP communication</p>
-<h1>include "lasote/arduino_http/http_client.h"</h1>
-<p>// a processor to decode JSON</p>
-<h1>include "lasote/stream_processor/stream_json_processor.h"</h1>
-<h1>include "lasote/stream_recorder/stream_recorder.h"</h1>
-<p>//For cc3000 adapter</p>
-<h1>include <adafruit/cc3000_library/adafruit_cc3000.h></h1>
-<h1>include "diego/ardunet/cc3000client.h"</h1>
-<h1>include "diego/ardunet/cc3000utils.h"</h1>
-<h1>define WLAN_SSID       "Atlantis"        // cannot be longer than 32 characters!</h1>
-<p>//#define WLAN_PASS       "xxxxxxxx"
+// Arduino symbols and Bindings
+#include "Arduino.h"
+#include "ntruchsess/arduino_uip/uipethernet.h"
+// client interface for HTTP communication
+#include "lasote/arduino_http/http_client.h"
+
+// a processor to decode JSON
+#include "lasote/stream_processor/stream_json_processor.h"
+#include "lasote/stream_recorder/stream_recorder.h"
+
+//For cc3000 adapter
+#include <adafruit/cc3000_library/adafruit_cc3000.h>
+#include "diego/ardunet/cc3000client.h"
+#include "diego/ardunet/cc3000utils.h"
+
+#define WLAN_SSID       "Atlantis"        // cannot be longer than 32 characters!
+//#define WLAN_PASS       "xxxxxxxx"
 char WLAN_PASS[] = {0x69, 0x69, 0x69, 0x69, 0x69, 0x00}; 
-// Security can be WLAN_SEC_UNSEC, WLAN_SEC_WEP, WLAN_SEC_WPA or WLAN_SEC_WPA2</p>
-<h1>define WLAN_SECURITY   WLAN_SEC_WEP</h1>
-<p>// These are the interrupt and control pins</p>
-<h1>define ADAFRUIT_CC3000_IRQ   3  // MUST be an interrupt pin!</h1>
-<p>// These can be any two pins</p>
-<h1>define ADAFRUIT_CC3000_VBAT  5</h1>
-<h1>define ADAFRUIT_CC3000_CS    10</h1>
-<p>using namespace lasote;</p>
-<p>//create CC3000 instance, and an SDK compatible Client
+// Security can be WLAN_SEC_UNSEC, WLAN_SEC_WEP, WLAN_SEC_WPA or WLAN_SEC_WPA2
+#define WLAN_SECURITY   WLAN_SEC_WEP
+
+// These are the interrupt and control pins
+#define ADAFRUIT_CC3000_IRQ   3  // MUST be an interrupt pin!
+// These can be any two pins
+#define ADAFRUIT_CC3000_VBAT  5
+#define ADAFRUIT_CC3000_CS    10
+
+
+using namespace lasote;
+
+//create CC3000 instance, and an SDK compatible Client
 Adafruit_CC3000 cc3000 = Adafruit_CC3000(ADAFRUIT_CC3000_CS,
-        ADAFRUIT_CC3000_IRQ, ADAFRUIT_CC3000_VBAT, SPI_CLOCK_DIVIDER);</p>
-<p>CC3000Client client(cc3000);</p>
-<p>char response_buffer[150];
+        ADAFRUIT_CC3000_IRQ, ADAFRUIT_CC3000_VBAT, SPI_CLOCK_DIVIDER);
+
+CC3000Client client(cc3000);
+
+char response_buffer[150];
 // This processor simply writes the response to a buffer
 StreamRecorderProcessor response_recorder(response_buffer, 150); 
-HttpClient http_client(client, Serial);</p>
-<p>// the keys of the values I'd like to fetch from the response
-//const char<em> queries[] = {"id", "value", "reason"};
+HttpClient http_client(client, Serial);
+
+// the keys of the values I'd like to fetch from the response
+//const char* queries[] = {"id", "value", "reason"};
 //                  processor(ArrayofQueries, nQueries, MaxNameSize, MaxValueSize, MaxTraceSize)
 //StreamJsonProcessor processor(queries, 3, 10, 10, 10);
 // the setup routine runs once when you press reset:
 void setup() {
     // open the serial connection to report messages
     Serial.begin(9600);
-    Serial.println("</em><strong><em>*</em></strong><strong><em>*</em> SETUP </strong><strong><em>*</em></strong><strong><em>*</em></strong>");
+    Serial.println("************* SETUP ****************");
     // begin the wifi connection using the cc3000 interface
-    startConnection(cc3000, WLAN_SSID, WLAN_PASS, WLAN_SECURITY);</p>
-<div class="highlight"><pre><span></span><code><span class="err">// add a HTTP Response processor</span>
-<span class="err">// this will take the response stream and process it depending on</span>
-<span class="err">// which processor we use. (i.e. JSON or just a raw buffer)</span>
-<span class="err">// http_client.processors.add_item(&amp;processor);</span>
-<span class="err">http_client.processors.add_item(&amp;response_recorder);</span>
-</code></pre></div>
+    startConnection(cc3000, WLAN_SSID, WLAN_PASS, WLAN_SECURITY);
 
+    // add a HTTP Response processor
+    // this will take the response stream and process it depending on
+    // which processor we use. (i.e. JSON or just a raw buffer)
+    // http_client.processors.add_item(&processor);
+    http_client.processors.add_item(&response_recorder);
 
-<p>}</p>
-<p>// the loop routine runs over and over again forever:
-void loop() {</p>
-<div class="highlight"><pre><span></span><code><span class="nt">delay</span><span class="o">(</span><span class="nt">20000</span><span class="o">);</span>
-<span class="nt">Serial</span><span class="p">.</span><span class="nc">println</span><span class="o">(</span><span class="s2">&quot;--- SENDING POST---&quot;</span><span class="o">);</span>
-<span class="o">//</span><span class="nt">Reset</span> <span class="nt">processors</span> <span class="nt">and</span> <span class="nt">custom</span> <span class="nt">headers</span>
-<span class="nt">http_client</span><span class="p">.</span><span class="nc">reset</span><span class="o">();</span> 
-<span class="o">//</span><span class="nt">We</span> <span class="nt">can</span> <span class="nt">add</span> <span class="nt">custom</span> <span class="nt">headers</span> <span class="nt">to</span> <span class="nt">the</span> <span class="nt">request</span> <span class="nt">if</span> <span class="nt">we</span> <span class="nt">wanted</span>
-<span class="o">//</span><span class="nt">http_client</span><span class="p">.</span><span class="nc">add_custom_header</span><span class="o">(</span><span class="s2">&quot;Content-Type&quot;</span><span class="o">,</span> <span class="s2">&quot;application/json&quot;</span><span class="o">);</span>
+}
 
-<span class="o">//</span> <span class="nt">Send</span> <span class="nt">an</span> <span class="nt">HTTP</span> <span class="nt">GET</span> <span class="nt">request</span> <span class="nt">for</span> <span class="nt">the</span> <span class="nt">value</span>
-<span class="nt">int</span> <span class="nt">sent</span> <span class="o">=</span> <span class="nt">http_client</span><span class="p">.</span><span class="nc">get</span><span class="o">(</span><span class="s2">&quot;condejo.org&quot;</span><span class="o">,</span> <span class="s2">&quot;/api/wifitest.php/getvalue&quot;</span><span class="o">,</span> <span class="nt">80</span><span class="o">);</span>
-<span class="o">//</span> <span class="nt">Evaluate</span> <span class="nt">the</span> <span class="nt">return</span> <span class="nt">code</span> <span class="nt">from</span> <span class="nt">the</span> <span class="nt">HTTP</span> <span class="nt">response</span>
-<span class="nt">short</span> <span class="nt">int</span> <span class="nt">ret_code</span> <span class="o">=</span> <span class="nt">http_client</span><span class="p">.</span><span class="nc">receive</span><span class="o">();</span>
-<span class="nt">Serial</span><span class="p">.</span><span class="nc">println</span><span class="o">(</span><span class="nt">ret_code</span><span class="o">);</span>
-<span class="nt">if</span><span class="o">(</span><span class="nt">sent</span><span class="o">)</span><span class="p">{</span>
-    <span class="err">if(ret_code){</span>
-        <span class="err">if(ret_code</span> <span class="err">==</span> <span class="err">200){</span>
-            <span class="err">Serial.println(&quot;Code</span> <span class="err">200</span> <span class="err">OK!&quot;)</span><span class="p">;</span>
-            <span class="err">//</span> <span class="err">for</span> <span class="err">the</span> <span class="err">JSON</span> <span class="err">processor</span> <span class="err">if</span> <span class="err">we</span> <span class="err">were</span> <span class="err">using</span> <span class="err">it</span>
-            <span class="err">//</span> <span class="err">if(processor.finished()){</span>
-            <span class="err">//</span>     <span class="err">Serial.print(&quot;Reading</span> <span class="n">ID</span><span class="p">:</span> <span class="s2">&quot;);</span>
-<span class="s2">            //     Serial.println(processor.results</span><span class="cp">[</span><span class="mi">0</span><span class="cp">]</span><span class="s2">);</span>
-<span class="s2">            //     Serial.print(&quot;</span><span class="n">Reading</span> <span class="n">Value</span><span class="o">:</span> <span class="s2">&quot;);</span>
-<span class="s2">            //     Serial.println(processor.results</span><span class="cp">[</span><span class="mi">1</span><span class="cp">]</span><span class="s2">);</span>
-<span class="s2">            //     Serial.print(&quot;</span><span class="n">Reason</span><span class="o">:</span> <span class="s2">&quot;);</span>
-<span class="s2">            //     Serial.println(processor.results</span><span class="cp">[</span><span class="mi">2</span><span class="cp">]</span><span class="s2">);</span>
-<span class="s2">            // }</span>
-<span class="s2">            // else{</span>
-<span class="s2">            //     Serial.println(&quot;</span><span class="n">Return</span> <span class="n">JSON</span> <span class="n">not</span> <span class="n">detected</span> <span class="n">or</span> <span class="n">queries</span> <span class="n">not</span> <span class="n">found</span><span class="o">!</span><span class="s2">&quot;);</span>
-<span class="s2">            // }</span>
-<span class="s2">            Serial.println(response_buffer);</span>
-<span class="s2">        }</span>
-<span class="s2">        else{</span>
-<span class="s2">            // PHP didn&#39;t like the request </span>
-<span class="s2">            Serial.print(&quot;</span><span class="n">Http</span> <span class="n">Error</span><span class="o">:</span><span class="s2">&quot;);</span>
-<span class="s2">            Serial.println(ret_code);</span>
-<span class="s2">        }</span>
-<span class="s2">    }</span>
-<span class="s2">    else{</span>
-<span class="s2">        // TCP Broke and we didn&#39;t get a response to our request</span>
-<span class="s2">        Serial.println(&quot;</span><span class="n">Error</span> <span class="n">receiving</span><span class="o">!</span><span class="s2">&quot;);</span>
-<span class="s2">    }</span>
-<span class="s2">}</span>
-<span class="s2">else{</span>
-<span class="s2">    // Couldn&#39;t send the initial request in the first place</span>
-<span class="s2">    Serial.println(&quot;</span><span class="n">ERROR</span> <span class="n">CONNECTING</span><span class="o">...</span> <span class="n">retrying</span><span class="err">&quot;</span><span class="p">);</span>
-<span class="p">}</span>
-</code></pre></div>
+// the loop routine runs over and over again forever:
+void loop() {
 
+    delay(20000);
+    Serial.println("--- SENDING POST---");
+    //Reset processors and custom headers
+    http_client.reset(); 
+    //We can add custom headers to the request if we wanted
+    //http_client.add_custom_header("Content-Type", "application/json");
 
-<p>}
+    // Send an HTTP GET request for the value
+    int sent = http_client.get("condejo.org", "/api/wifitest.php/getvalue", 80);
+    // Evaluate the return code from the HTTP response
+    short int ret_code = http_client.receive();
+    Serial.println(ret_code);
+    if(sent){
+        if(ret_code){
+            if(ret_code == 200){
+                Serial.println("Code 200 OK!");
+                // for the JSON processor if we were using it
+                // if(processor.finished()){
+                //     Serial.print("Reading ID: ");
+                //     Serial.println(processor.results[0]);
+                //     Serial.print("Reading Value: ");
+                //     Serial.println(processor.results[1]);
+                //     Serial.print("Reason: ");
+                //     Serial.println(processor.results[2]);
+                // }
+                // else{
+                //     Serial.println("Return JSON not detected or queries not found!");
+                // }
+                Serial.println(response_buffer);
+            }
+            else{
+                // PHP didn't like the request 
+                Serial.print("Http Error:");
+                Serial.println(ret_code);
+            }
+        }
+        else{
+            // TCP Broke and we didn't get a response to our request
+            Serial.println("Error receiving!");
+        }
+    }
+    else{
+        // Couldn't send the initial request in the first place
+        Serial.println("ERROR CONNECTING... retrying");
+    }
+}
 </code>
-</pre></p>
+</pre>
+
 <p>On first run, this program runs a subroutine that initializes critical objects and connects to the configures WiFi access point (in this example, it's called Atlantis). </p>
 <p>It then enters a loop, making a request to the server once every ten seconds. I simply have the arduino report this response over Serial, however you can do much more with it. For example, the response can be programmatically used as a trigger to preform advanced functions like turning LED's on/off, sending a text message, or even sending a new HTTP request to a different server. </p>
 <hr>
@@ -417,9 +426,7 @@ $app->run();
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script type="text/javascript" src="https://connerswann.me/theme/js/script.js"></script>
-  <link rel="stylesheet"
-      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.2/styles/default.min.css">
-  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.2/highlight.min.js"></script>
+
     <!-- Global Site Tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-24471866-2"></script>
     <script>

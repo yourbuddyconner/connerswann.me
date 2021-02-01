@@ -196,7 +196,7 @@
 <h1>Putting it Together</h1>
 <p>To demonstrate the power of this CI system, I made a quick little example project that I've thrown up on Github. It's a little flask app that returns "Hello World!" when you make a GET request to it. </p>
 <p>It's hosted here. But here's some of the juicy code so you don't have to go so far. </p>
-<p>This is the <code>.drone.yml</code> file, which is basically where all the magic happens:
+<p>This is the <code>.drone.yml</code> file, which is basically where all the magic happens:</p>
 <pre class="line-numbers">
 <code class="language-python">
 pipeline:
@@ -229,7 +229,7 @@ pipeline:
     image: plugins/slack
     webhook: https://hooks.slack.com/services/...
     recipient: conner
-    template: &gt;
+    template: >
       {{#success build.status}}
         Build {{build.number}}  for {{repo.name}}/{{build.branch}} succeeded. Good job.
       {{else}}
@@ -237,7 +237,8 @@ pipeline:
       {{/success}}
       Build Link: {{build.link}}
 </code>
-</pre></p>
+</pre>
+
 <p>This setup makes it ridiculously easy for me to launch a large number of containers running homebrew software with minimal interference from me. I can push code, go make coffee, and come back knowing that there's a new build of my code online. Well... either that or I messed up somewhere and I'm going to have a lead on how to fix it when I sit down.</p>
 <p>If you have any questions or comments about this blog post, feel free to tweet me <a href="http://twitter.com/yourbuddyconner">@Yourbuddyconner</a>!</p>
             </section>
@@ -307,9 +308,7 @@ pipeline:
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script type="text/javascript" src="https://connerswann.me/theme/js/script.js"></script>
-  <link rel="stylesheet"
-      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.2/styles/default.min.css">
-  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.2/highlight.min.js"></script>
+
     <!-- Global Site Tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-24471866-2"></script>
     <script>

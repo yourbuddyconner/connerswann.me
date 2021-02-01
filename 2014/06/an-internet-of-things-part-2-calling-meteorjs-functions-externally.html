@@ -180,7 +180,6 @@ if (Meteor.isClient) {
 }
 </code>
 </pre>
-
 <p>So far, this is all simple out-of-the-box meteor behavior, but since I wanted to play around with calling Meteor functions externally, I added Iron Router to my Meteor app. Iron Router is a "client and server-side router built for use with Meteor." It allows you to route traffic to URLs on your server (or client) to arbitrary templates or even trigger meteor functions.</p>
 <p>The code is super uninvolved, simply create a new Iron Router route on the server have it store the URL parameters that have been passed in a database. Meteor handles the ordeal of shuttling that data down to the client, something I find to be very powerful.</p>
 <pre class="line-numbers">
@@ -198,7 +197,6 @@ if (Meteor.isServer) {
 }
 </code>
 </pre>
-
 <p>I created a route at <code>http://arduinotest.meteor.com/yolo</code>. You can see that it works for yourself, just copy this: <code>http://arduinotest.meteor.com/yolo?v=9001</code> into your url bar and then visit <code>http://arduinotest.meteor.com</code>. Assuming the previous value wasn't already "9001", the page should have updated to reflect the changes.</p>
 <p>The page actually reacts to the values that are passed, but you'll have to play with it to figure out exactly what makes the text change!</p>
             </section>
@@ -268,9 +266,7 @@ if (Meteor.isServer) {
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script type="text/javascript" src="https://connerswann.me/theme/js/script.js"></script>
-  <link rel="stylesheet"
-      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.2/styles/default.min.css">
-  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.2/highlight.min.js"></script>
+
     <!-- Global Site Tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-24471866-2"></script>
     <script>

@@ -36,19 +36,21 @@
 &lt;h2&gt;What Does Machine Data Look Like?&lt;/h2&gt;
 &lt;p&gt;When talking about how difficult "Machine Data" is to process manually, it's really important to be able to visualize exactly why it's so difficult to process. Below are some examples text that Splunk might consume: &lt;/p&gt;
 &lt;h4&gt;HoneyPot Logs:&lt;/h4&gt;
-&lt;p&gt;&lt;pre class="language-accesslog"&gt;
+&lt;pre class="language-accesslog"&gt;
 &lt;code class="language-accesslog" data-language="Honeypot Log"&gt;
 2015-10-17 13:08:51-0700 [SSHService ssh-userauth on HoneyPotTransport,2323,93.158.203.167] login attempt [root/12345] succeeded
 &lt;/code&gt;
-&lt;/pre&gt;&lt;/p&gt;
+&lt;/pre&gt;
+
 &lt;h4&gt;Webserver Logs:&lt;/h4&gt;
-&lt;p&gt;&lt;pre class="language-accesslog"&gt;
+&lt;pre class="language-accesslog"&gt;
 &lt;code class="language-accesslog" data-language="Apache Access Log"&gt;
 64.242.88.10 - - [07/Mar/2004:16:05:49 -0800] "GET /twiki/bin/edit/Main/Double_bounce_sender?topicparent=Main.ConfigurationVariables HTTP/1.1" 401 12846
 &lt;/code&gt;
-&lt;/pre&gt;&lt;/p&gt;
+&lt;/pre&gt;
+
 &lt;h4&gt;Tweets:&lt;/h4&gt;
-&lt;p&gt;&lt;pre class="line-numbers language-json"&gt;
+&lt;pre class="line-numbers language-json"&gt;
 &lt;code class="language-json" data-language="json"&gt;
 {
     "created_at":"Mon Sep 28 19:39:04 +0000 2015”, 
@@ -77,7 +79,8 @@
     }
 }
 &lt;/code&gt;
-&lt;/pre&gt;&lt;/p&gt;
+&lt;/pre&gt;
+
 &lt;h4&gt;Text Messages:&lt;/h4&gt;
 &lt;pre class="language-accesslog"&gt;
 &lt;code class="language-accesslog" data-language="text-message"&gt;
@@ -140,7 +143,6 @@ SELECT message.ROWID as message_id,
 WHERE message.handle_id = handle.ROWID;
 &lt;/code&gt;
 &lt;/pre&gt;
-
 &lt;p&gt;&lt;small&gt;The SQL Query to create complete events&lt;/small&gt;&lt;/p&gt;
 &lt;p&gt;Once Splunk has digested the data, heading to the Search &amp;amp; Reporting app and typing &lt;code&gt;index=text_messages&lt;/code&gt; into the search box gives me a nice frequency graph and a list of events: &lt;/p&gt;
 &lt;p&gt;&lt;img alt="Splunk Screenshot" src="https://connerswann.me/images/2015/personal-analytics-screenshot-1.png"&gt;&lt;/p&gt;

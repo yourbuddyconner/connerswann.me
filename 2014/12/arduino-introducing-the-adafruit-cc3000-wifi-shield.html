@@ -156,46 +156,59 @@
 <p><img alt="Arduino with WiFi Shield" src="https://connerswann.me/2014/12/arduino-wifi-shield-1.jpg"></p>
 <p>To get it running, you have to add the shield's code libraries to your <code>arduino_sketch_location/libraries/</code> folder, the library is available for download along with installation instructions <a href="https://learn.adafruit.com/adafruit-cc3000-wifi/cc3000-library-software">here</a>.</p>
 <p>From there, all I did was pop the shield into place on top of the Arduino and load up the 'buildtest' example file [1]. </p>
-<p>I got an output that looked like this: 
+<p>I got an output that looked like this: </p>
 <pre>
 <code class="language-none">
-Hello, CC3000!</p>
-<p>RX Buffer : 131 bytes
+Hello, CC3000!
+
+RX Buffer : 131 bytes
 TX Buffer : 131 bytes
-Free RAM: 1221</p>
-<p>Initialising the CC3000 ...
+Free RAM: 1221
+
+Initialising the CC3000 ...
 Firmware V. : 1.24
 MAC Address : 0x08 0x00 0x28 0x57 0xA4 0xF5
 Networks found: 10
 ================================================
 SSID Name    : AtlantisBack
 RSSI         : 63
-Security Mode: 1</p>
-<p>SSID Name    : DIRECT-c0[BD]EM59
+Security Mode: 1
+
+SSID Name    : DIRECT-c0[BD]EM59
 RSSI         : 55
-Security Mode: 3</p>
-<p>SSID Name    : Someone's Wi-Fi Network
+Security Mode: 3
+
+SSID Name    : Someone's Wi-Fi Network
 RSSI         : 37
-Security Mode: 3</p>
-<p>SSID Name    : Atlantis
+Security Mode: 3
+
+SSID Name    : Atlantis
 RSSI         : 55
-Security Mode: 1</p>
-<p>================================================</p>
-<p>Deleting old connection profiles</p>
-<p>Attempting to connect to Atlantis
+Security Mode: 1
+
+================================================
+
+Deleting old connection profiles
+
+Attempting to connect to Atlantis
 Connected!
-Request DHCP</p>
-<p>IP Addr: 192.168.1.134
+Request DHCP
+
+IP Addr: 192.168.1.134
 Netmask: 255.255.255.0
 Gateway: 192.168.1.1
 DHCPsrv: 192.168.1.1
 DNSserv: 76.14.0.8
-www.adafruit.com -&gt; 207.58.139.247</p>
-<p>Pinging 207.58.139.247...5 replies
-Ping successful!</p>
-<p>Closing the connection
+www.adafruit.com -> 207.58.139.247
+
+Pinging 207.58.139.247...5 replies
+Ping successful!
+
+
+Closing the connection
 </code>
-</pre></p>
+</pre>
+
 <p>This is just a really basic example so I could prove to myself that I could get the shield working. However, my end-goal is to get the board speaking to a server and reporting some values, similarly to what I did in a <a href="http://connerswann.me/arduino-an-internet-of-things/">previous post with an Ethernet shield</a>. </p>
 <p>Stay tuned!</p>
 <div class="footnote">
@@ -273,9 +286,7 @@ Ping successful!</p>
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script type="text/javascript" src="https://connerswann.me/theme/js/script.js"></script>
-  <link rel="stylesheet"
-      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.2/styles/default.min.css">
-  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.2/highlight.min.js"></script>
+
     <!-- Global Site Tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-24471866-2"></script>
     <script>
