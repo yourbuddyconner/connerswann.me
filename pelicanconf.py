@@ -22,11 +22,9 @@ AUTHOR_FEED_ATOM = None
 AUTHOR_FEED_RSS = None
 
 # Blogroll
-LINKS = (('Coda Protocol', 'https://codaprotocol.org'),
+LINKS = (('Celo Protocol', 'https://clabs.co/'),
          ('Python.org', 'http://python.org/'),
-         ('Jinja2', 'http://jinja.pocoo.org/'),
-         ('You can modify those links in your config file', '#'),)
-
+         ('Jinja2', 'http://jinja.pocoo.org/'),)
 # Social widget
 SOCIAL = (('twitter', 'https://twitter.com/yourbuddyconner'),
           ('github', 'https://github.com/yourbuddyconner'),
@@ -73,6 +71,6 @@ AUTHORS_BIO = {
     "twitter": "yourbuddyconner",
     "linkedin": "connerswann",
     "location": "San Francisco",
-    "bio": "Software Engineer, Infrastructure Magician, Architecture Nerd </br> Core Maintainer @ Coda Protocol"
+    "bio": "Software Engineer, Infrastructure Specialist, Architecture Nerd </br> Partner, Engineering @ cLabs"
   }
 }
