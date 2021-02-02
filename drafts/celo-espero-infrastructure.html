@@ -166,6 +166,19 @@
 <p>The ceremony will consist of rounds of about 6–10 participants each running the Plumo setup software for a certain period of time. Each round will last approximately 36 hours. While much of the activity is passive and involves simply running the computation on a desktop machine, for the Ceremony participants should feel confident with running commands in the terminal and destroying USB keys. This will allow participants to feel comfortable with the commitment so that the Ceremony can run smoothly.</p>
 <p>The SNARK being secured by the Plumo Ceremony is one of the most complex yet powerful SNARKs to ever be secured, and the outcome can be used not only by cLabs &amp; the Plumo construction, but also by any project that uses the BW6 curve with the Groth16 proving system or any other based on polynomial commitments. By participating in this Ceremony, participants can be part of something that is a public good, and will hopefully be used to power many more systems to come.</p>
 </blockquote>
+<h2>Architecture Diagram</h2>
+<p>Before getting in too deep, lets look at the system from a high level and identify all the major parts. Below is an architecture diagram outlining the system, including the Microsoft Asure services that were used. </p>
+<p><img alt="Espero Ceremony Architecture Diagram" src="../images/2021/espero-ceremony-architecture.png"></p>
+<p>Important Pieces: </p>
+<ul>
+<li><strong>Ceremony Cooridnator:</strong> The brains of the whole ceremony, authenticates users via Public Key signatures and coordinates the metadata required to operate the ceremony efficiently. </li>
+<li><strong>Ceremony Verifier:</strong> Communicates with the coordinator, waiting for new contributions and verifying them on the fly. </li>
+<li><strong>Ceremony Monitor:</strong> Observes changes in the Coordinator API, emitting logs that can be used for Alerting on important changes in ceremony state. </li>
+<li><strong>Azure Front Door:</strong> Used for DDoS mitigation, easy to set up. </li>
+<li><strong>Azure Storage Account:</strong> Used store and retrieve chunks, also easy to set up and use. </li>
+<li><strong>Kubernetes: and Helm</strong>: Used to deploy and manage the various processes that must run in order to facilitate the ceremony. </li>
+<li><strong>Terraform:</strong> Used to wire up and deploy all the various pieces of infradtructure, including Kubernetes Clusters, Load Balancers, and other cloud resources.</li>
+</ul>
 <h2>Okay, But How Does it <em>Work</em>?</h2>
 <p>At the end of the day, the Espero Ceremony is just a Typescript JSON API Server that responds to HTTP Requests from various other actors in the system, secured with the same public key cryptogrphy that is the basis for the Celo blockchain. Users who desire to contribute to the ceremony generate a keypair, and share the public key with the Ceremony operator, then signing their HTTP requests for authentication. </p>
 <p>The Espero ceremony is particularly notable because it is split up into rounds, allowing a small number of participants to contribute their computations in parallel -- a novel innovation in the MPC ecosystem. Other MPC Ceremonies like the OG <a href="https://github.com/ebfull/powersoftau">Perpetual Powers of Tau</a> only allow for one participant at a time, while not necessarily a limitation mathematically, parallelizing it does allow for larger groups to be involved at once.</p>
@@ -179,20 +192,10 @@
 <script>window.addEventListener("message", function(e) {var i = e.data.split(":")[1];var h = e.data.split(":")[2];if (e.data.split(":")[0] == "swimlanes-io" && i && h) {document.getElementById("__sw-io-" + i).setAttribute("style","height:" + h + "px");}}, false);</script>
 <div id="__sw-io-lVHg"><iframe style="border:none; width:100%; height:100%" scrolling="no" src="https://cdn.swimlanes.io/dist/embeded.html#lVHLUoMwFN3zFecHhFofCxbOWGSYagccaPfEcC2Z0gSTsNCvN9CHdWqrLnPvedxzYoVtKERsWtIKkZJWi5fOCiVR0FtHkhMeBFtqtva8/VppXNw5tNKVkMw9Q1z6yHuCseB1J1cGZRLPEXDStFbyvfQO4Bv2XixEtEXhschSlOPRCNlTedZw7GOm+ApR77YzG5yDUFRB43a/eA7EXoOqk5b3H50mTHo1FG7Glq6tq6+skdPwfgCdcOtHJK05TnYAvfbxrBUnYzasszXc+MfZ+Q5Pf2ng26cv8tn/urj1sWgbxSpXiWmVNOR5Ulm3yaklZmFrYdBu87w6JWK8Rie3I9f9cHkfI5tnmMTJNE2naVJ+Ag==#lVHg"></iframe></div>
 
-<p>Here is where the Plumo project intersects with my particular ser of skills. Since the ceremony is easily modelled as a traditional web service, it is trivial to then deploy it in containers to Kubernetes. For the remainder of this post, we're going to discuss the various parts of the deployment (included in the Open Source <a href="https://github.com/celo-org/snark-setup-coordinator">Espero Coordinator Repository</a>) in the hopes that it is both interesting and relevant to others who want to extend the system. </p>
-<h2>Architecture Diagram</h2>
-<p>Before getting in too deep, lets look at the system from a high level and identify all the major parts. Below is an architecture diagram outlining the system, including the Microsoft Asure services that were used. </p>
-<p><img alt="Espero Ceremony Architecture Diagram" src="../images/2021/espero-ceremony-architecture.png"></p>
-<p>Important Pieces: </p>
-<ul>
-<li><strong>Ceremony Cooridnator:</strong> The brains of the whole ceremony, authenticates users via Public Key signatures and coordinates the metadata required to operate the ceremony efficiently. </li>
-<li><strong>Ceremony Verifier:</strong> Communicates with the coordinator, waiting for new contributions and verifying them on the fly. </li>
-<li><strong>Ceremony Monitor:</strong> Observes changes in the Coordinator API, emitting logs that can be used for Alerting on important changes in ceremony state. </li>
-<li><strong>Azure Front Door:</strong> Used for DDoS mitigation, easy to set up. </li>
-<li><strong>Azure Storage Account:</strong> Used store and retrieve chunks, also easy to set up and use. </li>
-<li><strong>Kubernetes: and Helm</strong>: Used to deploy and manage the various processes that must run in order to facilitate the ceremony. </li>
-<li><strong>Terraform:</strong> Used to wire up and deploy all the various pieces of infradtructure, including Kubernetes Clusters, Load Balancers, and other cloud resources. </li>
-</ul>
+<p>Here is where the Plumo project intersects with my particular set of skills. Since the ceremony coordinator is easily modelled as a traditional web service, it is trivial to then deploy it in containers to Kubernetes. For the remainder of this post, we're going to discuss the various parts of the deployment (included in the Open Source <a href="https://github.com/celo-org/snark-setup-coordinator">Espero Coordinator Repository</a>) in the hopes that it is both interesting and relevant to others who want to extend the system. </p>
+<h2>Why Microsoft Azure?</h2>
+<p>Like any cloud provider I see using Azure as a cost/benefit analysis for any project. The major reason we at cLabs run workloads on Azure is because the Azure Hardware Security Module (HSM) supports the <code>secp256k1</code> curve that is the basis for the public key cryptography in Celo (and the Espero Ceremony!). We use this feature for transaction signing among other things, and Google Cloud Platfrom (my cloud of choice) doesn't currently support this curve in their solution (booo!). Fortunately, Azure provides a perfectly servicable (if incredibly opinionated/non-intuitive) Kubernetes environment for us to work with. </p>
+<p>Since we were already using Azure, we immediately took a couple tools off the shelf including Azure Block Storage for chunk storage, Azure Front Door for DDoS mitigation (that we haven't required thus far), and Azure Kubernetes Service for workload management. </p>
             </section>
 
             <section class="post-info">
