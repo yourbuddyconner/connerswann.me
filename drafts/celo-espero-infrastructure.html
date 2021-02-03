@@ -234,6 +234,7 @@ add-participant \
 </pre>
 
 <h3>Alerting on Ceremony State</h3>
+<p>The Ceremony is structured such that participants are capable of shipping errors to the Cooridinator, notifying the Ceremony organizers of potential issues. The most common problem that pops up is simple networking issues, like localized DNS inconsistencies or global network partitions. These error logs are shipped to the Coordinator and show up in its logs to be consumed by alerting tools like the Azure Log Analytics Workspace. </p>
             </section>
 
             <section class="post-info">
