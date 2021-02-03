@@ -171,7 +171,7 @@
 <p><img alt="Espero Ceremony Architecture Diagram" src="../images/2021/espero-ceremony-architecture.png"></p>
 <p>Important Pieces: </p>
 <ul>
-<li><strong>Ceremony Cooridnator:</strong> The brains of the whole ceremony, authenticates users via Public Key signatures and coordinates the metadata required to operate the ceremony efficiently. </li>
+<li><strong>Ceremony Coordinator:</strong> The brains of the whole ceremony, authenticates users via Public Key signatures and coordinates the metadata required to operate the ceremony efficiently. </li>
 <li><strong>Ceremony Verifier:</strong> Communicates with the coordinator, waiting for new contributions and verifying them on the fly. </li>
 <li><strong>Ceremony Monitor:</strong> Observes changes in the Coordinator API, emitting logs that can be used for Alerting on important changes in ceremony state. </li>
 <li><strong>Azure Front Door:</strong> Used for DDoS mitigation, easy to set up. </li>
@@ -194,7 +194,7 @@
 
 <p>Since the ceremony coordinator is easily modelled as a traditional web service, it is trivial to then deploy it in containers to Kubernetes. For the remainder of this post, we're going to discuss the various parts of the deployment (included in the Open Source <a href="https://github.com/celo-org/snark-setup-coordinator">Espero Coordinator Repository</a>) in the hopes that it is both interesting and relevant to others who want to extend the system. </p>
 <h2>Why Microsoft Azure?</h2>
-<p>Like any cloud provider I see using Azure as a cost/benefit analysis for any project. The major reason we at cLabs run workloads on Azure is because the Azure Hardware Security Module (HSM) supports the <code>secp256k1</code> curve that is the basis for the public key cryptography in Celo (and the Espero Ceremony!). We use this feature for transaction signing among other things, and Google Cloud Platfrom (my cloud of choice) doesn't currently support this curve in their solution (booo!). Fortunately, Azure provides a perfectly servicable (if incredibly opinionated/non-intuitive) Kubernetes environment for us to work with. </p>
+<p>Like any cloud provider I see using Azure as a cost/benefit analysis for a given project. The major reason we at cLabs run workloads on Azure is because the Azure Hardware Security Module (HSM) supports the <code>secp256k1</code> curve that is the basis for the public key cryptography in Celo (and the Espero Ceremony!). We use this feature for transaction signing among other things, and Google Cloud Platfrom (my cloud of choice) doesn't currently support this curve in their solution (booo!). Fortunately, Azure provides a perfectly servicable (if incredibly opinionated/non-intuitive) Kubernetes environment for us to work with. </p>
 <p>Since we were already using Azure, we immediately took a couple tools off the shelf including Azure Block Storage for chunk storage, Azure Front Door for DDoS mitigation (that we haven't required thus far), and Azure Kubernetes Service for workload management. </p>
 <h2>The Lifecycle of a Ceremony</h2>
 <p>Because there is some human intervention required in the Espero Ceremony, an additional actor is introduced called the <code>Operator</code>. This entity, like the other actors in the system, authenticate to the Coordinator via private key. The entire lifecycle of the ceremony is managed by the <code>Coordinator</code> and administered by the <code>Operator</code> including adding/removing participants, verifying each round, and transitioning between rounds.</p>
@@ -213,13 +213,13 @@ add-participant \
 </pre>
 
 <h3>Round Maintenance</h3>
-<p>Besides adding users, the control binary can be used to free up the coordinator which is capable of getting into states where the ceremony cannot proceed if all participants do not complete their contribution as planned. Additionally, it's important to note that while the Operator can reove data that has already been contributed, it cannot forge data on behalf of a participant. This is ensured by the public key cryptography that underpins the Espero Ceremony and Plumo SNARK. </p>
+<p>Besides adding users, the control binary can be used to unstick the coordinator which is capable of getting into states where the ceremony cannot proceed -- especially if all participants do not complete their contribution as planned. Additionally, it's important to note that while the Operator can reove data that has already been contributed, it cannot forge data on behalf of a participant. This is ensured by the verifiable public key cryptography that underpins the Espero Ceremony and Plumo SNARK. </p>
 <p>Due to the way the Structured Reference String is broken up, as mentioned previously, each participant must complete their section of the computation on each chunk in order for the ceremony to proceed. There are a plethora of reasons a user could drop out of the ceremony, from slow/inconsistent internet connections to hardware failure. If <code>Participant A</code> drops out in the middle of the ceremony there are several options: </p>
 <ol>
-<li>Have the user share their private key with someone who may complete the contribution on their behalf, forfeiting some or all of the security guarantees of that particular contribution. </li>
+<li>Have <code>Participant A</code> share their private key with someone who may complete the contribution on their behalf, forfeiting some or all of the security guarantees of that particular contribution. </li>
 <li>Remove the participant, invalidating all chunks that <code>Participant A</code> contributed and also invalidating any descendent chunks created by other participants that used <code>Participant A</code>'s chunks as the basis for their own contributions. </li>
 </ol>
-<p>This puts a strong emphasis on maintaining communication with participants and ensuring that private keys are not destroyed before the round is complete and verified. </p>
+<p>This puts a strong emphasis on maintaining communication with participants and ensuring that private keys are not destroyed before the round is complete and verified. Removing users halfway through really degrades the user experience, so being proactive when this occurs can go a long way. </p>
 <h3>Round Verification</h3>
 <p>Because every contribution is signed and verifiable, the coordinator produces a <em>transcript</em> that consists of every operation that was made. This transcript can then be verified by anyone as a chain of custody of sorts that shows the evolution of the Structured Reference String. </p>
 <p>Below is an example of a command that verifies a round: </p>
@@ -232,6 +232,8 @@ add-participant \
 --publish
 </code>
 </pre>
+
+<h3>Alerting on Ceremony State</h3>
             </section>
 
             <section class="post-info">
