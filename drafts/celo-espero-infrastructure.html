@@ -38,7 +38,7 @@
 
 
 
-    <meta name="description" content="What is Celo? Celo is a Cryptocurrency protocol that I contribute to as part of the cLabs team. cLabs's Mission is to ensure "Financial...">
+    <meta name="description" content="What is Celo? Celo is a Cryptocurrency protocol that I contribute to as part of the cLabs team. cLabs's Mission is to ensure the...">
 
     <meta name="author" content="Conner Swann">
 
@@ -53,7 +53,7 @@
 <!-- Open Graph -->
 <meta property="og:site_name" content="Conner Swann"/>
 <meta property="og:title" content="Celo: The Infra Running the Espero Ceremony"/>
-<meta property="og:description" content="What is Celo? Celo is a Cryptocurrency protocol that I contribute to as part of the cLabs team. cLabs's Mission is to ensure "Financial..."/>
+<meta property="og:description" content="What is Celo? Celo is a Cryptocurrency protocol that I contribute to as part of the cLabs team. cLabs's Mission is to ensure the..."/>
 <meta property="og:locale" content="en_US"/>
 <meta property="og:url" content="https://connerswann.me/drafts/celo-espero-infrastructure.html"/>
 <meta property="og:type" content="article"/>
@@ -75,7 +75,7 @@
 
         <meta name="twitter:image:src" content="https://connerswann.me/images/2021/celo.jpeg">
 
-      <meta name="twitter:description" content="What is Celo? Celo is a Cryptocurrency protocol that I contribute to as part of the cLabs team. cLabs's Mission is to ensure "Financial...">
+      <meta name="twitter:description" content="What is Celo? Celo is a Cryptocurrency protocol that I contribute to as part of the cLabs team. cLabs's Mission is to ensure the...">
 
 <script type="application/ld+json">
 {
@@ -92,7 +92,7 @@
   },
   "image": "https://connerswann.me/images/2021/celo.jpeg",
   "url": "https://connerswann.me/drafts/celo-espero-infrastructure.html",
-  "description": "What is Celo? Celo is a Cryptocurrency protocol that I contribute to as part of the cLabs team. cLabs's Mission is to ensure "Financial..."
+  "description": "What is Celo? Celo is a Cryptocurrency protocol that I contribute to as part of the cLabs team. cLabs's Mission is to ensure the..."
 }
 </script>
 </head>
@@ -147,7 +147,7 @@
         <div class="inner">
             <section class="post-content">
                 <h1>What is Celo?</h1>
-<p><a href="https://celo.org/">Celo</a> is a Cryptocurrency protocol that I contribute to as part of the cLabs team. cLabs's Mission is to ensure "Financial Prosperity for all," which we are executing on by building the ecosystem's first mobile-first blockchain. For many in the world, banking and payments infrastructure is non-existent or hard to get access to, and Celo's goal is to fill that gap. </p>
+<p><a href="https://celo.org/">Celo</a> is a Cryptocurrency protocol that I contribute to as part of the cLabs team. cLabs's Mission is to ensure the conditions of "Financial Prosperity for all," which we are executing on by building the ecosystem's first mobile-first blockchain. For many in the world, banking and payments infrastructure is non-existent or hard to get access to, and Celo's goal is to fill that gap. </p>
 <p>In the words of <a href="https://www.coindesk.com/libra-minus-facebook-why-celo-is-2020s-buzzy-token-project">Polychain Capital President, Joe Eagan</a>, “The Celo mobile app, bringing stable payments and remittances to the unbanked, has a chance to bring broad swaths of people to the world of blockchain technology and crypto, but to also level up the economic well-being of those most in need across the globe."</p>
 <p>For more details on what Celo is doing and how it does it, I highly recommend checking out <a href="https://medium.com/celoorg/why-build-on-the-celo-blockchain-9ceab3d11b70">this post</a> on the cLabs Blog by the cLabs CTO Marek Olszewski.</p>
 <h2>What is Plumo?</h2>
@@ -180,7 +180,7 @@
 <li><strong>Terraform:</strong> Used to wire up and deploy all the various pieces of infradtructure, including Kubernetes Clusters, Load Balancers, and other cloud resources.</li>
 </ul>
 <h2>Okay, But How Does it <em>Work</em>?</h2>
-<p>At the end of the day, the Espero Ceremony is just a Typescript JSON API Server that responds to HTTP Requests from various other actors in the system, secured with the same public key cryptogrphy that is the basis for the Celo blockchain. Users who desire to contribute to the ceremony generate a keypair, and share the public key with the Ceremony operator, then signing their HTTP requests for authentication. </p>
+<p>At the end of the day, the Espero Ceremony is just a Typescript JSON API Server that responds to HTTP Requests from various other actors in the system, secured with the same public key cryptogrphy that is the basis for the Celo blockchain. Users who desire to contribute to the ceremony generate a keypair, and share the public key with the Ceremony operator, then signing their HTTP requests for authentication. Optionally (but recommended), contributors may also publish an attestation to a public channel like Twitter (<a href="https://twitter.com/YourBuddyConner/status/1339663701498982400">here's mine!</a>) -- this is to ensure that all of the individuals are participating are unique and not just one or more entities colluding. </p>
 <p>The Espero ceremony is particularly notable because it is split up into rounds, allowing a small number of participants to contribute their computations in parallel -- a novel innovation in the MPC ecosystem. Other MPC Ceremonies like the OG <a href="https://github.com/ebfull/powersoftau">Perpetual Powers of Tau</a> only allow for one participant at a time, while not necessarily a limitation mathematically, parallelizing it does allow for larger groups to be involved at once.</p>
 <p>Without getting too deep into the crypto, the gist of an MPC is you download something called a "Structured Reference String," do some computation with it as input, and return the output for the next participant to operate against. It's like a giant game of crypto telephone. The Structured Reference String consists of four vectors of varying size (see below diagram), each containing field elements from one of two Groups <code>G1</code> and <code>G2</code>. </p>
 <p>In order to facilitate multiple users in a round, the Structured Reference String is split up into many <em>chunks</em> which consist of slices of the field elements that are to be operated upon. Contributors acquire a "lock" on a chunk, download the chunk's contents, process the computation, and upload the results back to Azure to be verified. </p>
@@ -192,10 +192,30 @@
 <script>window.addEventListener("message", function(e) {var i = e.data.split(":")[1];var h = e.data.split(":")[2];if (e.data.split(":")[0] == "swimlanes-io" && i && h) {document.getElementById("__sw-io-" + i).setAttribute("style","height:" + h + "px");}}, false);</script>
 <div id="__sw-io-lVHg"><iframe style="border:none; width:100%; height:100%" scrolling="no" src="https://cdn.swimlanes.io/dist/embeded.html#lVHLUoMwFN3zFecHhFofCxbOWGSYagccaPfEcC2Z0gSTsNCvN9CHdWqrLnPvedxzYoVtKERsWtIKkZJWi5fOCiVR0FtHkhMeBFtqtva8/VppXNw5tNKVkMw9Q1z6yHuCseB1J1cGZRLPEXDStFbyvfQO4Bv2XixEtEXhschSlOPRCNlTedZw7GOm+ApR77YzG5yDUFRB43a/eA7EXoOqk5b3H50mTHo1FG7Glq6tq6+skdPwfgCdcOtHJK05TnYAvfbxrBUnYzasszXc+MfZ+Q5Pf2ng26cv8tn/urj1sWgbxSpXiWmVNOR5Ulm3yaklZmFrYdBu87w6JWK8Rie3I9f9cHkfI5tnmMTJNE2naVJ+Ag==#lVHg"></iframe></div>
 
-<p>Here is where the Plumo project intersects with my particular set of skills. Since the ceremony coordinator is easily modelled as a traditional web service, it is trivial to then deploy it in containers to Kubernetes. For the remainder of this post, we're going to discuss the various parts of the deployment (included in the Open Source <a href="https://github.com/celo-org/snark-setup-coordinator">Espero Coordinator Repository</a>) in the hopes that it is both interesting and relevant to others who want to extend the system. </p>
+<p>Since the ceremony coordinator is easily modelled as a traditional web service, it is trivial to then deploy it in containers to Kubernetes. For the remainder of this post, we're going to discuss the various parts of the deployment (included in the Open Source <a href="https://github.com/celo-org/snark-setup-coordinator">Espero Coordinator Repository</a>) in the hopes that it is both interesting and relevant to others who want to extend the system. </p>
 <h2>Why Microsoft Azure?</h2>
 <p>Like any cloud provider I see using Azure as a cost/benefit analysis for any project. The major reason we at cLabs run workloads on Azure is because the Azure Hardware Security Module (HSM) supports the <code>secp256k1</code> curve that is the basis for the public key cryptography in Celo (and the Espero Ceremony!). We use this feature for transaction signing among other things, and Google Cloud Platfrom (my cloud of choice) doesn't currently support this curve in their solution (booo!). Fortunately, Azure provides a perfectly servicable (if incredibly opinionated/non-intuitive) Kubernetes environment for us to work with. </p>
 <p>Since we were already using Azure, we immediately took a couple tools off the shelf including Azure Block Storage for chunk storage, Azure Front Door for DDoS mitigation (that we haven't required thus far), and Azure Kubernetes Service for workload management. </p>
+<h2>The Lifecycle of a Ceremony</h2>
+<p>Because there is some human intervention required in the Espero Ceremony, an additional actor is introduced called the <code>Operator</code>. This entity, like the other actors in the system, authenticate to the Coordinator via private key. The entire lifecycle of the ceremony is managed by the <code>Coordinator</code> and administered by the <code>Operator</code> including adding/removing participants, verifying each round, and transitioning between rounds.</p>
+<p>The operator commands are located in the control binary, lets walk through initialization and the first round: </p>
+<h3>Ceremony Initialization</h3>
+<p>At the very beginninng of the ceremony, chunks must be created and uploaded to Azure Block Storage. These make up the initial challenges that each participant in Round 0 will download, compute against, and re-upload. </p>
+<h3>Contributor Enrollment</h3>
+<p>The first thing we need to do after initializing the ceremony is add participants. We can do this by using the <code>add-participant</code> method, passing an address generated via the <code>generate</code> binary as the <code>--participant-id</code> argument. </p>
+<p><code>./target/release/control --coordinator-url https://plumo-example.azurefd.net --keys-file ~/plumo-verifier.keys add-participant --participant-id ADDRESS</code></p>
+<h3>Round Maintenance</h3>
+<p>Besides adding users, the control binary can be used to free up the coordinator which is capable of getting into states where the ceremony cannot proceed if all participants do not complete their contribution as planned. Additionally, it's important to note that while the Operator can reove data that has already been contributed, it cannot forge data on behalf of a participant. This is ensured by the public key cryptography that underpins the Espero Ceremony and Plumo SNARK. </p>
+<p>Due to the way the Structured Reference String is broken up, as mentioned previously, each participant must complete their section of the computation on each chunk in order for the ceremony to proceed. There are a plethora of reasons a user could drop out of the ceremony, from slow/inconsistent internet connections to hardware failure. If <code>Participant A</code> drops out in the middle of the ceremony there are several options: </p>
+<ol>
+<li>Have the user share their private key with someone who may complete the contribution on their behalf, forfeiting some or all of the security guarantees of that particular contribution. </li>
+<li>Remove the participant, invalidating all chunks that <code>Participant A</code> contributed and also invalidating any descendent chunks created by other participants that used <code>Participant A</code>'s chunks as the basis for their own contributions. </li>
+</ol>
+<p>This puts a strong emphasis on maintaining communication with participants and ensuring that private keys are not destroyed before the round is complete and verified. </p>
+<h3>Round Verification</h3>
+<p>Because every contribution is signed and verifiable, the coordinator produces a <em>transcript</em> that consists of every operation that was made. This transcript can then be verified by anyone as a chain of custody of sorts that shows the evolution of the Structured Reference String. </p>
+<p>Below is an example of a command that verifies a round: 
+<code>./target/release/control --coordinator-url https://plumo-example.azurefd.net --keys-file ~/plumo-verifier.keys new-round -e EXPECTED_PARTICIPANT_1 -e EXPECTED_PARTICIPANT_2 --verify-transcript --publish</code></p>
             </section>
 
             <section class="post-info">
