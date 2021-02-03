@@ -203,11 +203,14 @@
 <p>At the very beginninng of the ceremony, chunks must be created and uploaded to Azure Block Storage. These make up the initial challenges that each participant in Round 0 will download, compute against, and re-upload. </p>
 <h3>Contributor Enrollment</h3>
 <p>The first thing we need to do after initializing the ceremony is add participants. We can do this by using the <code>add-participant</code> method, passing an address generated via the <code>generate</code> binary as the <code>--participant-id</code> argument. </p>
-<div class="highlight"><pre><span></span><code><span class="err">./target/release/control --coordinator-url https://plumo-example.azurefd.net \</span>
-<span class="err">--keys-file ~/plumo-verifier.keys \</span>
-<span class="err">add-participant \</span>
-<span class="err">--participant-id ADDRESS</span>
-</code></pre></div>
+<pre class="line-numbers">
+<code class="language-shell">
+./target/release/control --coordinator-url https://plumo-example.azurefd.net \
+--keys-file ~/plumo-verifier.keys \
+add-participant \
+--participant-id ADDRESS
+</code>
+</pre>
 
 <h3>Round Maintenance</h3>
 <p>Besides adding users, the control binary can be used to free up the coordinator which is capable of getting into states where the ceremony cannot proceed if all participants do not complete their contribution as planned. Additionally, it's important to note that while the Operator can reove data that has already been contributed, it cannot forge data on behalf of a participant. This is ensured by the public key cryptography that underpins the Espero Ceremony and Plumo SNARK. </p>
@@ -220,12 +223,15 @@
 <h3>Round Verification</h3>
 <p>Because every contribution is signed and verifiable, the coordinator produces a <em>transcript</em> that consists of every operation that was made. This transcript can then be verified by anyone as a chain of custody of sorts that shows the evolution of the Structured Reference String. </p>
 <p>Below is an example of a command that verifies a round: </p>
-<div class="highlight"><pre><span></span><code><span class="err">./target/release/control --coordinator-url https://plumo-example.azurefd.net \</span>
-<span class="err">--keys-file ~/plumo-verifier.keys new-round \</span>
-<span class="err">-e EXPECTED_PARTICIPANT_1 -e EXPECTED_PARTICIPANT_2 \</span>
-<span class="err">--verify-transcript \</span>
-<span class="err">--publish</span>
-</code></pre></div>
+<pre class="line-numbers">
+<code class="language-shell">
+./target/release/control --coordinator-url https://plumo-example.azurefd.net \
+--keys-file ~/plumo-verifier.keys new-round \
+-e EXPECTED_PARTICIPANT_1 -e EXPECTED_PARTICIPANT_2 \
+--verify-transcript \
+--publish
+</code>
+</pre>
             </section>
 
             <section class="post-info">
