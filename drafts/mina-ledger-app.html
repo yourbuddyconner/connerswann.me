@@ -178,15 +178,26 @@ Getting network identifier... Error: HTTPConnectionPool<span class="o">(</span><
 </blockquote>
 <p>Rosetta provides a nice standard API for every blockchain, which can be a pain from the perspective of one writing a blockchain, but it is <em>hugely</em> useful when a big organization just forces everyone to adhere to the <em>same API</em>. Rosetta runs as a sidecar to the Archive Node deployment, consuming the GraphQL Port on the Daemon as well as data from the Postgres Database directly. </p>
 </hr>
-<p>In order to facilitate this, and add some more production-oriented features, I forked the official Helm Chart and am hosting it on the Sushi Validator github organization <a href="https://github.com/Sushi-Validator/mina-archive-node">here</a>. </p>
+<p>In order to facilitate the deployment of Rosetta, and add some more production-oriented features, I forked the official Helm Chart and am hosting it on the Sushi Validator github organization <a href="https://github.com/Sushi-Validator/mina-archive-node">here</a>. </p>
 <p>The <code>values.yaml</code> is compatible with the official chart, and is a super-set of the existing fields. Most notably, I added a <code>rosetta</code> section: </p>
-<div class="highlight"><pre><span></span><code><span class="n">rosetta</span><span class="o">:</span> 
-  <span class="n">image</span><span class="o">:</span> <span class="n">gcr</span><span class="o">.</span><span class="na">io</span><span class="sr">/o1labs-192920/</span><span class="n">coda</span><span class="o">-</span><span class="n">daemon</span><span class="o">-</span><span class="n">baked</span><span class="o">:</span><span class="mf">0.4</span><span class="o">.</span><span class="mi">2</span><span class="o">-</span><span class="mi">245</span><span class="n">a3f7</span><span class="o">-</span><span class="n">zenith</span><span class="o">-</span><span class="mi">7</span><span class="n">a89538</span>
-  <span class="n">graphqlUri</span><span class="o">:</span> <span class="n">http</span><span class="o">://</span><span class="mf">127.0</span><span class="o">.</span><span class="mf">0.1</span><span class="o">:</span><span class="mi">3085</span><span class="o">/</span><span class="n">graphql</span> 
-  <span class="n">archiveUri</span><span class="o">:</span> <span class="s1">&#39;{{ $.Values.archive.postgresUri }}&#39;</span>
-  <span class="n">ports</span><span class="o">:</span>
-    <span class="n">web</span><span class="o">:</span> <span class="mi">3087</span>
-</code></pre></div>
+<pre class="line-numbers">
+<code class="language-yaml">
+rosetta: 
+  image: gcr.io/o1labs-192920/coda-daemon-baked:0.4.2-245a3f7-zenith-7a89538
+  graphqlUri: http://127.0.0.1:3085/graphql 
+  archiveUri: '{{ $.Values.archive.postgresUri }}'
+  ports:
+    web: 3087
+</code>
+</pre>
+
+<p>Note: Fortunately O(1) packages the <code>mina-rosetta</code> binary in the <code>coda-daemon-baked</code> image, so we can use the same exact image as the Mina Daemon here.</p>
+<p>A complete example <code>values.yaml</code> follows: </p>
+<pre class="line-numbers">
+<code class="language-yaml">
+
+</code>
+</pre>
 
 <h2>mina_ledger_wallet CLI</h2>
 <h2>Send a Transaction</h2>
