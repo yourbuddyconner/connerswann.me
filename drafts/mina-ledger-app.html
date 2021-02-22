@@ -249,9 +249,12 @@ nodeSelector:
 </pre>
 
 <p>Now, given this <code>values.yaml</code>, all we need to do now is add the Sushi Validator helm repository: </p>
-<div class="highlight"><pre><span></span><code><span class="err">helm repo add sushi https://charts.sushivalidator.com</span>
-<span class="err">helm repo update</span>
-</code></pre></div>
+<pre class="line-numbers">
+<code class="language-shell">
+helm repo add sushi https://charts.sushivalidator.com
+helm repo update
+</code>
+</pre>
 
 <p>We can install the chart like so: </p>
 <pre class="line-numbers">
@@ -324,6 +327,15 @@ Addresses and ports:
 
 <p>Eventually, after ~10 minutes or so, your Daemon will be <code>Synced</code> and chain data will be flowing to your Postgres database. </p>
 <h2>A Little About Rosetta</h2>
+<p>Rosetta is an initiative from Coinbase, providing a standard API for applications built on top of blockchains to interact with the underlying ledger. It is a robust and well-tested interface, and it's pretty nice to work with. I think it would be fun to write some posts about writing applications on top of <code>mina-rosetta</code>.</p>
+<p>If you want to poke around, there is a cool rosetta-api client which can be found <a href="https://github.com/coinbase/rosetta-cli">on github, here.</a></p>
+<p>We can port-forward the Rosetta API Port so the CLI can communicate with the remote pod. </p>
+<pre class="line-numbers">
+<code class="language-shell">
+
+</code>
+</pre>
+
 <h2>mina_ledger_wallet CLI</h2>
 <h2>Send a Transaction</h2>
             </section>
