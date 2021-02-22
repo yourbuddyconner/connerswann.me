@@ -154,16 +154,20 @@
 <h2>Technology and Prerequesites</h2>
 <p>I like Kubernetes. Fortunately, O(1) Labs has provided some handy <a href="https://github.com/MinaProtocol/mina/tree/develop/helm">Helm Charts</a> that make our collective lives pretty easy and serve as a starting point to build an archive node deployment off of. </p>
 <p>In this post we will focus on deploying to a local Minikube/Docker Desktop cluster, but this will definitely work on any Kubernetes cluster (the <em>joy</em> of Kubernetes!). </p>
-<p>I assume you have the following things set up: 
-- A local Kubernetes cluster running and <code>kubectl</code> configured. 
-- The Helm 3 CLI. 
-- PostgreSQL installed locally if you would like to make queries. </p>
+<p>I assume you have the following things set up: </p>
+<ul>
+<li>A local Kubernetes cluster running and <code>kubectl</code> configured. </li>
+<li>The Helm 3 CLI. </li>
+<li>PostgreSQL installed locally if you would like to make queries. </li>
+</ul>
 <h2>Archive Node Helm Chart</h2>
 <p>The Archive Node Helm Chart lives in the Mina Monorepo and can be used to deploy a moderately-resilient Archive process that indexes blocks off the blockchain. It is perfectly suitable for testnets or local development. Since O(1) has a Helm Repo, you can simply install the Repo, provide a <code>values.yaml</code> to override the default values, and deploy! </p>
-<p>The chart consists of three discrete processes: 
-- Mina Daemon - The star of the show, syncs with the blockchain and does all the hard work
-- Archive Process - Receives RPC Updates from the Mina Daemon and persists on-chain data to the Postgres DB
-- PostgreSQL Database - Stores Archive data (via bitnami sub-chart)</p>
+<p>The chart consists of three discrete processes:</p>
+<ul>
+<li>Mina Daemon - The star of the show, syncs with the blockchain and does all the hard work</li>
+<li>Archive Process - Receives RPC Updates from the Mina Daemon and persists on-chain data to the Postgres DB</li>
+<li>PostgreSQL Database - Stores Archive data (via bitnami sub-chart)</li>
+</ul>
 <p><img alt="Mina Archive Node Architecture" src="../../images/2021/mina-archive-diagram-1.png"></p>
 <h3>Install the Helm Repo</h3>
 <p>The instructions for installing the Mina Helm Repo can be found <a href="https://github.com/MinaProtocol/mina/tree/develop/helm/archive-node">here</a> and can be found below. </p>
