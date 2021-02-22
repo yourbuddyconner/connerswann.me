@@ -157,7 +157,7 @@
 </ul>
 <p>It also might help to at least skim through the last post in the <em>March to Mainnet</em> Series <a href="https://connerswann.me/2021/01/mina-archive-node-kubernetes.html">about the Archive Node Helm Chart</a>, which sets the scene for all the concepts we will cover in this post. </p>
 <p>A last note: The word "ledger" is incredibly overloaded in the crypto world. In this post I try to differentiate between the company/Hardware Wallet <code>Ledger</code> (ex. Ledger Nano S) and the generic word <code>ledger</code> (ex. genesis ledger) which describes a list of accounts in a blockchain system. </p>
-<h2>Install Mina Ledger (You should have already done this)</h2>
+<h2>Install Mina Ledger App</h2>
 <p>If you have an address in the Mina Genesis Ledger, you should have already done this step and generated your address using the <code>mina_ledger_wallet</code> utility. However, instructions for installing it can be <a href="https://minaprotocol.com/docs/keypair/ledger-app-mina">found here</a>.</p>
 <p>I am assuming that you have placed the <code>mina_ledger_wallet</code> program somewhere in your <code>$PATH</code>, and if you don't the commands you might use will be slightly different than those in this post. </p>
 <p>If you have done your due dilligence, you might have run <code>mina_ledger_wallet test-transaction</code> which creates and signs a dummy transaction offline. This only requires the Ledger to preform successfully. </p>
@@ -404,7 +404,6 @@ mina_ledger_wallet \
     --network testnet \
     --mina_url http://localhost:3087 \
     --fee .01 \
-    --nonce 2 \
     42 \
     <SenderAddress> \
     <ReceiverAddress> \
@@ -417,7 +416,7 @@ mina_ledger_wallet \
 <p>Here's some example output from that command: </p>
 <pre class="line-numbers">
 <code class="language-shell">
-$ mina_ledger_wallet --verbose send-payment --network testnet --mina_url http://localhost:3087 --fee .01 --nonce 2 42 B62qqYpdvJ8oUF81gZL1WfLef1Ky8SsdvmUyfpr7YWb2m2rjRxaEcxq B62qmdut1usji2NFZSn9BrywhjHakYtAvL7Mdy7muyjcbrY3hKJ688Y .01
+$ mina_ledger_wallet --verbose send-payment --network testnet --mina_url http://localhost:3087 --fee .01 42 B62qqYpdvJ8oUF81gZL1WfLef1Ky8SsdvmUyfpr7YWb2m2rjRxaEcxq B62qmdut1usji2NFZSn9BrywhjHakYtAvL7Mdy7muyjcbrY3hKJ688Y .01
 Using rosetta override: http://localhost:3087
 Getting network identifier... debug
 Using network override: testnet
