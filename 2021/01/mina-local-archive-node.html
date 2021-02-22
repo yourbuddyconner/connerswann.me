@@ -221,147 +221,132 @@ healthcheck:
 
 nodeSelector:
   preemptible: false
+</code>
+</pre>
 
-<div class="highlight"><pre><span></span><code><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;</span><span class="w"></span>
-<span class="o">&lt;/</span><span class="n">pre</span><span class="o">&gt;</span><span class="w"></span>
+<p>There's a couple pieces here that we should examine closely. </p>
+<p>This section is for Mina (previously known as Coda) Daemon configuration variables. I have provided a recently built image (official images can be found <a href="gcr.io/o1labs-192920/coda-daemon-baked">here</a>), and valid seed peers for the network to which I would like to connect.</p>
+<pre class="line-numbers">
+<code class="language-yaml">
+coda:
+  runtimeConfig: ""
+  logLevel: "Info"
+  logSnarkWorkGossip: false
+  image: gcr.io/o1labs-192920/coda-daemon-baked:0.4.2-245a3f7-zenith-7a89538
+  seedPeers:
+    - /dns4/seed-1.zenith.o1test.net/tcp/10000/p2p/12D3KooWEEkNQY482QZ9RzTjsAYnczNNWS592guYKZHn9MMAkqpj
+    - /dns4/mina-seed-1.zkvalidator.com/tcp/8302/p2p/12D3KooWSR7LMBSfEk3LQUudmsX27yuRHe9NUxwLumurGF5P1MNS
+    - /dns4/mina-1.figment.io/tcp/8302/p2p/12D3KooWSkfwArLtqGMht1a9w3z3QiiqA2E6seBRAk378rvanGRZ
+  ports:
+    client: "8301"
+    graphql: "3085"
+    metrics: "10001"
+    p2p: "10909"
+</code>
+</pre>
 
-<span class="n">There</span><span class="s1">&#39;s a couple pieces here that we should examine closely. </span>
+<p>This section configures the Archive Node, and we have overriden the Docker Image. It is worth calling out the <code>archive.remoteSchemaFile</code> value, which can be used to pass in the remote SQL file that will bootstrap the Database. </p>
+<pre class="line-numbers">
+<code class="language-yaml">
+archive:
+  hostPort: "10909"
+  image: gcr.io/o1labs-192920/coda-archive:0.4.2-245a3f7
+  listenPort: "3086"
+  nodeName: "dev"
+  remoteSchemaFile: "https://raw.githubusercontent.com/MinaProtocol/mina/develop/src/app/archive/create_schema.sql"
+  postgresHost: '{{ .Release.Name }}-postgresql'
+  postgresPort: "5432"
+  postgresDB: "archive"
+  postgresUri: postgres://{{ .Values.postgresql.postgresqlUsername }}:{{ .Values.postgresql.postgresqlPassword }}@{{ tpl .Values.archive.postgresHost . }}:{{ .Values.archive.postgresPort }}/{{ .Values.archive.postgresDB }}
+  ports:
+    server: 3086
+    postgres: "5432"
+</code>
+</pre>
 
-<span class="s1">This section is for Mina (previously known as Coda) Daemon configuration variables. I have provided a recently built image (official images can be found [here](gcr.io/o1labs-192920/coda-daemon-baked)), and valid seed peers for the network to which I would like to connect.</span>
+<h2>Deploy it!</h2>
+<p>So, now that we have a <code>values.yaml</code> file locally, and assuming we have installed the Mina Helm Repo correctly, we can do the following: </p>
+<pre class="line-numbers">
+<code class="language-shell">
+$ helm install --values values.yaml archive mina/archive-node
+NAME: archive
+LAST DEPLOYED: Sun Feb 21 19:03:12 2021
+NAMESPACE: archive
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+NOTES:
+</code>
+</pre>
 
-<span class="s1">&lt;pre class=&quot;line-numbers&quot;&gt;</span>
-<span class="s1">&lt;code class=&quot;language-yaml&quot;&gt;</span>
-<span class="s1">coda:</span>
-<span class="s1">  runtimeConfig: &quot;&quot;</span>
-<span class="s1">  logLevel: &quot;Info&quot;</span>
-<span class="s1">  logSnarkWorkGossip: false</span>
-<span class="s1">  image: gcr.io/o1labs-192920/coda-daemon-baked:0.4.2-245a3f7-zenith-7a89538</span>
-<span class="s1">  seedPeers:</span>
-<span class="s1">    - /dns4/seed-1.zenith.o1test.net/tcp/10000/p2p/12D3KooWEEkNQY482QZ9RzTjsAYnczNNWS592guYKZHn9MMAkqpj</span>
-<span class="s1">    - /dns4/mina-seed-1.zkvalidator.com/tcp/8302/p2p/12D3KooWSR7LMBSfEk3LQUudmsX27yuRHe9NUxwLumurGF5P1MNS</span>
-<span class="s1">    - /dns4/mina-1.figment.io/tcp/8302/p2p/12D3KooWSkfwArLtqGMht1a9w3z3QiiqA2E6seBRAk378rvanGRZ</span>
-<span class="s1">  ports:</span>
-<span class="s1">    client: &quot;8301&quot;</span>
-<span class="s1">    graphql: &quot;3085&quot;</span>
-<span class="s1">    metrics: &quot;10001&quot;</span>
-<span class="s1">    p2p: &quot;10909&quot;</span>
-<span class="s1">&lt;/code&gt;</span>
-<span class="s1">&lt;/pre&gt;</span>
-
-<span class="s1">This section configures the Archive Node, and we have overriden the Docker Image. It is worth calling out the `archive.remoteSchemaFile` value, which can be used to pass in the remote SQL file that will bootstrap the Database. </span>
-<span class="s1">&lt;pre class=&quot;line-numbers&quot;&gt;</span>
-<span class="s1">&lt;code class=&quot;language-yaml&quot;&gt;</span>
-<span class="s1">archive:</span>
-<span class="s1">  hostPort: &quot;10909&quot;</span>
-<span class="s1">  image: gcr.io/o1labs-192920/coda-archive:0.4.2-245a3f7</span>
-<span class="s1">  listenPort: &quot;3086&quot;</span>
-<span class="s1">  nodeName: &quot;dev&quot;</span>
-<span class="s1">  remoteSchemaFile: &quot;https://raw.githubusercontent.com/MinaProtocol/mina/develop/src/app/archive/create_schema.sql&quot;</span>
-<span class="s1">  postgresHost: &#39;</span><span class="err">{{</span><span class="w"> </span><span class="p">.</span><span class="k">Release</span><span class="p">.</span><span class="n">Name</span><span class="w"> </span><span class="err">}}</span><span class="o">-</span><span class="n">postgresql</span><span class="err">&#39;</span><span class="w"></span>
-<span class="w">  </span><span class="nl">postgresPort</span><span class="p">:</span><span class="w"> </span><span class="ss">&quot;5432&quot;</span><span class="w"></span>
-<span class="w">  </span><span class="nl">postgresDB</span><span class="p">:</span><span class="w"> </span><span class="ss">&quot;archive&quot;</span><span class="w"></span>
-<span class="w">  </span><span class="nl">postgresUri</span><span class="p">:</span><span class="w"> </span><span class="nl">postgres</span><span class="p">:</span><span class="o">//</span><span class="err">{{</span><span class="w"> </span><span class="p">.</span><span class="k">Values</span><span class="p">.</span><span class="n">postgresql</span><span class="p">.</span><span class="n">postgresqlUsername</span><span class="w"> </span><span class="err">}}:{{</span><span class="w"> </span><span class="p">.</span><span class="k">Values</span><span class="p">.</span><span class="n">postgresql</span><span class="p">.</span><span class="n">postgresqlPassword</span><span class="w"> </span><span class="err">}}@{{</span><span class="w"> </span><span class="n">tpl</span><span class="w"> </span><span class="p">.</span><span class="k">Values</span><span class="p">.</span><span class="n">archive</span><span class="p">.</span><span class="n">postgresHost</span><span class="w"> </span><span class="p">.</span><span class="w"> </span><span class="err">}}:{{</span><span class="w"> </span><span class="p">.</span><span class="k">Values</span><span class="p">.</span><span class="n">archive</span><span class="p">.</span><span class="n">postgresPort</span><span class="w"> </span><span class="err">}}</span><span class="o">/</span><span class="err">{{</span><span class="w"> </span><span class="p">.</span><span class="k">Values</span><span class="p">.</span><span class="n">archive</span><span class="p">.</span><span class="n">postgresDB</span><span class="w"> </span><span class="err">}}</span><span class="w"></span>
-<span class="w">  </span><span class="nl">ports</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nl">server</span><span class="p">:</span><span class="w"> </span><span class="mi">3086</span><span class="w"></span>
-<span class="w">    </span><span class="nl">postgres</span><span class="p">:</span><span class="w"> </span><span class="ss">&quot;5432&quot;</span><span class="w"></span>
-<span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;</span><span class="w"></span>
-<span class="o">&lt;/</span><span class="n">pre</span><span class="o">&gt;</span><span class="w"></span>
-
-<span class="err">##</span><span class="w"> </span><span class="n">Deploy</span><span class="w"> </span><span class="n">it</span><span class="err">!</span><span class="w"> </span>
-
-<span class="n">So</span><span class="p">,</span><span class="w"> </span><span class="n">now</span><span class="w"> </span><span class="n">that</span><span class="w"> </span><span class="n">we</span><span class="w"> </span><span class="n">have</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="err">`</span><span class="k">values</span><span class="p">.</span><span class="n">yaml</span><span class="err">`</span><span class="w"> </span><span class="k">file</span><span class="w"> </span><span class="n">locally</span><span class="p">,</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">assuming</span><span class="w"> </span><span class="n">we</span><span class="w"> </span><span class="n">have</span><span class="w"> </span><span class="n">installed</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">Mina</span><span class="w"> </span><span class="n">Helm</span><span class="w"> </span><span class="n">Repo</span><span class="w"> </span><span class="n">correctly</span><span class="p">,</span><span class="w"> </span><span class="n">we</span><span class="w"> </span><span class="n">can</span><span class="w"> </span><span class="n">do</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="nl">following</span><span class="p">:</span><span class="w"> </span>
-
-<span class="err">```</span><span class="w"> </span><span class="n">bash</span><span class="w"></span>
-<span class="err">$</span><span class="w"> </span><span class="n">helm</span><span class="w"> </span><span class="n">install</span><span class="w"> </span><span class="c1">--values values.yaml archive mina/archive-node</span>
-<span class="nl">NAME</span><span class="p">:</span><span class="w"> </span><span class="n">archive</span><span class="w"></span>
-<span class="k">LAST</span><span class="w"> </span><span class="nl">DEPLOYED</span><span class="p">:</span><span class="w"> </span><span class="n">Sun</span><span class="w"> </span><span class="n">Feb</span><span class="w"> </span><span class="mi">21</span><span class="w"> </span><span class="mi">19</span><span class="err">:</span><span class="mi">03</span><span class="err">:</span><span class="mi">12</span><span class="w"> </span><span class="mi">2021</span><span class="w"></span>
-<span class="nl">NAMESPACE</span><span class="p">:</span><span class="w"> </span><span class="n">archive</span><span class="w"></span>
-<span class="nl">STATUS</span><span class="p">:</span><span class="w"> </span><span class="n">deployed</span><span class="w"></span>
-<span class="nl">REVISION</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w"></span>
-<span class="n">TEST</span><span class="w"> </span><span class="nl">SUITE</span><span class="p">:</span><span class="w"> </span><span class="k">None</span><span class="w"></span>
-<span class="nl">NOTES</span><span class="p">:</span><span class="w"></span>
-</code></pre></div>
-
-
-
-We can check the deployment by viewing the currently running pods: 
-
-
-<div class="highlight"><pre><span></span><code>$ kubectl get pods
+<p>We can check the deployment by viewing the currently running pods: </p>
+<pre class="line-numbers">
+<code class="language-shell">
+$ kubectl get pods
 NAME                         READY   STATUS      RESTARTS   AGE
-archive-5d9b967557-pkk2g     <span class="m">2</span>/2     Running     <span class="m">0</span>          37s
-archive-db-bootstrap-25mml   <span class="m">0</span>/3     Completed   <span class="m">0</span>          37s
-archive-db-bootstrap-nhp7f   <span class="m">0</span>/3     Error       <span class="m">0</span>          25s
-archive-db-bootstrap-nx9rw   <span class="m">0</span>/3     Error       <span class="m">0</span>          15s
-archive-postgresql-0         <span class="m">1</span>/1     Running     <span class="m">0</span>          37s
-</code></pre></div>
+archive-5d9b967557-pkk2g     2/2     Running     0          37s
+archive-db-bootstrap-25mml   0/3     Completed   0          37s
+archive-db-bootstrap-nhp7f   0/3     Error       0          25s
+archive-db-bootstrap-nx9rw   0/3     Error       0          15s
+archive-postgresql-0         1/1     Running     0          37s
+</code>
+</pre>
 
-
-
-Note: Depending on how long it takes for the Postgres container to pull and start, you might see one or more failed `archive-db-bootstrap-xxxxx` jobs, this is normal. 
-
-You can check your daemon's sync status with the following command: 
-
-`kubectl exec $(pods | grep archive- | head -n 1 | awk '{print $1}') -c coda -- coda client status`
-
-You should get output that looks similar to this: 
-
-<div class="highlight"><pre><span></span><code>$ kubectl <span class="nb">exec</span> <span class="k">$(</span>pods <span class="p">|</span> grep archive- <span class="p">|</span> head -n <span class="m">1</span> <span class="p">|</span> awk <span class="s1">&#39;{print $1}&#39;</span><span class="k">)</span> -c coda -- coda client status
+<p>Note: Depending on how long it takes for the Postgres container to pull and start, you might see one or more failed <code>archive-db-bootstrap-xxxxx</code> jobs, this is normal. </p>
+<p>You can check your daemon's sync status with the following command: </p>
+<p><code>kubectl exec $(pods | grep archive- | head -n 1 | awk '{print $1}') -c coda -- coda client status</code></p>
+<p>You should get output that looks similar to this: </p>
+<pre class="line-numbers">
+<code class="language-shell">
+$ kubectl exec $(pods | grep archive- | head -n 1 | awk '{print $1}') -c coda -- coda client status
 Coda daemon status
 -----------------------------------
 
-Max observed block height:              <span class="m">932</span>
-Max observed unvalidated block height:  <span class="m">0</span>
+Max observed block height:              932
+Max observed unvalidated block height:  0
 Local uptime:                           2m42s
 Chain id:                               394692fea7f6531810be6ef213959856010881425920d396be39009d53045074
-Git SHA-1:                              <span class="o">[</span>DIRTY<span class="o">]</span>245a3f7d883c516f5f16742cb1ca672872612851
+Git SHA-1:                              [DIRTY]245a3f7d883c516f5f16742cb1ca672872612851
 Configuration directory:                /root/.coda-config
-Peers:                                  <span class="m">33</span>
-User_commands sent:                     <span class="m">0</span>
+Peers:                                  33
+User_commands sent:                     0
 SNARK worker:                           None
-SNARK work fee:                         <span class="m">100000000</span>
+SNARK work fee:                         100000000
 Sync status:                            Bootstrap
-Block producers running:                <span class="m">0</span>
-Consensus <span class="nb">time</span> now:                     <span class="nv">epoch</span><span class="o">=</span><span class="m">0</span>, <span class="nv">slot</span><span class="o">=</span><span class="m">2076</span>
+Block producers running:                0
+Consensus time now:                     epoch=0, slot=2076
 Consensus mechanism:                    proof_of_stake
 Consensus configuration:                
-        Delta:                     <span class="m">0</span>
-        k:                         <span class="m">290</span>
-        Slots per epoch:           <span class="m">7140</span>
+        Delta:                     0
+        k:                         290
+        Slots per epoch:           7140
         Slot duration:             3m
         Epoch duration:            14d21h
-        Chain start timestamp:     <span class="m">2021</span>-02-17 <span class="m">19</span>:30:00.000000Z
+        Chain start timestamp:     2021-02-17 19:30:00.000000Z
         Acceptable network delay:  3m
 
 Addresses and ports:                    
-        External IP:    &lt;IP ADDRESS&gt;
-        Bind IP:        <span class="m">0</span>.0.0.0
+        External IP:    <IP ADDRESS>
+        Bind IP:        0.0.0.0
         Libp2p PeerID:  12D3KooWSfZd2tcaB5oPbu34KzcREoN8BNhQLofmSDguG3dRXzPS
-        Libp2p port:    <span class="m">10909</span>
-        Client port:    <span class="m">8301</span>
-</code></pre></div>
+        Libp2p port:    10909
+        Client port:    8301
+</code>
+</pre>
 
+<p>Eventually, after ~10 minutes or so, your Daemon will be <code>Synced</code> and chain data will be flowing to your Postgres database. </p>
+<h2>Ok, now what?</h2>
+<p>Now, you have a working, running Archive Node! Lets run a test query to see whats in the database. </p>
+<p>First, we should forward the Postgres port from the Database container to <code>localhost</code> with <code>kubectl</code>: </p>
+<pre class="line-numbers">
+<code class="language-shell">
+$ k port-forward archive-postgresql-0  5432
+Forwarding from 127.0.0.1:5432 -> 5432
+Forwarding from [::1]:5432 -> 5432
+</code>
+</pre>
 
-
-Eventually, after ~10 minutes or so, your Daemon will be `Synced` and chain data will be flowing to your Postgres database. 
-
-## Ok, now what? 
-
-Now, you have a working, running Archive Node! Lets run a test query to see whats in the database. 
-
-First, we should forward the Postgres port from the Database container to `localhost` with `kubectl`: 
-
-
-<div class="highlight"><pre><span></span><code>$ k port-forward archive-postgresql-0  <span class="m">5432</span>
-Forwarding from <span class="m">127</span>.0.0.1:5432 -&gt; <span class="m">5432</span>
-Forwarding from <span class="o">[</span>::1<span class="o">]</span>:5432 -&gt; <span class="m">5432</span>
-</code></pre></div>
-
-
-
-In another terminal, connect to the database with the `psql` client using the credentials we set in the `values.yaml` above: 
-
-
+<p>In another terminal, connect to the database with the <code>psql</code> client using the credentials we set in the <code>values.yaml</code> above: </p>
 <div class="highlight"><pre><span></span><code>$ psql -h localhost --user postgres
 Password <span class="k">for</span> user postgres: 
 psql <span class="o">(</span><span class="m">13</span>.2, server <span class="m">11</span>.10<span class="o">)</span>
@@ -370,11 +355,7 @@ Type <span class="s2">&quot;help&quot;</span> <span class="k">for</span> help.
 <span class="nv">postgres</span><span class="o">=</span><span class="c1"># </span>
 </code></pre></div>
 
-
-
-We can list the databases, switch to the archive database, list the tables, and query one of them: 
-
-
+<p>We can list the databases, switch to the archive database, list the tables, and query one of them: </p>
 <div class="highlight"><pre><span></span><code>$ psql -h localhost --user postgres
 Password <span class="k">for</span> user postgres: 
 psql <span class="o">(</span><span class="m">13</span>.2, server <span class="m">11</span>.10<span class="o">)</span>
@@ -422,13 +403,9 @@ You are now connected to database <span class="s2">&quot;archive&quot;</span> as
 <span class="o">(</span><span class="m">5</span> rows<span class="o">)</span>
 </code></pre></div>
 
-
-
-Now, there are a few limitations here. For the moment, there is no way to retrieve missing blocks from the chain. As such, you will need to have a nice friend with a SQL dump of their database to fill in the gaps. However, this definitely provides a workable dev environment for those requiring access to a working Archive node. Good work around Archive node redundancy is being done, details can be found in this Docs commit [here](https://github.com/MinaProtocol/mina/blob/0351fc31e9f5e29dc87a04bb55f3cdc5aee2038e/docs/archive-redundancy.md). 
-
-There is so much to do from here, like adding the `mina-rosetta` server to expose data in a consistent format for the Ledger, Postgres database backups, and more! 
-
-I invite you to try this out and stay tuned for more posts in this _March to Mainnet_ series. Next time, how to hook up this Archive deployment to your Ledger for fun and profit!
+<p>Now, there are a few limitations here. For the moment, there is no way to retrieve missing blocks from the chain. As such, you will need to have a nice friend with a SQL dump of their database to fill in the gaps. However, this definitely provides a workable dev environment for those requiring access to a working Archive node. Good work around Archive node redundancy is being done, details can be found in this Docs commit <a href="https://github.com/MinaProtocol/mina/blob/0351fc31e9f5e29dc87a04bb55f3cdc5aee2038e/docs/archive-redundancy.md">here</a>. </p>
+<p>There is so much to do from here, like adding the <code>mina-rosetta</code> server to expose data in a consistent format for the Ledger, Postgres database backups, and more! </p>
+<p>I invite you to try this out and stay tuned for more posts in this <em>March to Mainnet</em> series. Next time, how to hook up this Archive deployment to your Ledger for fun and profit! </p>
             </section>
 
             <section class="post-info">
