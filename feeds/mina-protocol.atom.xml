@@ -5,7 +5,7 @@
 &lt;p&gt;&lt;img alt="Mainnet is Coming Meme" src="../../images/2021/mainnet-is-coming.jpg"&gt;&lt;/p&gt;
 &lt;p&gt;In this installment of the Mina &lt;em&gt;March to Mainnet&lt;/em&gt; series we will be covering how to send transactions with a Ledger hardware wallet. We'll also introduce the Sushi Validator Archive Helm Chart, which can be used to deploy a production-ready instance of the Archive Node with Rosetta to a Kubernetes cluster of your choice. &lt;/p&gt;
 &lt;h2&gt;Prerequisites&lt;/h2&gt;
-&lt;p&gt;Since I love Kubernetes, I am going to have a pretty opinionated setup, but I think &lt;em&gt;everyone&lt;/em&gt; should have a little understanding of how Container and Kubernetes work in 2021. Fortunately, O(1) Labs has provided some Helm Charts that offer a good starting place when building a Mina deployment. &lt;/p&gt;
+&lt;p&gt;Since I love Kubernetes, I am going to have a pretty opinionated setup, but I think &lt;em&gt;everyone&lt;/em&gt; should have a little understanding of how Containers and Kubernetes work in 2021. Fortunately, O(1) Labs has provided some Helm Charts that offer a good starting place when building a Mina deployment. &lt;/p&gt;
 &lt;p&gt;You will need the following things in order to fully follow along with this post: &lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;A kubernetes cluster running and &lt;code&gt;kubectl&lt;/code&gt; configured (I use the Kubernetes feature on Docker Desktop)&lt;/li&gt;
