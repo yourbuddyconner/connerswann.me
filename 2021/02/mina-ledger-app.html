@@ -178,8 +178,8 @@ Getting network identifier... Error: HTTPConnectionPool<span class="o">(</span><
 </blockquote>
 <p>Rosetta provides a nice standard API for every blockchain, which can be a pain from the perspective of one writing a blockchain, but it is <em>hugely</em> useful when a big organization just forces everyone to adhere to the <em>same API</em>. Rosetta runs as a sidecar to the Archive Node deployment, consuming the GraphQL Port on the Daemon as well as data from the Postgres Database directly. </p>
 </hr>
-<p>In order to facilitate the deployment of Rosetta, and add some more production-oriented features, I forked the official Helm Chart and am hosting it on the <a href="https://minastakingpool.connerswann.me/">Sushi Validator</a> github organization <a href="https://github.com/Sushi-Validator/mina-archive-node">here</a>. </p>
-<p>The <code>values.yaml</code> is compatible with the official chart, and is a super-set of the existing fields. Most notably, I added a <code>rosetta</code> section: </p>
+<p>In order to facilitate the deployment of Rosetta, and add some more production-oriented features, we at the Sushi Validator forked the official chart and are hosting it on the official <a href="https://minastakingpool.connerswann.me/">Sushi Validator</a> helm repository <a href="https://github.com/Sushi-Validator/helm-charts">here</a>. </p>
+<p>The <code>values.yaml</code> is compatible with the official chart, and is a super-set of the existing fields. Most notably, a <code>rosetta</code> section was added: </p>
 <pre class="line-numbers">
 <code class="language-yaml">
 rosetta: 
