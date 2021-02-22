@@ -178,7 +178,7 @@ Getting network identifier... Error: HTTPConnectionPool<span class="o">(</span><
 </blockquote>
 <p>Rosetta provides a nice standard API for every blockchain, which can be a pain from the perspective of one writing a blockchain, but it is <em>hugely</em> useful when a big organization just forces everyone to adhere to the <em>same API</em>. Rosetta runs as a sidecar to the Archive Node deployment, consuming the GraphQL Port on the Daemon as well as data from the Postgres Database directly. </p>
 </hr>
-<p>In order to facilitate the deployment of Rosetta, and add some more production-oriented features, I forked the official Helm Chart and am hosting it on the Sushi Validator github organization <a href="https://github.com/Sushi-Validator/mina-archive-node">here</a>. </p>
+<p>In order to facilitate the deployment of Rosetta, and add some more production-oriented features, I forked the official Helm Chart and am hosting it on the <a href="https://minastakingpool.connerswann.me/">Sushi Validator</a> github organization <a href="https://github.com/Sushi-Validator/mina-archive-node">here</a>. </p>
 <p>The <code>values.yaml</code> is compatible with the official chart, and is a super-set of the existing fields. Most notably, I added a <code>rosetta</code> section: </p>
 <pre class="line-numbers">
 <code class="language-yaml">
@@ -195,9 +195,67 @@ rosetta:
 <p>A complete example <code>values.yaml</code> follows: </p>
 <pre class="line-numbers">
 <code class="language-yaml">
+testnetName: "zenith"
+coda:
+  runtimeConfig: ""
+  logLevel: "Info"
+  logSnarkWorkGossip: false
+  image: gcr.io/o1labs-192920/coda-daemon-baked:0.4.2-245a3f7-zenith-7a89538
+  privkeyPass: "naughty blue worm"
+  seedPeers:
+    - /dns4/seed-1.zenith.o1test.net/tcp/10000/p2p/12D3KooWEEkNQY482QZ9RzTjsAYnczNNWS592guYKZHn9MMAkqpj
+    - /dns4/mina-seed-1.zkvalidator.com/tcp/8302/p2p/12D3KooWSR7LMBSfEk3LQUudmsX27yuRHe9NUxwLumurGF5P1MNS
+    - /dns4/mina-1.figment.io/tcp/8302/p2p/12D3KooWSkfwArLtqGMht1a9w3z3QiiqA2E6seBRAk378rvanGRZ
+  ports:
+    client: "8301"
+    graphql: "3085"
+    metrics: "10001"
+    p2p: "10909"
 
+archive:
+  hostPort: "10909"
+  image: gcr.io/o1labs-192920/coda-archive:0.4.2-245a3f7
+  listenPort: "3086"
+  nodeName: "dev"
+  remoteSchemaFile: "https://raw.githubusercontent.com/MinaProtocol/mina/develop/src/app/archive/create_schema.sql"
+  postgresHost: '{{ .Release.Name }}-postgresql'
+  postgresPort: "5432"
+  postgresDB: "archive"
+  postgresUri: postgres://{{ .Values.postgresql.postgresqlUsername }}:{{ .Values.postgresql.postgresqlPassword }}@{{ tpl .Values.archive.postgresHost . }}:{{ .Values.archive.postgresPort }}/{{ .Values.archive.postgresDB }}
+  ports:
+    server: 3086
+    postgres: "5432"
+
+postgresql:
+  postgresqlPassword: "foobar"
+  postgresqlUsername: "postgres"
+
+rosetta: 
+  image: gcr.io/o1labs-192920/coda-daemon-baked:0.4.2-245a3f7-zenith-7a89538
+  graphqlUri: http://127.0.0.1:3085/graphql 
+  archiveUri: '{{ $.Values.archive.postgresUri }}'
+  ports:
+    web: 3087
+
+healthcheck:
+  enabled: true
+  failureThreshold: 60
+  periodSeconds: 5
+  initialDelaySeconds: 30
+
+nodeSelector:
+  preemptible: false
 </code>
 </pre>
+
+<p>Now, given this <code>values.yaml</code>, all we need to do now is add the Sushi Validator helm repository: </p>
+<div class="highlight"><pre><span></span><code><span class="err">helm repo add sushi https://charts.sushivalidator.com</span>
+<span class="err">helm repo update</span>
+</code></pre></div>
+
+<p>We can install the chart like so: </p>
+<div class="highlight"><pre><span></span><code><span class="err">helm install --values values.yaml archive sushi/archive-node/</span>
+</code></pre></div>
 
 <h2>mina_ledger_wallet CLI</h2>
 <h2>Send a Transaction</h2>
