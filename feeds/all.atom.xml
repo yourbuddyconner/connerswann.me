@@ -268,7 +268,328 @@ archive=# SELECT id, state_hash, parent_id, parent_hash, creator_id, height, glo
 
 &lt;p&gt;Now, there are a few limitations here. For the moment, there is no way to retrieve missing blocks from the chain. As such, you will need to have a nice friend with a SQL dump of their database to fill in the gaps. However, this definitely provides a workable dev environment for those requiring access to a working Archive node. Good work around Archive node redundancy is being done, details can be found in this Docs commit &lt;a href="https://github.com/MinaProtocol/mina/blob/0351fc31e9f5e29dc87a04bb55f3cdc5aee2038e/docs/archive-redundancy.md"&gt;here&lt;/a&gt;. &lt;/p&gt;
 &lt;p&gt;There is so much to do from here, like adding the &lt;code&gt;mina-rosetta&lt;/code&gt; server to expose data in a consistent format for the Ledger, Postgres database backups, and more! &lt;/p&gt;
-&lt;p&gt;I invite you to try this out and stay tuned for more posts in this &lt;em&gt;March to Mainnet&lt;/em&gt; series. Next time, how to hook up this Archive deployment to your Ledger for fun and profit! &lt;/p&gt;</content><category term="Mina Protocol"></category><category term="Mina"></category><category term="Blockchain"></category><category term="Archive Node"></category></entry><entry><title>Weekend Project - Coda Blockchain Visualization</title><link href="https://connerswann.me/2019/09/weekend-project-coda-blockchain.html" rel="alternate"></link><published>2019-09-14T00:00:00-07:00</published><updated>2019-09-14T00:00:00-07:00</updated><author><name>Conner Swann</name></author><id>tag:connerswann.me,2019-09-14:/2019/09/weekend-project-coda-blockchain.html</id><summary type="html">&lt;h1&gt;What's Coda?&lt;/h1&gt;
+&lt;p&gt;I invite you to try this out and stay tuned for more posts in this &lt;em&gt;March to Mainnet&lt;/em&gt; series. Next time, how to hook up this Archive deployment to your Ledger for fun and profit! &lt;/p&gt;</content><category term="Mina Protocol"></category><category term="Mina"></category><category term="Blockchain"></category><category term="Archive Node"></category></entry><entry><title>March to Mainnet: Sending a Transaction With Your Ledger Hardware Wallet</title><link href="https://connerswann.me/2021/01/mina-ledger-app.html" rel="alternate"></link><published>2021-01-22T00:00:00-08:00</published><updated>2021-01-22T00:00:00-08:00</updated><author><name>Conner Swann</name></author><id>tag:connerswann.me,2021-01-22:/2021/01/mina-ledger-app.html</id><summary type="html">&lt;h1&gt;Need to Test your Ledger?&lt;/h1&gt;
+&lt;p&gt;Mina Mainnet is upon us, if you are one of those who opted to self-custody their Mina tokens, chances are you generated your addresses with a Ledger Nano S. Now, your next step is to send some transactions with it, but you might be surprised …&lt;/p&gt;</summary><content type="html">&lt;h1&gt;Need to Test your Ledger?&lt;/h1&gt;
+&lt;p&gt;Mina Mainnet is upon us, if you are one of those who opted to self-custody their Mina tokens, chances are you generated your addresses with a Ledger Nano S. Now, your next step is to send some transactions with it, but you might be surprised to learn that it's not quite as easy as running a Mina daemon locally! Don't worry, it's still pretty easy, but you need a helping hand from the Mina Archive node and the &lt;code&gt;mina-rosetta&lt;/code&gt; API. &lt;/p&gt;
+&lt;p&gt;&lt;img alt="Mainnet is Coming Meme" src="../../images/2021/mainnet-is-coming.jpg"&gt;&lt;/p&gt;
+&lt;p&gt;In this installment of the Mina &lt;em&gt;March to Mainnet&lt;/em&gt; series we will be covering how to send transactions with a Ledger hardware wallet. We'll also introduce the Sushi Validator Archive Helm Chart, which can be used to deploy a production-ready instance of the Archive Node with Rosetta to a Kubernetes cluster of your choice. &lt;/p&gt;
+&lt;h2&gt;Prerequisites&lt;/h2&gt;
+&lt;p&gt;Since I love Kubernetes, I am going to have a pretty opinionated setup, but I think &lt;em&gt;everyone&lt;/em&gt; should have a little understanding of how Container and Kubernetes work in 2021. Fortunately, O(1) Labs has provided some Helm Charts that offer a good starting place when building a Mina deployment. &lt;/p&gt;
+&lt;p&gt;You will need the following things in order to fully follow along with this post: &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;A kubernetes cluster running and &lt;code&gt;kubectl&lt;/code&gt; configured (I use the Kubernetes feature on Docker Desktop)&lt;/li&gt;
+&lt;li&gt;Helm 3 installed &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;It also might help to at least skim through the last post in the &lt;em&gt;March to Mainnet&lt;/em&gt; Series &lt;a href="https://connerswann.me/2021/mina-archive-node-kubetnetes.html"&gt;about the Archive Node Helm Chart&lt;/a&gt;, which sets the scene for all the concepts we will cover in this post. &lt;/p&gt;
+&lt;p&gt;A last note: The word "ledger" is incredibly overloaded in the crypto world. In this post I try to differentiate between the company/Hardware Wallet &lt;code&gt;Ledger&lt;/code&gt; (ex. Ledger Nano S) and the generic word &lt;code&gt;ledger&lt;/code&gt; (ex. genesis ledger) which describes a list of accounts in a blockchain system. &lt;/p&gt;
+&lt;h2&gt;Install Mina Ledger (You should have already done this)&lt;/h2&gt;
+&lt;p&gt;If you have an address in the Mina Genesis Ledger, you should have already done this step and generated your address using the &lt;code&gt;mina_ledger_wallet&lt;/code&gt; utility. However, instructions for installing it can be &lt;a href="https://minaprotocol.com/docs/keypair/ledger-app-mina"&gt;found here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;I am assuming that you have placed the &lt;code&gt;mina_ledger_wallet&lt;/code&gt; program somewhere in your &lt;code&gt;$PATH&lt;/code&gt;, and if you don't the commands you might use will be slightly different than those in this post. &lt;/p&gt;
+&lt;p&gt;If you are had done your due dilligence, you might have run &lt;code&gt;mina_ledger_wallet test-transaction&lt;/code&gt; which creates and signs a dummy transaction offline. This only requires the Ledger to preform successfully. &lt;/p&gt;
+&lt;p&gt;If you were curious and tried to run &lt;code&gt;mina_ledger_wallet send-payment&lt;/code&gt; though, you might discover you get an error: &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ mina_ledger_wallet --verbose send-payment --network testnet  --fee .01 &lt;span class="m"&gt;42&lt;/span&gt; &amp;lt;SenderKey&amp;gt; &amp;lt;ReceiverKey&amp;gt; .01
+Getting network identifier... Error: HTTPConnectionPool&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;host&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;localhost&amp;#39;&lt;/span&gt;, &lt;span class="nv"&gt;port&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;3087&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;: Max retries exceeded with url: /network/list &lt;span class="o"&gt;(&lt;/span&gt;Caused by NewConnectionError&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&amp;lt;urllib3.connection.HTTPConnection object at 0x1105912b0&amp;gt;: Failed to establish a new connection: [Errno 61] Connection refused&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Question: What is the &lt;code&gt;mina_ledger_wallet&lt;/code&gt; program expecting to be running on port &lt;code&gt;3087&lt;/code&gt;? The Mina Graphql Port binds to port &lt;code&gt;3085&lt;/code&gt; by default...&lt;/p&gt;
+&lt;p&gt;Answer: &lt;code&gt;mina_ledger_wallet&lt;/code&gt; is looking for the &lt;code&gt;mina-rosetta&lt;/code&gt; API! &lt;/p&gt;
+&lt;p&gt;This actually makes sense, &lt;code&gt;mina_ledger_wallet&lt;/code&gt; needs up-to-date information from the blockchain about your account in order to properly format the transaction. So, lets get that set up!&lt;/p&gt;
+&lt;h2&gt;Run an Archive Node with Rosetta&lt;/h2&gt;
+&lt;p&gt;In the &lt;a href="{filename}2021/mina-kubernetes-archive-node.md"&gt;last post&lt;/a&gt;, we discussed using the official Archive Node Helm Chart to install an Archive Node in Kubernetes. The official chart is designed for testnets works great for development and archives blocks no problem. However, to send transactions with the Ledger Nano S, we need the Rosetta API too! &lt;/p&gt;
+&lt;p&gt;First, an aside, what &lt;em&gt;exactly&lt;/em&gt; is Rosetta? &lt;/p&gt;
+&lt;p&gt;From the &lt;a href="https://www.rosetta-api.org/"&gt;rosetta-api website&lt;/a&gt;: &lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Rosetta is an open standard designed to simplify blockchain deployment and interaction. Spend less time on integration and more time on novel blockchain advancements.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Rosetta provides a nice standard API for every blockchain, which can be a pain from the perspective of one writing a blockchain, but it is &lt;em&gt;hugely&lt;/em&gt; useful when a big organization just forces everyone to adhere to the &lt;em&gt;same API&lt;/em&gt;. Rosetta runs as a sidecar to the Archive Node deployment, consuming the GraphQL Port on the Daemon as well as data from the Postgres Database directly. &lt;/p&gt;
+&lt;/hr&gt;
+&lt;p&gt;In order to facilitate the deployment of Rosetta, and add some more production-oriented features, I forked the official Helm Chart and am hosting it on the &lt;a href="https://minastakingpool.connerswann.me/"&gt;Sushi Validator&lt;/a&gt; github organization &lt;a href="https://github.com/Sushi-Validator/mina-archive-node"&gt;here&lt;/a&gt;. &lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;values.yaml&lt;/code&gt; is compatible with the official chart, and is a super-set of the existing fields. Most notably, I added a &lt;code&gt;rosetta&lt;/code&gt; section: &lt;/p&gt;
+&lt;pre class="line-numbers"&gt;
+&lt;code class="language-yaml"&gt;
+rosetta: 
+  image: gcr.io/o1labs-192920/coda-daemon-baked:0.4.2-245a3f7-zenith-7a89538
+  graphqlUri: http://127.0.0.1:3085/graphql 
+  archiveUri: '{{ $.Values.archive.postgresUri }}'
+  ports:
+    web: 3087
+&lt;/code&gt;
+&lt;/pre&gt;
+
+&lt;p&gt;Note: Fortunately O(1) packages the &lt;code&gt;mina-rosetta&lt;/code&gt; binary in the &lt;code&gt;coda-daemon-baked&lt;/code&gt; image, so we can use the same exact image as the Mina Daemon here.&lt;/p&gt;
+&lt;p&gt;A complete example &lt;code&gt;values.yaml&lt;/code&gt; follows: &lt;/p&gt;
+&lt;pre class="line-numbers"&gt;
+&lt;code class="language-yaml"&gt;
+testnetName: "zenith"
+coda:
+  runtimeConfig: ""
+  logLevel: "Info"
+  logSnarkWorkGossip: false
+  image: gcr.io/o1labs-192920/coda-daemon-baked:0.4.2-245a3f7-zenith-7a89538
+  privkeyPass: "naughty blue worm"
+  seedPeers:
+    - /dns4/seed-1.zenith.o1test.net/tcp/10000/p2p/12D3KooWEEkNQY482QZ9RzTjsAYnczNNWS592guYKZHn9MMAkqpj
+    - /dns4/mina-seed-1.zkvalidator.com/tcp/8302/p2p/12D3KooWSR7LMBSfEk3LQUudmsX27yuRHe9NUxwLumurGF5P1MNS
+    - /dns4/mina-1.figment.io/tcp/8302/p2p/12D3KooWSkfwArLtqGMht1a9w3z3QiiqA2E6seBRAk378rvanGRZ
+  ports:
+    client: "8301"
+    graphql: "3085"
+    metrics: "10001"
+    p2p: "10909"
+
+archive:
+  hostPort: "10909"
+  image: gcr.io/o1labs-192920/coda-archive:0.4.2-245a3f7
+  listenPort: "3086"
+  nodeName: "dev"
+  remoteSchemaFile: "https://raw.githubusercontent.com/MinaProtocol/mina/develop/src/app/archive/create_schema.sql"
+  postgresHost: '{{ .Release.Name }}-postgresql'
+  postgresPort: "5432"
+  postgresDB: "archive"
+  postgresUri: postgres://{{ .Values.postgresql.postgresqlUsername }}:{{ .Values.postgresql.postgresqlPassword }}@{{ tpl .Values.archive.postgresHost . }}:{{ .Values.archive.postgresPort }}/{{ .Values.archive.postgresDB }}
+  ports:
+    server: 3086
+    postgres: "5432"
+
+postgresql:
+  postgresqlPassword: "foobar"
+  postgresqlUsername: "postgres"
+
+rosetta: 
+  image: gcr.io/o1labs-192920/coda-daemon-baked:0.4.2-245a3f7-zenith-7a89538
+  graphqlUri: http://127.0.0.1:3085/graphql 
+  archiveUri: '{{ $.Values.archive.postgresUri }}'
+  ports:
+    web: 3087
+
+healthcheck:
+  enabled: true
+  failureThreshold: 60
+  periodSeconds: 5
+  initialDelaySeconds: 30
+
+nodeSelector:
+  preemptible: false
+&lt;/code&gt;
+&lt;/pre&gt;
+
+&lt;p&gt;Now, given this &lt;code&gt;values.yaml&lt;/code&gt;, all we need to do now is add the Sushi Validator helm repository: &lt;/p&gt;
+&lt;pre class="line-numbers"&gt;
+&lt;code class="language-shell"&gt;
+helm repo add sushi https://charts.sushivalidator.com
+helm repo update
+&lt;/code&gt;
+&lt;/pre&gt;
+
+&lt;p&gt;We can install the chart like so: &lt;/p&gt;
+&lt;pre class="line-numbers"&gt;
+&lt;code class="language-shell"&gt;
+helm install --values values.yaml archive sushi/archive-node/
+NAME: archive
+LAST DEPLOYED: Sun Feb 22 19:03:12 2021
+NAMESPACE: archive
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+NOTES:
+&lt;/code&gt;
+&lt;/pre&gt;
+
+&lt;p&gt;We can check the deployment by viewing the currently running pods: &lt;/p&gt;
+&lt;pre class="line-numbers"&gt;
+&lt;code class="language-shell"&gt;
+$ kubectl get pods
+NAME                         READY   STATUS      RESTARTS   AGE
+archive-5d9b967557-pkk2g     3/3     Running     0          37s
+archive-db-bootstrap-25mml   0/3     Completed   0          37s
+archive-db-bootstrap-nhp7f   0/3     Error       0          25s
+archive-db-bootstrap-nx9rw   0/3     Error       0          15s
+archive-postgresql-0         1/1     Running     0          37s
+&lt;/code&gt;
+&lt;/pre&gt;
+
+&lt;p&gt;Note: Depending on how long it takes for the Postgres container to pull and start, you might see one or more failed &lt;code&gt;archive-db-bootstrap-xxxxx&lt;/code&gt; jobs, this is normal. &lt;/p&gt;
+&lt;p&gt;You can check your daemon's sync status with the following command: &lt;/p&gt;
+&lt;p&gt;&lt;code&gt;kubectl exec $(pods | grep archive- | head -n 1 | awk '{print $1}') -c coda -- coda client status&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;You should get output that looks similar to this: &lt;/p&gt;
+&lt;pre class="line-numbers"&gt;
+&lt;code class="language-shell"&gt;
+$ kubectl exec $(pods | grep archive- | head -n 1 | awk '{print $1}') -c coda -- coda client status
+Coda daemon status
+-----------------------------------
+
+Max observed block height:              932
+Max observed unvalidated block height:  0
+Local uptime:                           2m42s
+Chain id:                               394692fea7f6531810be6ef213959856010881425920d396be39009d53045074
+Git SHA-1:                              [DIRTY]245a3f7d883c516f5f16742cb1ca672872612851
+Configuration directory:                /root/.coda-config
+Peers:                                  33
+User_commands sent:                     0
+SNARK worker:                           None
+SNARK work fee:                         100000000
+Sync status:                            Bootstrap
+Block producers running:                0
+Consensus time now:                     epoch=0, slot=2076
+Consensus mechanism:                    proof_of_stake
+Consensus configuration:                
+        Delta:                     0
+        k:                         290
+        Slots per epoch:           7140
+        Slot duration:             3m
+        Epoch duration:            14d21h
+        Chain start timestamp:     2021-02-17 19:30:00.000000Z
+        Acceptable network delay:  3m
+
+Addresses and ports:                    
+        External IP:    &lt;IP ADDRESS&gt;
+        Bind IP:        0.0.0.0
+        Libp2p PeerID:  12D3KooWSfZd2tcaB5oPbu34KzcREoN8BNhQLofmSDguG3dRXzPS
+        Libp2p port:    10909
+        Client port:    8301
+&lt;/code&gt;
+&lt;/pre&gt;
+
+&lt;p&gt;Eventually, after ~10 minutes or so, your Daemon will be &lt;code&gt;Synced&lt;/code&gt; and chain data will be flowing to your Postgres database. &lt;/p&gt;
+&lt;h2&gt;A Little About Rosetta&lt;/h2&gt;
+&lt;p&gt;Rosetta is an initiative from Coinbase, providing a standard API for applications built on top of blockchains to interact with the underlying ledger. It is a robust and well-tested interface, and it's pretty nice to work with. I think it would be fun to write some posts about writing applications on top of &lt;code&gt;mina-rosetta&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;If you want to poke around, there is a cool rosetta-api client which can be found &lt;a href="https://github.com/coinbase/rosetta-cli"&gt;on github, here.&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;We can port-forward the Rosetta API Port so the CLI can communicate with the remote pod:&lt;/p&gt;
+&lt;pre class="line-numbers"&gt;
+&lt;code class="language-shell"&gt;
+kubectl port-forward $(pods | grep archive- | head -n 1 | awk '{print $1}')  3087
+&lt;/code&gt;
+&lt;/pre&gt;
+
+&lt;p&gt;Next, we need to configure the &lt;code&gt;rosetta-cli&lt;/code&gt; with a &lt;code&gt;rosetta.conf&lt;/code&gt; -- an example &lt;a href="https://gist.github.com/yourbuddyconner/89837c85b409439bdd07acdd37425e34"&gt;can be found here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Now we can do things like query blocks: &lt;/p&gt;
+&lt;pre class="line-numbers"&gt;
+&lt;code class="language-shell"&gt;
+$ rosetta-cli --configuration-file rosetta.conf view:block 1
+loaded configuration file: rosetta.conf
+
+Current Block:
+{
+ "block_identifier": {
+  "index": 1,
+  "hash": "3NLH8GM4afTu4UdbE6nD5yELa5yV78PzdN8QTYYXrL7g1xoPhBGw"
+ },
+ "parent_block_identifier": {
+  "index": 1,
+  "hash": "3NLH8GM4afTu4UdbE6nD5yELa5yV78PzdN8QTYYXrL7g1xoPhBGw"
+ },
+ "timestamp": 0,
+ "transactions": [],
+ "metadata": {
+  "creator": "B62qiy32p8kAKnny8ZFwoMhYpBppM1DWVCqAPBYNcXnsAHhnfAAuXgg"
+ }
+}
+Balance Changes:
+Cummulative: 3NLH8GM4afTu4UdbE6nD5yELa5yV78PzdN8QTYYXrL7g1xoPhBGw
+
+Operation Groups:
+&lt;/code&gt;
+&lt;/pre&gt;
+
+&lt;h2&gt;mina_ledger_wallet CLI&lt;/h2&gt;
+&lt;p&gt;Now for the reason we are all here, lets send some transactions. Now that we have a Rosetta API running, and port-forwarded (if you didn't do this, go do it now!), we can  now use the &lt;code&gt;mina_ledger_wallet&lt;/code&gt; CLI to send a transaction. &lt;/p&gt;
+&lt;p&gt;Lets look at the help output: &lt;/p&gt;
+&lt;pre class="line-numbers"&gt;
+&lt;code class="language-shell"&gt;
+$ mina_ledger_wallet send-payment -h 
+usage: mina_ledger_wallet send-payment [-h] [--mina_url MINA_URL] [--network NETWORK] [--fee FEE] [--nonce NONCE] [--valid_until VALID_UNTIL] [--memo MEMO]
+                                       sender_bip44_account sender_address receiver amount
+
+positional arguments:
+  sender_bip44_account  BIP44 account to send from (e.g. 42)
+  sender_address        Mina address of sender
+  receiver              Mina address of recipient
+  amount                Payment amount you want to send
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --mina_url MINA_URL   Mina rosetta interface url (default http://localhost:3087)
+  --network NETWORK     Network override
+  --fee FEE             Fee override
+  --nonce NONCE         Nonce override
+  --valid_until VALID_UNTIL
+                        Valid until
+  --memo MEMO           Transaction memo (publicly visible)
+&lt;/code&gt;
+&lt;/pre&gt;
+
+&lt;p&gt;So, a properly formatted command sending &lt;code&gt;0.1&lt;/code&gt; Mina from &lt;code&gt;&amp;lt;SenderAddress&amp;gt;&lt;/code&gt; to &lt;code&gt;&amp;lt;ReceiverAddress&amp;gt;&lt;/code&gt; would look something like: &lt;/p&gt;
+&lt;pre class="line-numbers"&gt;
+&lt;code class="language-shell"&gt;
+mina_ledger_wallet \
+    send-payment \
+    --network testnet \
+    --mina_url http://localhost:3087 \
+    --fee .01 \
+    --nonce 2 \
+    42 \
+    &lt;SenderAddress&gt; \
+    &lt;ReceiverAddress&gt; \
+    0.1
+&lt;/code&gt;
+&lt;/pre&gt;
+
+&lt;h2&gt;Send a Transaction&lt;/h2&gt;
+&lt;p&gt;Lets do it! &lt;/p&gt;
+&lt;p&gt;Here's some example output from that command: &lt;/p&gt;
+&lt;pre class="line-numbers"&gt;
+&lt;code class="language-shell"&gt;
+$ mina_ledger_wallet --verbose send-payment --network testnet --mina_url http://localhost:3087 --fee .01 --nonce 2 42 B62qqYpdvJ8oUF81gZL1WfLef1Ky8SsdvmUyfpr7YWb2m2rjRxaEcxq B62qmdut1usji2NFZSn9BrywhjHakYtAvL7Mdy7muyjcbrY3hKJ688Y .01
+Using rosetta override: http://localhost:3087
+Getting network identifier... debug
+Using network override: testnet
+Getting account nonce and suggested fee... done
+Using fee override: .01
+Using nonce override: 2
+Getting account balance... done
+
+Sign transaction:
+    Type:        Payment
+    Account:     42 (path 44'/12586'/42'/0/0)
+    Sender:      B62qqYpdvJ8oUF81gZL1WfLef1Ky8SsdvmUyfpr7YWb2m2rjRxaEcxq (balance 0.98)
+    Receiver:    B62qmdut1usji2NFZSn9BrywhjHakYtAvL7Mdy7muyjcbrY3hKJ688Y
+    Amount:      0.010000000
+    Fee:         0.010000000
+    Total:       0.020000000
+    Nonce:       2
+
+Continue? (y/N) y
+
+Constructing unsigned payment transaction... done
+
+UNSIGNED_TX = {"randomOracleInput": "0000000307CA9F7EDC5DADFD1F4C3D5673DB8A4908FEEA3BB00FA9BF630878243D1561A607CA9F7EDC5DADFD1F4C3D5673DB8A4908FEEA3BB00FA9BF630878243D1561A644E13E79A27347D407C33B2A8C2CDD8BAF4FA57FB76D8DB7FCDAA4C49ADDEABC0000025701691900000000008000000000000000A00000007FFFFFFFC00000000000000000000000000000000000000000000000000000000000000000000A000000000000000005A4640000000000", "payment": {"to": "B62qmdut1usji2NFZSn9BrywhjHakYtAvL7Mdy7muyjcbrY3hKJ688Y", "from": "B62qqYpdvJ8oUF81gZL1WfLef1Ky8SsdvmUyfpr7YWb2m2rjRxaEcxq", "fee": "10000000", "token": "1", "nonce": "2", "memo": null, "amount": "10000000", "valid_until": null}, "stakeDelegation": null, "createToken": null, "createTokenAccount": null, "mintTokens": null}
+
+Signing transaction (please confirm on Ledger device)... 
+apduMessage hex (346) = &lt;HEX_OUTPUT&gt;
+
+SIGNED_TX   = {"signature": "1f0f4ef044b259a1851cfffc98307beef4b388047dcf57de53debdce83fa2d661e1dc6db0b2c14aef2cd6227682ac5376f5561a741b7f6338ea55245e190eea8", "payment": {"to": "B62qmdut1usji2NFZSn9BrywhjHakYtAvL7Mdy7muyjcbrY3hKJ688Y", "from": "B62qqYpdvJ8oUF81gZL1WfLef1Ky8SsdvmUyfpr7YWb2m2rjRxaEcxq", "fee": "10000000", "token": "1", "nonce": "2", "memo": null, "amount": "10000000", "valid_until": "4294967295"}, "stake_delegation": null, "create_token": null, "create_token_account": null, "mint_tokens": null}
+
+
+Send transaction:
+    Type:        Payment
+    Account:     42 (path 44'/12586'/42'/0/0)
+    Sender:      B62qqYpdvJ8oUF81gZL1WfLef1Ky8SsdvmUyfpr7YWb2m2rjRxaEcxq (balance 0.98)
+    Receiver:    B62qmdut1usji2NFZSn9BrywhjHakYtAvL7Mdy7muyjcbrY3hKJ688Y
+    Amount:      0.010000000
+    Fee:         0.010000000
+    Total:       0.020000000
+    Nonce:       2
+    Signature:   1f0f4ef044b259a1851cfffc98307beef4b388047dcf57de53debdce83fa2d661e1dc6db0b...
+
+Continue? (y/N)
+&lt;/code&gt;
+&lt;/pre&gt;
+
+&lt;p&gt;I didn't actually send this test transaction, but you totally can and should!&lt;/p&gt;
+&lt;p&gt;You can check your balance on MinaExplorer.com by plugging your sender or receiver address into the following URL and visiting it in your browser: &lt;/p&gt;
+&lt;p&gt;&lt;code&gt;https://minaexplorer.com/wallet/&amp;lt;ADDRESS&amp;gt;&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;With any luck, you should see something like this: &lt;/p&gt;
+&lt;p&gt;&lt;img alt="Mina Transaction" src="../../images/2021/ledger-transaction-screenshot.png"&gt;&lt;/p&gt;</content><category term="Mina Protocol"></category><category term="Mina"></category><category term="Blockchain"></category><category term="Archive Node"></category></entry><entry><title>Weekend Project - Coda Blockchain Visualization</title><link href="https://connerswann.me/2019/09/weekend-project-coda-blockchain.html" rel="alternate"></link><published>2019-09-14T00:00:00-07:00</published><updated>2019-09-14T00:00:00-07:00</updated><author><name>Conner Swann</name></author><id>tag:connerswann.me,2019-09-14:/2019/09/weekend-project-coda-blockchain.html</id><summary type="html">&lt;h1&gt;What's Coda?&lt;/h1&gt;
 &lt;p&gt;Coda is a Crypto Protocol that I am working on as part of the O(1) Labs Team. Coda implements a "succinct" blockchain that effectively "&lt;a href="https://codaprotocol.com/"&gt;swaps the traditional blockchain for a tiny cryptographic proof.&lt;/a&gt;" &lt;/p&gt;
 &lt;p&gt;Practically, this means that in the average Coda node, once a block with transactions …&lt;/p&gt;</summary><content type="html">&lt;h1&gt;What's Coda?&lt;/h1&gt;
 &lt;p&gt;Coda is a Crypto Protocol that I am working on as part of the O(1) Labs Team. Coda implements a "succinct" blockchain that effectively "&lt;a href="https://codaprotocol.com/"&gt;swaps the traditional blockchain for a tiny cryptographic proof.&lt;/a&gt;" &lt;/p&gt;
