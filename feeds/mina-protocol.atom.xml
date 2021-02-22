@@ -128,7 +128,7 @@ NOTES:
 &lt;/pre&gt;
 
 &lt;p&gt;Once installed, we'll get a deployment that looks like this: &lt;/p&gt;
-&lt;p&gt;&lt;img alt="Mina Rosetta Diagram" src="../../images/2021/mina-archive-diagram.png"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Mina Archive Helm Chart" src="../../images/2021/archive-node-helm-chart.png"&gt;&lt;/p&gt;
 &lt;p&gt;We can check the deployment by viewing the currently running pods: &lt;/p&gt;
 &lt;pre class="line-numbers"&gt;
 &lt;code class="language-shell"&gt;
