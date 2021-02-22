@@ -1,5 +1,249 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Conner Swann</title><link href="https://connerswann.me/" rel="alternate"></link><link href="https://connerswann.me/feeds/all.atom.xml" rel="self"></link><id>https://connerswann.me/</id><updated>2019-09-14T00:00:00-07:00</updated><subtitle>Reliability Engineer</subtitle><entry><title>Weekend Project - Coda Blockchain Visualization</title><link href="https://connerswann.me/2019/09/weekend-project-coda-blockchain.html" rel="alternate"></link><published>2019-09-14T00:00:00-07:00</published><updated>2019-09-14T00:00:00-07:00</updated><author><name>Conner Swann</name></author><id>tag:connerswann.me,2019-09-14:/2019/09/weekend-project-coda-blockchain.html</id><summary type="html">&lt;h1&gt;What's Coda?&lt;/h1&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Conner Swann</title><link href="https://connerswann.me/" rel="alternate"></link><link href="https://connerswann.me/feeds/all.atom.xml" rel="self"></link><id>https://connerswann.me/</id><updated>2021-01-22T00:00:00-08:00</updated><subtitle>Reliability Engineer</subtitle><entry><title>March to Mainnet: Running a Mina Archive Node in Kubernetes</title><link href="https://connerswann.me/2021/01/mina-local-archive-node.html" rel="alternate"></link><published>2021-01-22T00:00:00-08:00</published><updated>2021-01-22T00:00:00-08:00</updated><author><name>Conner Swann</name></author><id>tag:connerswann.me,2021-01-22:/2021/01/mina-local-archive-node.html</id><summary type="html">&lt;h1&gt;How to run a Mina Archive Node in Kubernetes&lt;/h1&gt;
+&lt;h2&gt;Mina Protocol&lt;/h2&gt;
+&lt;p&gt;For the uninitiated, Mina Protocol is a new crypto network. Mina implements a "succinct" blockchain that effectively "&lt;a href="https://minaprotocol.com/"&gt;swaps the traditional blockchain for a tiny cryptographic proof.&lt;/a&gt;" &lt;/p&gt;
+&lt;p&gt;Practically, this means that in the average Mina node, once a block with …&lt;/p&gt;</summary><content type="html">&lt;h1&gt;How to run a Mina Archive Node in Kubernetes&lt;/h1&gt;
+&lt;h2&gt;Mina Protocol&lt;/h2&gt;
+&lt;p&gt;For the uninitiated, Mina Protocol is a new crypto network. Mina implements a "succinct" blockchain that effectively "&lt;a href="https://minaprotocol.com/"&gt;swaps the traditional blockchain for a tiny cryptographic proof.&lt;/a&gt;" &lt;/p&gt;
+&lt;p&gt;Practically, this means that in the average Mina node, once a block with transactions is "swapped" for a proof, it gets thrown out to save disk space. &lt;/p&gt;
+&lt;p&gt;Earlier blockchain implementations like Bitcoin and Ethereum don't have this ability, and as such the hardware requirements for running a Node on their networks increase steadily with the size of their respective chains (240GB and &amp;gt;1TB respectively).&lt;/p&gt;
+&lt;p&gt;However, due to the succinct property of the Mina blockchain, an archive node is needed to store chain data that is SNARKed away. Whether it be for tax purposes, to calculate staking payouts, or just to have access to the data, numerous organizations will need to run archive nodes, so I decided to spend some time documenting the process for those that will inevitably follow after. &lt;/p&gt;
+&lt;p&gt;My approach is a little opinionated, but it derives best-practices from the cutting edge of container orchestration and cloud computing. I definitely recommend this approach, however be aware that this definitely not the only way to cook the sausage here. &lt;/p&gt;
+&lt;h2&gt;Technology and Prerequesites&lt;/h2&gt;
+&lt;p&gt;I like Kubernetes. Fortunately, O(1) Labs has provided some handy &lt;a href="https://github.com/MinaProtocol/mina/tree/develop/helm"&gt;Helm Charts&lt;/a&gt; that make our collective lives pretty easy and serve as a starting point to build an archive node deployment off of. &lt;/p&gt;
+&lt;p&gt;In this post we will focus on deploying to a local Minikube/Docker Desktop cluster, but this will definitely work on any Kubernetes cluster (the &lt;em&gt;joy&lt;/em&gt; of Kubernetes!). &lt;/p&gt;
+&lt;p&gt;I assume you have the following things set up: &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;A local Kubernetes cluster running and &lt;code&gt;kubectl&lt;/code&gt; configured. &lt;/li&gt;
+&lt;li&gt;The Helm 3 CLI. &lt;/li&gt;
+&lt;li&gt;PostgreSQL installed locally if you would like to make queries. &lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Archive Node Helm Chart&lt;/h2&gt;
+&lt;p&gt;The Archive Node Helm Chart lives in the Mina Monorepo and can be used to deploy a moderately-resilient Archive process that indexes blocks off the blockchain. It is perfectly suitable for testnets or local development. Since O(1) has a Helm Repo, you can simply install the Repo, provide a &lt;code&gt;values.yaml&lt;/code&gt; to override the default values, and deploy! &lt;/p&gt;
+&lt;p&gt;The chart consists of three discrete processes:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Mina Daemon - The star of the show, syncs with the blockchain and does all the hard work&lt;/li&gt;
+&lt;li&gt;Archive Process - Receives RPC Updates from the Mina Daemon and persists on-chain data to the Postgres DB&lt;/li&gt;
+&lt;li&gt;PostgreSQL Database - Stores Archive data (via bitnami sub-chart)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img alt="Mina Archive Node Architecture" src="../../images/2021/mina-archive-diagram-1.png"&gt;&lt;/p&gt;
+&lt;h3&gt;Install the Helm Repo&lt;/h3&gt;
+&lt;p&gt;The instructions for installing the Mina Helm Repo can be found &lt;a href="https://github.com/MinaProtocol/mina/tree/develop/helm/archive-node"&gt;here&lt;/a&gt; and can be found below. &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;helm repo add mina https://coda-charts.storage.googleapis.com
+helm repo update
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h3&gt;Helm Chart Values&lt;/h3&gt;
+&lt;p&gt;The default values for the helm chart can be found in the repo &lt;a href="https://github.com/MinaProtocol/mina/blob/develop/helm/archive-node/values.yaml"&gt;here&lt;/a&gt;. Simply create a yaml file locally that overrides one or more of them like so: &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nt"&gt;testnetName&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;zenith&amp;quot;&lt;/span&gt;
+&lt;span class="nt"&gt;coda&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+  &lt;span class="nt"&gt;runtimeConfig&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;&amp;quot;&lt;/span&gt;
+  &lt;span class="nt"&gt;logLevel&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;Info&amp;quot;&lt;/span&gt;
+  &lt;span class="nt"&gt;logSnarkWorkGossip&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;false&lt;/span&gt;
+  &lt;span class="nt"&gt;image&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;gcr.io/o1labs-192920/coda-daemon-baked:0.4.2-245a3f7-zenith-7a89538&lt;/span&gt;
+  &lt;span class="nt"&gt;privkeyPass&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;naughty&lt;/span&gt;&lt;span class="nv"&gt; &lt;/span&gt;&lt;span class="s"&gt;blue&lt;/span&gt;&lt;span class="nv"&gt; &lt;/span&gt;&lt;span class="s"&gt;worm&amp;quot;&lt;/span&gt;
+  &lt;span class="nt"&gt;seedPeers&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;/dns4/seed-1.zenith.o1test.net/tcp/10000/p2p/12D3KooWEEkNQY482QZ9RzTjsAYnczNNWS592guYKZHn9MMAkqpj&lt;/span&gt;
+    &lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;/dns4/mina-seed-1.zkvalidator.com/tcp/8302/p2p/12D3KooWSR7LMBSfEk3LQUudmsX27yuRHe9NUxwLumurGF5P1MNS&lt;/span&gt;
+    &lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;/dns4/mina-1.figment.io/tcp/8302/p2p/12D3KooWSkfwArLtqGMht1a9w3z3QiiqA2E6seBRAk378rvanGRZ&lt;/span&gt;
+  &lt;span class="nt"&gt;ports&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="nt"&gt;client&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;8301&amp;quot;&lt;/span&gt;
+    &lt;span class="nt"&gt;graphql&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;3085&amp;quot;&lt;/span&gt;
+    &lt;span class="nt"&gt;metrics&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;10001&amp;quot;&lt;/span&gt;
+    &lt;span class="nt"&gt;p2p&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;10909&amp;quot;&lt;/span&gt;
+
+&lt;span class="nt"&gt;archive&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+  &lt;span class="nt"&gt;hostPort&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;10909&amp;quot;&lt;/span&gt;
+  &lt;span class="nt"&gt;image&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;gcr.io/o1labs-192920/coda-archive:0.4.2-245a3f7&lt;/span&gt;
+  &lt;span class="nt"&gt;listenPort&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;3086&amp;quot;&lt;/span&gt;
+  &lt;span class="nt"&gt;nodeName&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;dev&amp;quot;&lt;/span&gt;
+  &lt;span class="nt"&gt;remoteSchemaFile&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;https://raw.githubusercontent.com/MinaProtocol/mina/develop/src/app/archive/create_schema.sql&amp;quot;&lt;/span&gt;
+  &lt;span class="nt"&gt;postgresHost&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;{{&lt;/span&gt;&lt;span class="nv"&gt; &lt;/span&gt;&lt;span class="s"&gt;.Release.Name&lt;/span&gt;&lt;span class="nv"&gt; &lt;/span&gt;&lt;span class="s"&gt;}}-postgresql&amp;#39;&lt;/span&gt;
+  &lt;span class="nt"&gt;postgresPort&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;5432&amp;quot;&lt;/span&gt;
+  &lt;span class="nt"&gt;postgresDB&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;archive&amp;quot;&lt;/span&gt;
+  &lt;span class="nt"&gt;postgresUri&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;postgres://{{ .Values.postgresql.postgresqlUsername }}:{{ .Values.postgresql.postgresqlPassword }}@{{ tpl .Values.archive.postgresHost . }}:{{ .Values.archive.postgresPort }}/{{ .Values.archive.postgresDB }}&lt;/span&gt;
+  &lt;span class="nt"&gt;ports&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="nt"&gt;server&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;3086&lt;/span&gt;
+    &lt;span class="nt"&gt;postgres&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;5432&amp;quot;&lt;/span&gt;
+
+&lt;span class="nt"&gt;postgresql&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+  &lt;span class="nt"&gt;postgresqlPassword&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;foobar&amp;quot;&lt;/span&gt;
+  &lt;span class="nt"&gt;postgresqlUsername&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;postgres&amp;quot;&lt;/span&gt;
+
+&lt;span class="nt"&gt;healthcheck&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+  &lt;span class="nt"&gt;enabled&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;true&lt;/span&gt;
+  &lt;span class="nt"&gt;failureThreshold&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;60&lt;/span&gt;
+  &lt;span class="nt"&gt;periodSeconds&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;5&lt;/span&gt;
+  &lt;span class="nt"&gt;initialDelaySeconds&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;30&lt;/span&gt;
+
+&lt;span class="nt"&gt;nodeSelector&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+  &lt;span class="nt"&gt;preemptible&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;false&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;There's a couple pieces here that we should examine closely. &lt;/p&gt;
+&lt;p&gt;This section is for Mina (previously known as Coda) Daemon configuration variables. I have provided a recently built image (official images can be found &lt;a href="gcr.io/o1labs-192920/coda-daemon-baked"&gt;here&lt;/a&gt;), and valid seed peers for the network to which I would like to connect.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nt"&gt;coda&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+  &lt;span class="nt"&gt;runtimeConfig&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;&amp;quot;&lt;/span&gt;
+  &lt;span class="nt"&gt;logLevel&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;Info&amp;quot;&lt;/span&gt;
+  &lt;span class="nt"&gt;logSnarkWorkGossip&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;false&lt;/span&gt;
+  &lt;span class="nt"&gt;image&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;gcr.io/o1labs-192920/coda-daemon-baked:0.4.2-245a3f7-zenith-7a89538&lt;/span&gt;
+  &lt;span class="nt"&gt;seedPeers&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;/dns4/seed-1.zenith.o1test.net/tcp/10000/p2p/12D3KooWEEkNQY482QZ9RzTjsAYnczNNWS592guYKZHn9MMAkqpj&lt;/span&gt;
+    &lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;/dns4/mina-seed-1.zkvalidator.com/tcp/8302/p2p/12D3KooWSR7LMBSfEk3LQUudmsX27yuRHe9NUxwLumurGF5P1MNS&lt;/span&gt;
+    &lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;/dns4/mina-1.figment.io/tcp/8302/p2p/12D3KooWSkfwArLtqGMht1a9w3z3QiiqA2E6seBRAk378rvanGRZ&lt;/span&gt;
+  &lt;span class="nt"&gt;ports&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="nt"&gt;client&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;8301&amp;quot;&lt;/span&gt;
+    &lt;span class="nt"&gt;graphql&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;3085&amp;quot;&lt;/span&gt;
+    &lt;span class="nt"&gt;metrics&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;10001&amp;quot;&lt;/span&gt;
+    &lt;span class="nt"&gt;p2p&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;10909&amp;quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;This section configures the Archive Node, and we have overriden the Docker Image. It is worth calling out the &lt;code&gt;archive.remoteSchemaFile&lt;/code&gt; value, which can be used to pass in the remote SQL file that will bootstrap the Database. &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nt"&gt;archive&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+  &lt;span class="nt"&gt;hostPort&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;10909&amp;quot;&lt;/span&gt;
+  &lt;span class="nt"&gt;image&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;gcr.io/o1labs-192920/coda-archive:0.4.2-245a3f7&lt;/span&gt;
+  &lt;span class="nt"&gt;listenPort&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;3086&amp;quot;&lt;/span&gt;
+  &lt;span class="nt"&gt;nodeName&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;dev&amp;quot;&lt;/span&gt;
+  &lt;span class="nt"&gt;remoteSchemaFile&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;https://raw.githubusercontent.com/MinaProtocol/mina/develop/src/app/archive/create_schema.sql&amp;quot;&lt;/span&gt;
+  &lt;span class="nt"&gt;postgresHost&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;{{&lt;/span&gt;&lt;span class="nv"&gt; &lt;/span&gt;&lt;span class="s"&gt;.Release.Name&lt;/span&gt;&lt;span class="nv"&gt; &lt;/span&gt;&lt;span class="s"&gt;}}-postgresql&amp;#39;&lt;/span&gt;
+  &lt;span class="nt"&gt;postgresPort&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;5432&amp;quot;&lt;/span&gt;
+  &lt;span class="nt"&gt;postgresDB&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;archive&amp;quot;&lt;/span&gt;
+  &lt;span class="nt"&gt;postgresUri&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;postgres://{{ .Values.postgresql.postgresqlUsername }}:{{ .Values.postgresql.postgresqlPassword }}@{{ tpl .Values.archive.postgresHost . }}:{{ .Values.archive.postgresPort }}/{{ .Values.archive.postgresDB }}&lt;/span&gt;
+  &lt;span class="nt"&gt;ports&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="nt"&gt;server&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;3086&lt;/span&gt;
+    &lt;span class="nt"&gt;postgres&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;5432&amp;quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;Deploy it!&lt;/h2&gt;
+&lt;p&gt;So, now that we have a &lt;code&gt;values.yaml&lt;/code&gt; file locally, and assuming we have installed the Mina Helm Repo correctly, we can do the following: &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ helm install --values values.yaml archive mina/archive-node
+NAME: archive
+LAST DEPLOYED: Sun Feb &lt;span class="m"&gt;21&lt;/span&gt; &lt;span class="m"&gt;19&lt;/span&gt;:03:12 &lt;span class="m"&gt;2021&lt;/span&gt;
+NAMESPACE: archive
+STATUS: deployed
+REVISION: &lt;span class="m"&gt;1&lt;/span&gt;
+TEST SUITE: None
+NOTES:
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;We can check the deployment by viewing the currently running pods: &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ kubectl get pods
+NAME                         READY   STATUS      RESTARTS   AGE
+archive-5d9b967557-pkk2g     &lt;span class="m"&gt;2&lt;/span&gt;/2     Running     &lt;span class="m"&gt;0&lt;/span&gt;          37s
+archive-db-bootstrap-25mml   &lt;span class="m"&gt;0&lt;/span&gt;/3     Completed   &lt;span class="m"&gt;0&lt;/span&gt;          37s
+archive-db-bootstrap-nhp7f   &lt;span class="m"&gt;0&lt;/span&gt;/3     Error       &lt;span class="m"&gt;0&lt;/span&gt;          25s
+archive-db-bootstrap-nx9rw   &lt;span class="m"&gt;0&lt;/span&gt;/3     Error       &lt;span class="m"&gt;0&lt;/span&gt;          15s
+archive-postgresql-0         &lt;span class="m"&gt;1&lt;/span&gt;/1     Running     &lt;span class="m"&gt;0&lt;/span&gt;          37s
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Note: Depending on how long it takes for the Postgres container to pull and start, you might see one or more failed &lt;code&gt;archive-db-bootstrap-xxxxx&lt;/code&gt; jobs, this is normal. &lt;/p&gt;
+&lt;p&gt;You can check your daemon's sync status with the following command: &lt;/p&gt;
+&lt;p&gt;&lt;code&gt;kubectl exec $(pods | grep archive- | head -n 1 | awk '{print $1}') -c coda -- coda client status&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;You should get output that looks similar to this: &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ kubectl &lt;span class="nb"&gt;exec&lt;/span&gt; &lt;span class="k"&gt;$(&lt;/span&gt;pods &lt;span class="p"&gt;|&lt;/span&gt; grep archive- &lt;span class="p"&gt;|&lt;/span&gt; head -n &lt;span class="m"&gt;1&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt; awk &lt;span class="s1"&gt;&amp;#39;{print $1}&amp;#39;&lt;/span&gt;&lt;span class="k"&gt;)&lt;/span&gt; -c coda -- coda client status
+Coda daemon status
+-----------------------------------
+
+Max observed block height:              &lt;span class="m"&gt;932&lt;/span&gt;
+Max observed unvalidated block height:  &lt;span class="m"&gt;0&lt;/span&gt;
+Local uptime:                           2m42s
+Chain id:                               394692fea7f6531810be6ef213959856010881425920d396be39009d53045074
+Git SHA-1:                              &lt;span class="o"&gt;[&lt;/span&gt;DIRTY&lt;span class="o"&gt;]&lt;/span&gt;245a3f7d883c516f5f16742cb1ca672872612851
+Configuration directory:                /root/.coda-config
+Peers:                                  &lt;span class="m"&gt;33&lt;/span&gt;
+User_commands sent:                     &lt;span class="m"&gt;0&lt;/span&gt;
+SNARK worker:                           None
+SNARK work fee:                         &lt;span class="m"&gt;100000000&lt;/span&gt;
+Sync status:                            Bootstrap
+Block producers running:                &lt;span class="m"&gt;0&lt;/span&gt;
+Consensus &lt;span class="nb"&gt;time&lt;/span&gt; now:                     &lt;span class="nv"&gt;epoch&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;, &lt;span class="nv"&gt;slot&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;2076&lt;/span&gt;
+Consensus mechanism:                    proof_of_stake
+Consensus configuration:                
+        Delta:                     &lt;span class="m"&gt;0&lt;/span&gt;
+        k:                         &lt;span class="m"&gt;290&lt;/span&gt;
+        Slots per epoch:           &lt;span class="m"&gt;7140&lt;/span&gt;
+        Slot duration:             3m
+        Epoch duration:            14d21h
+        Chain start timestamp:     &lt;span class="m"&gt;2021&lt;/span&gt;-02-17 &lt;span class="m"&gt;19&lt;/span&gt;:30:00.000000Z
+        Acceptable network delay:  3m
+
+Addresses and ports:                    
+        External IP:    &amp;lt;IP ADDRESS&amp;gt;
+        Bind IP:        &lt;span class="m"&gt;0&lt;/span&gt;.0.0.0
+        Libp2p PeerID:  12D3KooWSfZd2tcaB5oPbu34KzcREoN8BNhQLofmSDguG3dRXzPS
+        Libp2p port:    &lt;span class="m"&gt;10909&lt;/span&gt;
+        Client port:    &lt;span class="m"&gt;8301&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Eventually, after ~10 minutes or so, your Daemon will be &lt;code&gt;Synced&lt;/code&gt; and chain data will be flowing to your Postgres database. &lt;/p&gt;
+&lt;h2&gt;Ok, now what?&lt;/h2&gt;
+&lt;p&gt;Now, you have a working, running Archive Node! Lets run a test query to see whats in the database. &lt;/p&gt;
+&lt;p&gt;First, we should forward the Postgres port from the Database container to &lt;code&gt;localhost&lt;/code&gt; with &lt;code&gt;kubectl&lt;/code&gt;: &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ k port-forward archive-postgresql-0  &lt;span class="m"&gt;5432&lt;/span&gt;
+Forwarding from &lt;span class="m"&gt;127&lt;/span&gt;.0.0.1:5432 -&amp;gt; &lt;span class="m"&gt;5432&lt;/span&gt;
+Forwarding from &lt;span class="o"&gt;[&lt;/span&gt;::1&lt;span class="o"&gt;]&lt;/span&gt;:5432 -&amp;gt; &lt;span class="m"&gt;5432&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;In another terminal, connect to the database with the &lt;code&gt;psql&lt;/code&gt; client using the credentials we set in the &lt;code&gt;values.yaml&lt;/code&gt; above: &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ psql -h localhost --user postgres
+Password &lt;span class="k"&gt;for&lt;/span&gt; user postgres: 
+psql &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;13&lt;/span&gt;.2, server &lt;span class="m"&gt;11&lt;/span&gt;.10&lt;span class="o"&gt;)&lt;/span&gt;
+Type &lt;span class="s2"&gt;&amp;quot;help&amp;quot;&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; help.
+
+&lt;span class="nv"&gt;postgres&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="c1"&gt;# &lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;We can list the databases, switch to the archive database, list the tables, and query one of them: &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ psql -h localhost --user postgres
+Password &lt;span class="k"&gt;for&lt;/span&gt; user postgres: 
+psql &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;13&lt;/span&gt;.2, server &lt;span class="m"&gt;11&lt;/span&gt;.10&lt;span class="o"&gt;)&lt;/span&gt;
+Type &lt;span class="s2"&gt;&amp;quot;help&amp;quot;&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; help.
+
+&lt;span class="nv"&gt;postgres&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="c1"&gt;# \l&lt;/span&gt;
+                                  List of databases
+   Name    &lt;span class="p"&gt;|&lt;/span&gt;  Owner   &lt;span class="p"&gt;|&lt;/span&gt; Encoding &lt;span class="p"&gt;|&lt;/span&gt;   Collate   &lt;span class="p"&gt;|&lt;/span&gt;    Ctype    &lt;span class="p"&gt;|&lt;/span&gt;   Access privileges   
+-----------+----------+----------+-------------+-------------+-----------------------
+ archive   &lt;span class="p"&gt;|&lt;/span&gt; postgres &lt;span class="p"&gt;|&lt;/span&gt; UTF8     &lt;span class="p"&gt;|&lt;/span&gt; en_US.UTF-8 &lt;span class="p"&gt;|&lt;/span&gt; en_US.UTF-8 &lt;span class="p"&gt;|&lt;/span&gt; 
+ postgres  &lt;span class="p"&gt;|&lt;/span&gt; postgres &lt;span class="p"&gt;|&lt;/span&gt; UTF8     &lt;span class="p"&gt;|&lt;/span&gt; en_US.UTF-8 &lt;span class="p"&gt;|&lt;/span&gt; en_US.UTF-8 &lt;span class="p"&gt;|&lt;/span&gt; 
+ template0 &lt;span class="p"&gt;|&lt;/span&gt; postgres &lt;span class="p"&gt;|&lt;/span&gt; UTF8     &lt;span class="p"&gt;|&lt;/span&gt; en_US.UTF-8 &lt;span class="p"&gt;|&lt;/span&gt; en_US.UTF-8 &lt;span class="p"&gt;|&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt;c/postgres          +
+           &lt;span class="p"&gt;|&lt;/span&gt;          &lt;span class="p"&gt;|&lt;/span&gt;          &lt;span class="p"&gt;|&lt;/span&gt;             &lt;span class="p"&gt;|&lt;/span&gt;             &lt;span class="p"&gt;|&lt;/span&gt; &lt;span class="nv"&gt;postgres&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;CTc/postgres
+ template1 &lt;span class="p"&gt;|&lt;/span&gt; postgres &lt;span class="p"&gt;|&lt;/span&gt; UTF8     &lt;span class="p"&gt;|&lt;/span&gt; en_US.UTF-8 &lt;span class="p"&gt;|&lt;/span&gt; en_US.UTF-8 &lt;span class="p"&gt;|&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt;c/postgres          +
+           &lt;span class="p"&gt;|&lt;/span&gt;          &lt;span class="p"&gt;|&lt;/span&gt;          &lt;span class="p"&gt;|&lt;/span&gt;             &lt;span class="p"&gt;|&lt;/span&gt;             &lt;span class="p"&gt;|&lt;/span&gt; &lt;span class="nv"&gt;postgres&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;CTc/postgres
+&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;4&lt;/span&gt; rows&lt;span class="o"&gt;)&lt;/span&gt;
+
+&lt;span class="nv"&gt;postgres&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="c1"&gt;# \c archive &lt;/span&gt;
+psql &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;13&lt;/span&gt;.2, server &lt;span class="m"&gt;11&lt;/span&gt;.10&lt;span class="o"&gt;)&lt;/span&gt;
+You are now connected to database &lt;span class="s2"&gt;&amp;quot;archive&amp;quot;&lt;/span&gt; as user &lt;span class="s2"&gt;&amp;quot;postgres&amp;quot;&lt;/span&gt;.
+&lt;span class="nv"&gt;archive&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="c1"&gt;# \dt&lt;/span&gt;
+                  List of relations
+ Schema &lt;span class="p"&gt;|&lt;/span&gt;           Name           &lt;span class="p"&gt;|&lt;/span&gt; Type  &lt;span class="p"&gt;|&lt;/span&gt;  Owner   
+--------+--------------------------+-------+----------
+ public &lt;span class="p"&gt;|&lt;/span&gt; balances                 &lt;span class="p"&gt;|&lt;/span&gt; table &lt;span class="p"&gt;|&lt;/span&gt; postgres
+ public &lt;span class="p"&gt;|&lt;/span&gt; blocks                   &lt;span class="p"&gt;|&lt;/span&gt; table &lt;span class="p"&gt;|&lt;/span&gt; postgres
+ public &lt;span class="p"&gt;|&lt;/span&gt; blocks_internal_commands &lt;span class="p"&gt;|&lt;/span&gt; table &lt;span class="p"&gt;|&lt;/span&gt; postgres
+ public &lt;span class="p"&gt;|&lt;/span&gt; blocks_user_commands     &lt;span class="p"&gt;|&lt;/span&gt; table &lt;span class="p"&gt;|&lt;/span&gt; postgres
+ public &lt;span class="p"&gt;|&lt;/span&gt; epoch_data               &lt;span class="p"&gt;|&lt;/span&gt; table &lt;span class="p"&gt;|&lt;/span&gt; postgres
+ public &lt;span class="p"&gt;|&lt;/span&gt; internal_commands        &lt;span class="p"&gt;|&lt;/span&gt; table &lt;span class="p"&gt;|&lt;/span&gt; postgres
+ public &lt;span class="p"&gt;|&lt;/span&gt; public_keys              &lt;span class="p"&gt;|&lt;/span&gt; table &lt;span class="p"&gt;|&lt;/span&gt; postgres
+ public &lt;span class="p"&gt;|&lt;/span&gt; snarked_ledger_hashes    &lt;span class="p"&gt;|&lt;/span&gt; table &lt;span class="p"&gt;|&lt;/span&gt; postgres
+ public &lt;span class="p"&gt;|&lt;/span&gt; timing_info              &lt;span class="p"&gt;|&lt;/span&gt; table &lt;span class="p"&gt;|&lt;/span&gt; postgres
+ public &lt;span class="p"&gt;|&lt;/span&gt; user_commands            &lt;span class="p"&gt;|&lt;/span&gt; table &lt;span class="p"&gt;|&lt;/span&gt; postgres
+&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;10&lt;/span&gt; rows&lt;span class="o"&gt;)&lt;/span&gt;
+
+&lt;span class="nv"&gt;archive&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="c1"&gt;# SELECT id, state_hash, parent_id, parent_hash, creator_id, height, global_slot FROM BLOCKS LIMIT 5;&lt;/span&gt;
+ id &lt;span class="p"&gt;|&lt;/span&gt;                      state_hash                      &lt;span class="p"&gt;|&lt;/span&gt; parent_id &lt;span class="p"&gt;|&lt;/span&gt;                     parent_hash                      &lt;span class="p"&gt;|&lt;/span&gt; creator_id &lt;span class="p"&gt;|&lt;/span&gt; height &lt;span class="p"&gt;|&lt;/span&gt; global_slot 
+----+------------------------------------------------------+-----------+------------------------------------------------------+------------+--------+-------------
+  &lt;span class="m"&gt;1&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt; 3NL4SSDnG5EbFBV8kj5J3fmwuABQzUBrybVEHwYiGmudJUJMAFkc &lt;span class="p"&gt;|&lt;/span&gt;           &lt;span class="p"&gt;|&lt;/span&gt; 3NLr2QiYhu2mp4GhzEmVty1yWpW7QkkEjrkYJUrzBHgLRvDNL1nY &lt;span class="p"&gt;|&lt;/span&gt;          &lt;span class="m"&gt;1&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt;    &lt;span class="m"&gt;642&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt;        &lt;span class="m"&gt;1537&lt;/span&gt;
+  &lt;span class="m"&gt;2&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt; 3NKqnVZJYHWHmsNujM21HHDt2U7PVDLsu7AxnTq1uzjNKw1Rx6iC &lt;span class="p"&gt;|&lt;/span&gt;         &lt;span class="m"&gt;1&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt; 3NL4SSDnG5EbFBV8kj5J3fmwuABQzUBrybVEHwYiGmudJUJMAFkc &lt;span class="p"&gt;|&lt;/span&gt;          &lt;span class="m"&gt;1&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt;    &lt;span class="m"&gt;643&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt;        &lt;span class="m"&gt;1538&lt;/span&gt;
+  &lt;span class="m"&gt;3&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt; 3NLnmcUMRF9TproRxydkwqvtjYQjzNw59koQ62GYb4MRHKuQj1P1 &lt;span class="p"&gt;|&lt;/span&gt;         &lt;span class="m"&gt;2&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt; 3NKqnVZJYHWHmsNujM21HHDt2U7PVDLsu7AxnTq1uzjNKw1Rx6iC &lt;span class="p"&gt;|&lt;/span&gt;          &lt;span class="m"&gt;6&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt;    &lt;span class="m"&gt;644&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt;        &lt;span class="m"&gt;1539&lt;/span&gt;
+  &lt;span class="m"&gt;4&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt; 3NKZ1uZPPqssNtKkvwN3gDgw6vsuWjSDervuSd8QBEy2nswwgc4w &lt;span class="p"&gt;|&lt;/span&gt;         &lt;span class="m"&gt;3&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt; 3NLnmcUMRF9TproRxydkwqvtjYQjzNw59koQ62GYb4MRHKuQj1P1 &lt;span class="p"&gt;|&lt;/span&gt;          &lt;span class="m"&gt;9&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt;    &lt;span class="m"&gt;645&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt;        &lt;span class="m"&gt;1540&lt;/span&gt;
+  &lt;span class="m"&gt;5&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt; 3NKqcnzLzNScVMQf6xV1uBz1LnLTw9pedR8NfRtSa9tFkXxvbDqV &lt;span class="p"&gt;|&lt;/span&gt;         &lt;span class="m"&gt;4&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt; 3NKZ1uZPPqssNtKkvwN3gDgw6vsuWjSDervuSd8QBEy2nswwgc4w &lt;span class="p"&gt;|&lt;/span&gt;         &lt;span class="m"&gt;11&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt;    &lt;span class="m"&gt;646&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt;        &lt;span class="m"&gt;1542&lt;/span&gt;
+&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;5&lt;/span&gt; rows&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Now, there are a few limitations here. For the moment, there is no way to retrieve missing blocks from the chain. As such, you will need to have a nice friend with a SQL dump of their database to fill in the gaps. However, this definitely provides a workable dev environment for those requiring access to a working Archive node. Good work around Archive node redundancy is being done, details can be found in this Docs commit &lt;a href="https://github.com/MinaProtocol/mina/blob/0351fc31e9f5e29dc87a04bb55f3cdc5aee2038e/docs/archive-redundancy.md"&gt;here&lt;/a&gt;. &lt;/p&gt;
+&lt;p&gt;There is so much to do from here, like adding the &lt;code&gt;mina-rosetta&lt;/code&gt; server to expose data in a consistent format for the Ledger, Postgres database backups, and more! &lt;/p&gt;
+&lt;p&gt;I invite you to try this out and stay tuned for more posts in this &lt;em&gt;March to Mainnet&lt;/em&gt; series. Next time, how to hook up this Archive deployment to your Ledger for fun and profit! &lt;/p&gt;</content><category term="Mina Protocol"></category><category term="Mina"></category><category term="Blockchain"></category><category term="Archive Node"></category></entry><entry><title>Weekend Project - Coda Blockchain Visualization</title><link href="https://connerswann.me/2019/09/weekend-project-coda-blockchain.html" rel="alternate"></link><published>2019-09-14T00:00:00-07:00</published><updated>2019-09-14T00:00:00-07:00</updated><author><name>Conner Swann</name></author><id>tag:connerswann.me,2019-09-14:/2019/09/weekend-project-coda-blockchain.html</id><summary type="html">&lt;h1&gt;What's Coda?&lt;/h1&gt;
 &lt;p&gt;Coda is a Crypto Protocol that I am working on as part of the O(1) Labs Team. Coda implements a "succinct" blockchain that effectively "&lt;a href="https://codaprotocol.com/"&gt;swaps the traditional blockchain for a tiny cryptographic proof.&lt;/a&gt;" &lt;/p&gt;
 &lt;p&gt;Practically, this means that in the average Coda node, once a block with transactions …&lt;/p&gt;</summary><content type="html">&lt;h1&gt;What's Coda?&lt;/h1&gt;
 &lt;p&gt;Coda is a Crypto Protocol that I am working on as part of the O(1) Labs Team. Coda implements a "succinct" blockchain that effectively "&lt;a href="https://codaprotocol.com/"&gt;swaps the traditional blockchain for a tiny cryptographic proof.&lt;/a&gt;" &lt;/p&gt;
