@@ -155,7 +155,7 @@
 <li>A kubernetes cluster running and <code>kubectl</code> configured (I use the Kubernetes feature on Docker Desktop)</li>
 <li>Helm 3 installed </li>
 </ul>
-<p>It also might help to at least skim through the last post in the <em>March to Mainnet</em> Series <a href="https://connerswann.me/2021/01/mina-archive-node-kubetnetes.html">about the Archive Node Helm Chart</a>, which sets the scene for all the concepts we will cover in this post. </p>
+<p>It also might help to at least skim through the last post in the <em>March to Mainnet</em> Series <a href="https://connerswann.me/2021/01/mina-archive-node-kubernetes.html">about the Archive Node Helm Chart</a>, which sets the scene for all the concepts we will cover in this post. </p>
 <p>A last note: The word "ledger" is incredibly overloaded in the crypto world. In this post I try to differentiate between the company/Hardware Wallet <code>Ledger</code> (ex. Ledger Nano S) and the generic word <code>ledger</code> (ex. genesis ledger) which describes a list of accounts in a blockchain system. </p>
 <h2>Install Mina Ledger (You should have already done this)</h2>
 <p>If you have an address in the Mina Genesis Ledger, you should have already done this step and generated your address using the <code>mina_ledger_wallet</code> utility. However, instructions for installing it can be <a href="https://minaprotocol.com/docs/keypair/ledger-app-mina">found here</a>.</p>
@@ -170,7 +170,7 @@ Getting network identifier... Error: HTTPConnectionPool<span class="o">(</span><
 <p>Answer: <code>mina_ledger_wallet</code> is looking for the <code>mina-rosetta</code> API! </p>
 <p>This actually makes sense, <code>mina_ledger_wallet</code> needs up-to-date information from the blockchain about your account in order to properly format the transaction. So, lets get that set up!</p>
 <h2>Run an Archive Node with Rosetta</h2>
-<p>In the <a href="https://connerswann.me/2021/01/mina-archive-node-kubetnetes.html">last post</a>, we discussed using the official Archive Node Helm Chart to install an Archive Node in Kubernetes. The official chart is designed for testnets works great for development and archives blocks no problem. However, to send transactions with the Ledger Nano S, we need the Rosetta API too! </p>
+<p>In the <a href="https://connerswann.me/2021/01/mina-archive-node-kubernetes.html">last post</a>, we discussed using the official Archive Node Helm Chart to install an Archive Node in Kubernetes. The official chart is designed for testnets works great for development and archives blocks no problem. However, to send transactions with the Ledger Nano S, we need the Rosetta API too! </p>
 <p>First, an aside, what <em>exactly</em> is Rosetta? </p>
 <p>From the <a href="https://www.rosetta-api.org/">rosetta-api website</a>: </p>
 <blockquote>
