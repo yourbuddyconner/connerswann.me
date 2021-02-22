@@ -345,7 +345,7 @@ Continue? (y/N)
 &lt;li&gt;Archive Process - Receives RPC Updates from the Mina Daemon and persists on-chain data to the Postgres DB&lt;/li&gt;
 &lt;li&gt;PostgreSQL Database - Stores Archive data (via bitnami sub-chart)&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;&lt;img alt="Mina Archive Node Architecture" src="../../images/2021/mina-archive-diagram-1.png"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Mina Archive Node Architecture" src="../../images/2021/01/mina-archive-diagram-1.png"&gt;&lt;/p&gt;
 &lt;h3&gt;Install the Helm Repo&lt;/h3&gt;
 &lt;p&gt;The instructions for installing the Mina Helm Repo can be found &lt;a href="https://github.com/MinaProtocol/mina/tree/develop/helm/archive-node"&gt;here&lt;/a&gt; and can be found below. &lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;helm repo add mina https://coda-charts.storage.googleapis.com
