@@ -204,61 +204,67 @@ Forwarding from [::1]:5432 -&gt; 5432
 &lt;/pre&gt;
 
 &lt;p&gt;In another terminal, connect to the database with the &lt;code&gt;psql&lt;/code&gt; client using the credentials we set in the &lt;code&gt;values.yaml&lt;/code&gt; above: &lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ psql -h localhost --user postgres
-Password &lt;span class="k"&gt;for&lt;/span&gt; user postgres: 
-psql &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;13&lt;/span&gt;.2, server &lt;span class="m"&gt;11&lt;/span&gt;.10&lt;span class="o"&gt;)&lt;/span&gt;
-Type &lt;span class="s2"&gt;&amp;quot;help&amp;quot;&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; help.
+&lt;pre class="line-numbers"&gt;
+&lt;code class="language-shell"&gt;
+$ psql -h localhost --user postgres
+Password for user postgres: 
+psql (13.2, server 11.10)
+Type "help" for help.
 
-&lt;span class="nv"&gt;postgres&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="c1"&gt;# &lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+postgres=# 
+&lt;/code&gt;
+&lt;/pre&gt;
 
 &lt;p&gt;We can list the databases, switch to the archive database, list the tables, and query one of them: &lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ psql -h localhost --user postgres
-Password &lt;span class="k"&gt;for&lt;/span&gt; user postgres: 
-psql &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;13&lt;/span&gt;.2, server &lt;span class="m"&gt;11&lt;/span&gt;.10&lt;span class="o"&gt;)&lt;/span&gt;
-Type &lt;span class="s2"&gt;&amp;quot;help&amp;quot;&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; help.
+&lt;pre class="line-numbers"&gt;
+&lt;code class="language-shell"&gt;
+$ psql -h localhost --user postgres
+Password for user postgres: 
+psql (13.2, server 11.10)
+Type "help" for help.
 
-&lt;span class="nv"&gt;postgres&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="c1"&gt;# \l&lt;/span&gt;
+postgres=# \l
                                   List of databases
-   Name    &lt;span class="p"&gt;|&lt;/span&gt;  Owner   &lt;span class="p"&gt;|&lt;/span&gt; Encoding &lt;span class="p"&gt;|&lt;/span&gt;   Collate   &lt;span class="p"&gt;|&lt;/span&gt;    Ctype    &lt;span class="p"&gt;|&lt;/span&gt;   Access privileges   
+   Name    |  Owner   | Encoding |   Collate   |    Ctype    |   Access privileges   
 -----------+----------+----------+-------------+-------------+-----------------------
- archive   &lt;span class="p"&gt;|&lt;/span&gt; postgres &lt;span class="p"&gt;|&lt;/span&gt; UTF8     &lt;span class="p"&gt;|&lt;/span&gt; en_US.UTF-8 &lt;span class="p"&gt;|&lt;/span&gt; en_US.UTF-8 &lt;span class="p"&gt;|&lt;/span&gt; 
- postgres  &lt;span class="p"&gt;|&lt;/span&gt; postgres &lt;span class="p"&gt;|&lt;/span&gt; UTF8     &lt;span class="p"&gt;|&lt;/span&gt; en_US.UTF-8 &lt;span class="p"&gt;|&lt;/span&gt; en_US.UTF-8 &lt;span class="p"&gt;|&lt;/span&gt; 
- template0 &lt;span class="p"&gt;|&lt;/span&gt; postgres &lt;span class="p"&gt;|&lt;/span&gt; UTF8     &lt;span class="p"&gt;|&lt;/span&gt; en_US.UTF-8 &lt;span class="p"&gt;|&lt;/span&gt; en_US.UTF-8 &lt;span class="p"&gt;|&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt;c/postgres          +
-           &lt;span class="p"&gt;|&lt;/span&gt;          &lt;span class="p"&gt;|&lt;/span&gt;          &lt;span class="p"&gt;|&lt;/span&gt;             &lt;span class="p"&gt;|&lt;/span&gt;             &lt;span class="p"&gt;|&lt;/span&gt; &lt;span class="nv"&gt;postgres&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;CTc/postgres
- template1 &lt;span class="p"&gt;|&lt;/span&gt; postgres &lt;span class="p"&gt;|&lt;/span&gt; UTF8     &lt;span class="p"&gt;|&lt;/span&gt; en_US.UTF-8 &lt;span class="p"&gt;|&lt;/span&gt; en_US.UTF-8 &lt;span class="p"&gt;|&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt;c/postgres          +
-           &lt;span class="p"&gt;|&lt;/span&gt;          &lt;span class="p"&gt;|&lt;/span&gt;          &lt;span class="p"&gt;|&lt;/span&gt;             &lt;span class="p"&gt;|&lt;/span&gt;             &lt;span class="p"&gt;|&lt;/span&gt; &lt;span class="nv"&gt;postgres&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;CTc/postgres
-&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;4&lt;/span&gt; rows&lt;span class="o"&gt;)&lt;/span&gt;
+ archive   | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | 
+ postgres  | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | 
+ template0 | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =c/postgres          +
+           |          |          |             |             | postgres=CTc/postgres
+ template1 | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =c/postgres          +
+           |          |          |             |             | postgres=CTc/postgres
+(4 rows)
 
-&lt;span class="nv"&gt;postgres&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="c1"&gt;# \c archive &lt;/span&gt;
-psql &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;13&lt;/span&gt;.2, server &lt;span class="m"&gt;11&lt;/span&gt;.10&lt;span class="o"&gt;)&lt;/span&gt;
-You are now connected to database &lt;span class="s2"&gt;&amp;quot;archive&amp;quot;&lt;/span&gt; as user &lt;span class="s2"&gt;&amp;quot;postgres&amp;quot;&lt;/span&gt;.
-&lt;span class="nv"&gt;archive&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="c1"&gt;# \dt&lt;/span&gt;
+postgres=# \c archive 
+psql (13.2, server 11.10)
+You are now connected to database "archive" as user "postgres".
+archive=# \dt
                   List of relations
- Schema &lt;span class="p"&gt;|&lt;/span&gt;           Name           &lt;span class="p"&gt;|&lt;/span&gt; Type  &lt;span class="p"&gt;|&lt;/span&gt;  Owner   
+ Schema |           Name           | Type  |  Owner   
 --------+--------------------------+-------+----------
- public &lt;span class="p"&gt;|&lt;/span&gt; balances                 &lt;span class="p"&gt;|&lt;/span&gt; table &lt;span class="p"&gt;|&lt;/span&gt; postgres
- public &lt;span class="p"&gt;|&lt;/span&gt; blocks                   &lt;span class="p"&gt;|&lt;/span&gt; table &lt;span class="p"&gt;|&lt;/span&gt; postgres
- public &lt;span class="p"&gt;|&lt;/span&gt; blocks_internal_commands &lt;span class="p"&gt;|&lt;/span&gt; table &lt;span class="p"&gt;|&lt;/span&gt; postgres
- public &lt;span class="p"&gt;|&lt;/span&gt; blocks_user_commands     &lt;span class="p"&gt;|&lt;/span&gt; table &lt;span class="p"&gt;|&lt;/span&gt; postgres
- public &lt;span class="p"&gt;|&lt;/span&gt; epoch_data               &lt;span class="p"&gt;|&lt;/span&gt; table &lt;span class="p"&gt;|&lt;/span&gt; postgres
- public &lt;span class="p"&gt;|&lt;/span&gt; internal_commands        &lt;span class="p"&gt;|&lt;/span&gt; table &lt;span class="p"&gt;|&lt;/span&gt; postgres
- public &lt;span class="p"&gt;|&lt;/span&gt; public_keys              &lt;span class="p"&gt;|&lt;/span&gt; table &lt;span class="p"&gt;|&lt;/span&gt; postgres
- public &lt;span class="p"&gt;|&lt;/span&gt; snarked_ledger_hashes    &lt;span class="p"&gt;|&lt;/span&gt; table &lt;span class="p"&gt;|&lt;/span&gt; postgres
- public &lt;span class="p"&gt;|&lt;/span&gt; timing_info              &lt;span class="p"&gt;|&lt;/span&gt; table &lt;span class="p"&gt;|&lt;/span&gt; postgres
- public &lt;span class="p"&gt;|&lt;/span&gt; user_commands            &lt;span class="p"&gt;|&lt;/span&gt; table &lt;span class="p"&gt;|&lt;/span&gt; postgres
-&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;10&lt;/span&gt; rows&lt;span class="o"&gt;)&lt;/span&gt;
+ public | balances                 | table | postgres
+ public | blocks                   | table | postgres
+ public | blocks_internal_commands | table | postgres
+ public | blocks_user_commands     | table | postgres
+ public | epoch_data               | table | postgres
+ public | internal_commands        | table | postgres
+ public | public_keys              | table | postgres
+ public | snarked_ledger_hashes    | table | postgres
+ public | timing_info              | table | postgres
+ public | user_commands            | table | postgres
+(10 rows)
 
-&lt;span class="nv"&gt;archive&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="c1"&gt;# SELECT id, state_hash, parent_id, parent_hash, creator_id, height, global_slot FROM BLOCKS LIMIT 5;&lt;/span&gt;
- id &lt;span class="p"&gt;|&lt;/span&gt;                      state_hash                      &lt;span class="p"&gt;|&lt;/span&gt; parent_id &lt;span class="p"&gt;|&lt;/span&gt;                     parent_hash                      &lt;span class="p"&gt;|&lt;/span&gt; creator_id &lt;span class="p"&gt;|&lt;/span&gt; height &lt;span class="p"&gt;|&lt;/span&gt; global_slot 
+archive=# SELECT id, state_hash, parent_id, parent_hash, creator_id, height, global_slot FROM BLOCKS LIMIT 5;
+ id |                      state_hash                      | parent_id |                     parent_hash                      | creator_id | height | global_slot 
 ----+------------------------------------------------------+-----------+------------------------------------------------------+------------+--------+-------------
-  &lt;span class="m"&gt;1&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt; 3NL4SSDnG5EbFBV8kj5J3fmwuABQzUBrybVEHwYiGmudJUJMAFkc &lt;span class="p"&gt;|&lt;/span&gt;           &lt;span class="p"&gt;|&lt;/span&gt; 3NLr2QiYhu2mp4GhzEmVty1yWpW7QkkEjrkYJUrzBHgLRvDNL1nY &lt;span class="p"&gt;|&lt;/span&gt;          &lt;span class="m"&gt;1&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt;    &lt;span class="m"&gt;642&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt;        &lt;span class="m"&gt;1537&lt;/span&gt;
-  &lt;span class="m"&gt;2&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt; 3NKqnVZJYHWHmsNujM21HHDt2U7PVDLsu7AxnTq1uzjNKw1Rx6iC &lt;span class="p"&gt;|&lt;/span&gt;         &lt;span class="m"&gt;1&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt; 3NL4SSDnG5EbFBV8kj5J3fmwuABQzUBrybVEHwYiGmudJUJMAFkc &lt;span class="p"&gt;|&lt;/span&gt;          &lt;span class="m"&gt;1&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt;    &lt;span class="m"&gt;643&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt;        &lt;span class="m"&gt;1538&lt;/span&gt;
-  &lt;span class="m"&gt;3&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt; 3NLnmcUMRF9TproRxydkwqvtjYQjzNw59koQ62GYb4MRHKuQj1P1 &lt;span class="p"&gt;|&lt;/span&gt;         &lt;span class="m"&gt;2&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt; 3NKqnVZJYHWHmsNujM21HHDt2U7PVDLsu7AxnTq1uzjNKw1Rx6iC &lt;span class="p"&gt;|&lt;/span&gt;          &lt;span class="m"&gt;6&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt;    &lt;span class="m"&gt;644&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt;        &lt;span class="m"&gt;1539&lt;/span&gt;
-  &lt;span class="m"&gt;4&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt; 3NKZ1uZPPqssNtKkvwN3gDgw6vsuWjSDervuSd8QBEy2nswwgc4w &lt;span class="p"&gt;|&lt;/span&gt;         &lt;span class="m"&gt;3&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt; 3NLnmcUMRF9TproRxydkwqvtjYQjzNw59koQ62GYb4MRHKuQj1P1 &lt;span class="p"&gt;|&lt;/span&gt;          &lt;span class="m"&gt;9&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt;    &lt;span class="m"&gt;645&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt;        &lt;span class="m"&gt;1540&lt;/span&gt;
-  &lt;span class="m"&gt;5&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt; 3NKqcnzLzNScVMQf6xV1uBz1LnLTw9pedR8NfRtSa9tFkXxvbDqV &lt;span class="p"&gt;|&lt;/span&gt;         &lt;span class="m"&gt;4&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt; 3NKZ1uZPPqssNtKkvwN3gDgw6vsuWjSDervuSd8QBEy2nswwgc4w &lt;span class="p"&gt;|&lt;/span&gt;         &lt;span class="m"&gt;11&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt;    &lt;span class="m"&gt;646&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt;        &lt;span class="m"&gt;1542&lt;/span&gt;
-&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;5&lt;/span&gt; rows&lt;span class="o"&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+  1 | 3NL4SSDnG5EbFBV8kj5J3fmwuABQzUBrybVEHwYiGmudJUJMAFkc |           | 3NLr2QiYhu2mp4GhzEmVty1yWpW7QkkEjrkYJUrzBHgLRvDNL1nY |          1 |    642 |        1537
+  2 | 3NKqnVZJYHWHmsNujM21HHDt2U7PVDLsu7AxnTq1uzjNKw1Rx6iC |         1 | 3NL4SSDnG5EbFBV8kj5J3fmwuABQzUBrybVEHwYiGmudJUJMAFkc |          1 |    643 |        1538
+  3 | 3NLnmcUMRF9TproRxydkwqvtjYQjzNw59koQ62GYb4MRHKuQj1P1 |         2 | 3NKqnVZJYHWHmsNujM21HHDt2U7PVDLsu7AxnTq1uzjNKw1Rx6iC |          6 |    644 |        1539
+  4 | 3NKZ1uZPPqssNtKkvwN3gDgw6vsuWjSDervuSd8QBEy2nswwgc4w |         3 | 3NLnmcUMRF9TproRxydkwqvtjYQjzNw59koQ62GYb4MRHKuQj1P1 |          9 |    645 |        1540
+  5 | 3NKqcnzLzNScVMQf6xV1uBz1LnLTw9pedR8NfRtSa9tFkXxvbDqV |         4 | 3NKZ1uZPPqssNtKkvwN3gDgw6vsuWjSDervuSd8QBEy2nswwgc4w |         11 |    646 |        1542
+(5 rows)
+&lt;/code&gt;
+&lt;/pre&gt;
 
 &lt;p&gt;Now, there are a few limitations here. For the moment, there is no way to retrieve missing blocks from the chain. As such, you will need to have a nice friend with a SQL dump of their database to fill in the gaps. However, this definitely provides a workable dev environment for those requiring access to a working Archive node. Good work around Archive node redundancy is being done, details can be found in this Docs commit &lt;a href="https://github.com/MinaProtocol/mina/blob/0351fc31e9f5e29dc87a04bb55f3cdc5aee2038e/docs/archive-redundancy.md"&gt;here&lt;/a&gt;. &lt;/p&gt;
 &lt;p&gt;There is so much to do from here, like adding the &lt;code&gt;mina-rosetta&lt;/code&gt; server to expose data in a consistent format for the Ledger, Postgres database backups, and more! &lt;/p&gt;

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+
+  <title>March to Mainnet: Running a Mina Archive Node in Kubernetes</title>
+
+
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="referrer" content="origin" />
+  <meta name="generator" content="Pelican" />
+<link href="https://connerswann.me/drafts/mina-local-archive-node.html" rel="canonical" />
+  <!-- Feed -->
+        <link href="https://connerswann.me/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Conner Swann Full Atom Feed" />
+          <link href="https://connerswann.me/feeds/{slug}.atom.xml" type="application/atom+xml" rel="alternate" title="Conner Swann Categories Atom Feed" />
+
+  <link href="https://connerswann.me/theme/css/style.css" type="text/css" rel="stylesheet" />
+
+  <!-- Code highlight color scheme -->
+      <link href="https://connerswann.me/theme/css/code_blocks/monokai.css" rel="stylesheet">
+
+
+  <!-- Custom fonts -->
+  <link href='https://fonts.googleapis.com/css?family=Montserrat:400,300' rel='stylesheet' type='text/css' />
+  <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css" />
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+
+
+
+    <meta name="description" content="Need to Test your Ledger? Mina Mainnet is upon us, if you are one of those who opted to self-custody their Mina tokens chances are you...">
+
+    <meta name="author" content="Conner Swann">
+
+    <meta name="tags" content="Mina">
+    <meta name="tags" content="Blockchain">
+    <meta name="tags" content="Archive Node">
+
+
+
+
+<!-- Open Graph -->
+<meta property="og:site_name" content="Conner Swann"/>
+<meta property="og:title" content="March to Mainnet: Running a Mina Archive Node in Kubernetes"/>
+<meta property="og:description" content="Need to Test your Ledger? Mina Mainnet is upon us, if you are one of those who opted to self-custody their Mina tokens chances are you..."/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:url" content="https://connerswann.me/drafts/mina-local-archive-node.html"/>
+<meta property="og:type" content="article"/>
+<meta property="article:published_time" content="2021-01-22 00:00:00-08:00"/>
+<meta property="article:modified_time" content=""/>
+<meta property="article:author" content="https://connerswann.me/author/conner-swann">
+<meta property="article:section" content="Mina Protocol"/>
+<meta property="article:tag" content="Mina"/>
+<meta property="article:tag" content="Blockchain"/>
+<meta property="article:tag" content="Archive Node"/>
+<meta property="og:image" content="https://connerswann.me/images/2019/coda-cover.jpg">
+
+<!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@yourbuddyconner">
+    <meta name="twitter:title" content="March to Mainnet: Running a Mina Archive Node in Kubernetes">
+    <meta name="twitter:url" content="https://connerswann.me/drafts/mina-local-archive-node.html">
+
+        <meta name="twitter:image:src" content="https://connerswann.me/images/2019/coda-cover.jpg">
+
+      <meta name="twitter:description" content="Need to Test your Ledger? Mina Mainnet is upon us, if you are one of those who opted to self-custody their Mina tokens chances are you...">
+
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Article",
+  "name": "March to Mainnet: Running a Mina Archive Node in Kubernetes",
+  "headline": "March to Mainnet: Running a Mina Archive Node in Kubernetes",
+  "datePublished": "2021-01-22 00:00:00-08:00",
+  "dateModified": "",
+  "author": {
+    "@type": "Person",
+    "name": "Conner Swann",
+    "url": "https://connerswann.me/author/conner-swann"
+  },
+  "image": "https://connerswann.me/images/2019/coda-cover.jpg",
+  "url": "https://connerswann.me/drafts/mina-local-archive-node.html",
+  "description": "Need to Test your Ledger? Mina Mainnet is upon us, if you are one of those who opted to self-custody their Mina tokens chances are you..."
+}
+</script>
+</head>
+<!-- TODO : Body class -->
+<body class="home-template">
+
+<nav id="menu">
+  <a class="close-button">Close</a>
+  <div class="nav-wrapper">
+    <p class="nav-label">Menu</p>
+    <ul>
+
+              <li role="presentation"><a href="https://connerswann.me/pages/about-me/">About Me</a></li>
+
+    </ul>
+  </div>
+</nav>
+    <!-- Progressbar -->
+    <div class="progress-container">
+        <span class="progress-bar"></span>
+    </div>
+
+    <!-- Page Header -->
+    <!-- Set your background image for this header on the line below. -->
+    <header id="post-header" class="has-cover">
+      <div class="inner">
+        <nav id="navigation">
+            <span id="home-button" class="nav-button">
+                <a class="home-button" href="https://connerswann.me/" title="Home"><i class="ic ic-arrow-left"></i> Home</a>
+            </span>
+          <span id="menu-button" class="nav-button">
+            <a class="menu-button"><i class="ic ic-menu"></i> Menu</a>
+          </span>
+        </nav>
+        <h1 class="post-title">March to Mainnet: Running a Mina Archive Node in Kubernetes</h1>
+        <!-- TODO : Proper class for headline -->
+        <span class="post-meta">
+                <a href="https://connerswann.me/author/conner-swann">Conner Swann</a>
+            | <time datetime="Fri 22 January 2021">Fri 22 January 2021</time>
+        </span>
+        <!-- TODO : Modified check -->
+            <div class="post-cover cover" style="background-image: url('https://connerswann.me/images/2019/coda-cover.jpg')">
+      </div>
+    </header>
+
+  <section id="wrapper">
+    <a class="hidden-close"></a>
+
+    <!-- Post content -->
+    <main class="content" role="main">
+        <article class="post">
+        <div class="inner">
+            <section class="post-content">
+                <h1>Need to Test your Ledger?</h1>
+<p>Mina Mainnet is upon us, if you are one of those who opted to self-custody their Mina tokens chances are you generated your addresses with a Ledger Nano S. Now, your next step is to send some transactions with it, but you might be surprised to learn that it's not quite as easy as running a Mina daemon locally! Don't worry, it's still pretty easy, but you need a helping hand from the Mina Archive node and the <code>mina-rosetta</code> API. </p>
+<p><img alt="Mainnet is Coming Meme" src="../../images/2021/mainnet-is-coming.jpg"></p>
+<p>In this installment of the Mina <em>March to Mainnet</em> series we will be covering how to send transactions with a Ledger wallet. We'll also introduce the Sushi Validator Archive Helm Chart, which can be used to deploy a production-ready instance of the Archive Node with Rosetta to a Kubernetes cluster of your choice. </p>
+<h2>Prerequisites</h2>
+<p>Since I love Kubernetes, I am going to have a pretty opinionated setup, but I think <em>everyone</em> should have a little understanding of how Container and Kubernetes work in 2021. Fortunately, O(1) Labs has provided some Helm Charts that offer a good starting place when building a Mina deployment. </p>
+<p>You will need the following things in order to fully follow along with this post: </p>
+<ul>
+<li>A kubernetes cluster running and <code>kubectl</code> configured (I use the Kubernetes feature on Docker Desktop)</li>
+<li>Helm 3 installed </li>
+</ul>
+<p>It also might help to at least skim through the last post in the <em>March to Mainnet</em> Series <a href="{filename}2021/mina-kubernetes-archive-node.md">about the Archive Node Helm Chart</a>, which sets the scene for all the concepts we will cover in this post. </p>
+<p>A last note: The word "ledger" is incredibly overloaded in the crypto world. In this post I try to differentiate between the company/Hardware Wallet <code>Ledger</code> (ex. Ledger Nano S) and the generic word <code>ledger</code> (ex. genesis ledger) which describes a list of accounts in a blockchain system. </p>
+<h2>Install Mina Ledger (You should have already done this)</h2>
+<p>If you have an address in the Mina Genesis Ledger, you should have already done this step and generated your address using the <code>mina_ledger_wallet</code> utility. However, instructions for installing it can be <a href="https://minaprotocol.com/docs/keypair/ledger-app-mina">found here</a>.</p>
+<p>I am assuming that you have placed the <code>mina_ledger_wallet</code> program somewhere in your <code>$PATH</code>, and if you don't the commands you might use will be slightly different than those in this post. </p>
+<p>If you are had done your due dilligence, you might have run <code>mina_ledger_wallet test-transaction</code> which creates and signs a dummy transaction offline. This only requires the Ledger to preform successfully. </p>
+<p>If you were curious and tried to run <code>mina_ledger_wallet send-payment</code> though, you might discover you get an error: </p>
+<div class="highlight"><pre><span></span><code>$ mina_ledger_wallet --verbose send-payment --network testnet  --fee .01 <span class="m">42</span> &lt;SenderKey&gt; &lt;ReceiverKey&gt; .01
+Getting network identifier... Error: HTTPConnectionPool<span class="o">(</span><span class="nv">host</span><span class="o">=</span><span class="s1">&#39;localhost&#39;</span>, <span class="nv">port</span><span class="o">=</span><span class="m">3087</span><span class="o">)</span>: Max retries exceeded with url: /network/list <span class="o">(</span>Caused by NewConnectionError<span class="o">(</span><span class="s1">&#39;&lt;urllib3.connection.HTTPConnection object at 0x1105912b0&gt;: Failed to establish a new connection: [Errno 61] Connection refused&#39;</span><span class="o">))</span>
+</code></pre></div>
+
+<p>Question: What is the <code>mina_ledger_wallet</code> program expecting to be running on port <code>3087</code>? The Mina Graphql Port binds to port <code>3085</code> by default...</p>
+<p>Answer: <code>mina_ledger_wallet</code> is looking for the <code>mina-rosetta</code> API! </p>
+<p>This actually makes sense, <code>mina_ledger_wallet</code> needs up-to-date information from the blockchain about your account in order to properly format the transaction. So, lets get that set up!</p>
+<h2>Run an Archive Node with Rosetta</h2>
+<p>In the <a href="{filename}2021/mina-kubernetes-archive-node.md">last post</a>, we discussed using the official Archive Node Helm Chart to install an Archive Node in Kubernetes. The official chart is designed for testnets works great for development and archives blocks no problem. However, to send transactions with the Ledger Nano S, we need the Rosetta API too! </p>
+<p>First, an aside, what <em>exactly</em> is Rosetta? </p>
+<p>From the <a href="https://www.rosetta-api.org/">rosetta-api website</a>: </p>
+<blockquote>
+<p>Rosetta is an open standard designed to simplify blockchain deployment and interaction. Spend less time on integration and more time on novel blockchain advancements.</p>
+</blockquote>
+<p>Rosetta provides a nice standard API for every blockchain, which can be a pain from the perspective of one writing a blockchain, but it is <em>hugely</em> useful when a big organization just forces everyone to adhere to the <em>same API</em>. Rosetta runs as a sidecar to the Archive Node deployment, consuming the GraphQL Port on the Daemon as well as data from the Postgres Database directly. </p>
+</hr>
+<p>In order to facilitate this, and add some more production-oriented features, I forked the official Helm Chart and am hosting it on the Sushi Validator github organization <a href="https://github.com/Sushi-Validator/mina-archive-node">here</a>. </p>
+<p>The <code>values.yaml</code> is compatible with the official chart, and is a super-set of the existing fields. Most notably, I added a <code>rosetta</code> section: </p>
+<div class="highlight"><pre><span></span><code><span class="n">rosetta</span><span class="o">:</span> 
+  <span class="n">image</span><span class="o">:</span> <span class="n">gcr</span><span class="o">.</span><span class="na">io</span><span class="sr">/o1labs-192920/</span><span class="n">coda</span><span class="o">-</span><span class="n">daemon</span><span class="o">-</span><span class="n">baked</span><span class="o">:</span><span class="mf">0.4</span><span class="o">.</span><span class="mi">2</span><span class="o">-</span><span class="mi">245</span><span class="n">a3f7</span><span class="o">-</span><span class="n">zenith</span><span class="o">-</span><span class="mi">7</span><span class="n">a89538</span>
+  <span class="n">graphqlUri</span><span class="o">:</span> <span class="n">http</span><span class="o">://</span><span class="mf">127.0</span><span class="o">.</span><span class="mf">0.1</span><span class="o">:</span><span class="mi">3085</span><span class="o">/</span><span class="n">graphql</span> 
+  <span class="n">archiveUri</span><span class="o">:</span> <span class="s1">&#39;{{ $.Values.archive.postgresUri }}&#39;</span>
+  <span class="n">ports</span><span class="o">:</span>
+    <span class="n">web</span><span class="o">:</span> <span class="mi">3087</span>
+</code></pre></div>
+
+<h2>mina_ledger_wallet CLI</h2>
+<h2>Send a Transaction</h2>
+            </section>
+
+            <section class="post-info">
+                <div class="post-share">
+                    <a class="twitter" href="https://twitter.com/share?text=March to Mainnet: Running a Mina Archive Node in Kubernetes&amp;url=https://connerswann.me/drafts/mina-local-archive-node.html" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <i class="ic ic-twitter"></i><span class="hidden">Twitter</span>
+                    </a>
+                    <a class="facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://connerswann.me/drafts/mina-local-archive-node.html" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <i class="ic ic-facebook"></i><span class="hidden">Facebook</span>
+                    </a>
+                    <a class="googleplus" href="https://plus.google.com/share?url=https://connerswann.me/drafts/mina-local-archive-node.html" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <i class="ic ic-googleplus"></i><span class="hidden">Google+</span>
+                    </a>
+                    <div class="clear"></div>
+                </div>
+
+                <aside class="post-tags">
+<a href="https://connerswann.me/tag/mina">Mina</a><a href="https://connerswann.me/tag/blockchain">Blockchain</a><a href="https://connerswann.me/tag/archive-node">Archive Node</a>                </aside>
+
+                <div class="clear"></div>
+
+                <aside class="post-author">
+
+
+                        <figure class="post-author-avatar">
+                            <img src="https://connerswann.me/images/conner-profile-picture.png" alt="Conner Swann" />
+                        </figure>
+                    <div class="post-author-bio">
+                        <h4 class="post-author-name"><a href="https://connerswann.me/author/conner-swann">Conner Swann</a></h4>
+                            <p class="post-author-about">Software Engineer, Infrastructure Specialist, Architecture Nerd </br> Partner, Engineering @ cLabs</p>
+                            <span class="post-author-location"><i class="ic ic-location"></i> San Francisco</span>
+                            <span class="post-author-website"><a href="https://connerswann.me"><i class="ic ic-link"></i> Website</a></span>
+                        <!-- Social linkes in alphabet order. -->
+                            <span class="post-author-github"><a target="_blank" href="https://github.com/yourbuddyconner"><i class="ic ic-link"></i> GitHub</a></span>
+                            <span class="post-author-linkedin"><a target="_blank" href="https://www.linkedin.com/in/connerswann"><i class="ic ic-link"></i> LinkedIn</a></span>
+                            <span class="post-author-twitter"><a target="_blank" href="https://twitter.com/yourbuddyconner"><i class="ic ic-twitter"></i> Twitter</a></span>
+                    </div>
+                    <div class="clear"></div>
+                </aside>
+
+                </section>
+
+
+                <aside class="post-nav">
+                    <div class="clear"></div>
+                </aside>
+
+            </div>
+        </article>
+    </main>
+      <!-- TODO : Body class -->
+    <div id="body-class" style="display: none;" class=""></div>
+
+    <footer id="footer">
+      <div class="inner">
+        <section class="credits">
+
+
+          <span class="credits-theme">Theme <a href="https://github.com/arulrajnet/attila" rel="nofollow">Attila</a></span>
+          <span class="credits-software">Published with <a href="https://github.com/getpelican/pelican" rel="nofollow">Pelican</a></span>
+        </section>
+      </div>
+    </footer>
+  </section>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script type="text/javascript" src="https://connerswann.me/theme/js/script.js"></script>
+
+    <!-- Global Site Tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-24471866-2"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-24471866-2', { 'anonymize_ip': true });
+    </script>
+</body>
+</html>
