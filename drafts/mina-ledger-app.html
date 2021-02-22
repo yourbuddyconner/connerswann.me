@@ -38,7 +38,7 @@
 
 
 
-    <meta name="description" content="Need to Test your Ledger? Mina Mainnet is upon us, if you are one of those who opted to self-custody their Mina tokens chances are you...">
+    <meta name="description" content="Need to Test your Ledger? Mina Mainnet is upon us, if you are one of those who opted to self-custody their Mina tokens, chances are you...">
 
     <meta name="author" content="Conner Swann">
 
@@ -52,7 +52,7 @@
 <!-- Open Graph -->
 <meta property="og:site_name" content="Conner Swann"/>
 <meta property="og:title" content="March to Mainnet: Sending a Transaction With Your Ledger Hardware Wallet"/>
-<meta property="og:description" content="Need to Test your Ledger? Mina Mainnet is upon us, if you are one of those who opted to self-custody their Mina tokens chances are you..."/>
+<meta property="og:description" content="Need to Test your Ledger? Mina Mainnet is upon us, if you are one of those who opted to self-custody their Mina tokens, chances are you..."/>
 <meta property="og:locale" content="en_US"/>
 <meta property="og:url" content="https://connerswann.me/drafts/mina-ledger-app.html"/>
 <meta property="og:type" content="article"/>
@@ -73,7 +73,7 @@
 
         <meta name="twitter:image:src" content="https://connerswann.me/images/2019/coda-cover.jpg">
 
-      <meta name="twitter:description" content="Need to Test your Ledger? Mina Mainnet is upon us, if you are one of those who opted to self-custody their Mina tokens chances are you...">
+      <meta name="twitter:description" content="Need to Test your Ledger? Mina Mainnet is upon us, if you are one of those who opted to self-custody their Mina tokens, chances are you...">
 
 <script type="application/ld+json">
 {
@@ -90,7 +90,7 @@
   },
   "image": "https://connerswann.me/images/2019/coda-cover.jpg",
   "url": "https://connerswann.me/drafts/mina-ledger-app.html",
-  "description": "Need to Test your Ledger? Mina Mainnet is upon us, if you are one of those who opted to self-custody their Mina tokens chances are you..."
+  "description": "Need to Test your Ledger? Mina Mainnet is upon us, if you are one of those who opted to self-custody their Mina tokens, chances are you..."
 }
 </script>
 </head>
@@ -145,9 +145,9 @@
         <div class="inner">
             <section class="post-content">
                 <h1>Need to Test your Ledger?</h1>
-<p>Mina Mainnet is upon us, if you are one of those who opted to self-custody their Mina tokens chances are you generated your addresses with a Ledger Nano S. Now, your next step is to send some transactions with it, but you might be surprised to learn that it's not quite as easy as running a Mina daemon locally! Don't worry, it's still pretty easy, but you need a helping hand from the Mina Archive node and the <code>mina-rosetta</code> API. </p>
+<p>Mina Mainnet is upon us, if you are one of those who opted to self-custody their Mina tokens, chances are you generated your addresses with a Ledger Nano S. Now, your next step is to send some transactions with it, but you might be surprised to learn that it's not quite as easy as running a Mina daemon locally! Don't worry, it's still pretty easy, but you need a helping hand from the Mina Archive node and the <code>mina-rosetta</code> API. </p>
 <p><img alt="Mainnet is Coming Meme" src="../../images/2021/mainnet-is-coming.jpg"></p>
-<p>In this installment of the Mina <em>March to Mainnet</em> series we will be covering how to send transactions with a Ledger wallet. We'll also introduce the Sushi Validator Archive Helm Chart, which can be used to deploy a production-ready instance of the Archive Node with Rosetta to a Kubernetes cluster of your choice. </p>
+<p>In this installment of the Mina <em>March to Mainnet</em> series we will be covering how to send transactions with a Ledger hardware wallet. We'll also introduce the Sushi Validator Archive Helm Chart, which can be used to deploy a production-ready instance of the Archive Node with Rosetta to a Kubernetes cluster of your choice. </p>
 <h2>Prerequisites</h2>
 <p>Since I love Kubernetes, I am going to have a pretty opinionated setup, but I think <em>everyone</em> should have a little understanding of how Container and Kubernetes work in 2021. Fortunately, O(1) Labs has provided some Helm Charts that offer a good starting place when building a Mina deployment. </p>
 <p>You will need the following things in order to fully follow along with this post: </p>
@@ -254,9 +254,76 @@ nodeSelector:
 </code></pre></div>
 
 <p>We can install the chart like so: </p>
-<div class="highlight"><pre><span></span><code><span class="err">helm install --values values.yaml archive sushi/archive-node/</span>
-</code></pre></div>
+<pre class="line-numbers">
+<code class="language-shell">
+helm install --values values.yaml archive sushi/archive-node/
+NAME: archive
+LAST DEPLOYED: Sun Feb 22 19:03:12 2021
+NAMESPACE: archive
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+NOTES:
+</code>
+</pre>
 
+<p>We can check the deployment by viewing the currently running pods: </p>
+<pre class="line-numbers">
+<code class="language-shell">
+$ kubectl get pods
+NAME                         READY   STATUS      RESTARTS   AGE
+archive-5d9b967557-pkk2g     3/3     Running     0          37s
+archive-db-bootstrap-25mml   0/3     Completed   0          37s
+archive-db-bootstrap-nhp7f   0/3     Error       0          25s
+archive-db-bootstrap-nx9rw   0/3     Error       0          15s
+archive-postgresql-0         1/1     Running     0          37s
+</code>
+</pre>
+
+<p>Note: Depending on how long it takes for the Postgres container to pull and start, you might see one or more failed <code>archive-db-bootstrap-xxxxx</code> jobs, this is normal. </p>
+<p>You can check your daemon's sync status with the following command: </p>
+<p><code>kubectl exec $(pods | grep archive- | head -n 1 | awk '{print $1}') -c coda -- coda client status</code></p>
+<p>You should get output that looks similar to this: </p>
+<pre class="line-numbers">
+<code class="language-shell">
+$ kubectl exec $(pods | grep archive- | head -n 1 | awk '{print $1}') -c coda -- coda client status
+Coda daemon status
+-----------------------------------
+
+Max observed block height:              932
+Max observed unvalidated block height:  0
+Local uptime:                           2m42s
+Chain id:                               394692fea7f6531810be6ef213959856010881425920d396be39009d53045074
+Git SHA-1:                              [DIRTY]245a3f7d883c516f5f16742cb1ca672872612851
+Configuration directory:                /root/.coda-config
+Peers:                                  33
+User_commands sent:                     0
+SNARK worker:                           None
+SNARK work fee:                         100000000
+Sync status:                            Bootstrap
+Block producers running:                0
+Consensus time now:                     epoch=0, slot=2076
+Consensus mechanism:                    proof_of_stake
+Consensus configuration:                
+        Delta:                     0
+        k:                         290
+        Slots per epoch:           7140
+        Slot duration:             3m
+        Epoch duration:            14d21h
+        Chain start timestamp:     2021-02-17 19:30:00.000000Z
+        Acceptable network delay:  3m
+
+Addresses and ports:                    
+        External IP:    <IP ADDRESS>
+        Bind IP:        0.0.0.0
+        Libp2p PeerID:  12D3KooWSfZd2tcaB5oPbu34KzcREoN8BNhQLofmSDguG3dRXzPS
+        Libp2p port:    10909
+        Client port:    8301
+</code>
+</pre>
+
+<p>Eventually, after ~10 minutes or so, your Daemon will be <code>Synced</code> and chain data will be flowing to your Postgres database. </p>
+<h2>A Little About Rosetta</h2>
 <h2>mina_ledger_wallet CLI</h2>
 <h2>Send a Transaction</h2>
             </section>
