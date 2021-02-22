@@ -329,15 +329,142 @@ Addresses and ports:
 <h2>A Little About Rosetta</h2>
 <p>Rosetta is an initiative from Coinbase, providing a standard API for applications built on top of blockchains to interact with the underlying ledger. It is a robust and well-tested interface, and it's pretty nice to work with. I think it would be fun to write some posts about writing applications on top of <code>mina-rosetta</code>.</p>
 <p>If you want to poke around, there is a cool rosetta-api client which can be found <a href="https://github.com/coinbase/rosetta-cli">on github, here.</a></p>
-<p>We can port-forward the Rosetta API Port so the CLI can communicate with the remote pod. </p>
+<p>We can port-forward the Rosetta API Port so the CLI can communicate with the remote pod:</p>
 <pre class="line-numbers">
 <code class="language-shell">
+kubectl port-forward $(pods | grep archive- | head -n 1 | awk '{print $1}')  3087
+</code>
+</pre>
 
+<p>Next, we need to configure the <code>rosetta-cli</code> with a <code>rosetta.conf</code> -- an example <a href="https://gist.github.com/yourbuddyconner/89837c85b409439bdd07acdd37425e34">can be found here</a>.</p>
+<p>Now we can do things like query blocks: </p>
+<pre class="line-numbers">
+<code class="language-shell">
+$ rosetta-cli --configuration-file rosetta.conf view:block 1
+loaded configuration file: rosetta.conf
+
+Current Block:
+{
+ "block_identifier": {
+  "index": 1,
+  "hash": "3NLH8GM4afTu4UdbE6nD5yELa5yV78PzdN8QTYYXrL7g1xoPhBGw"
+ },
+ "parent_block_identifier": {
+  "index": 1,
+  "hash": "3NLH8GM4afTu4UdbE6nD5yELa5yV78PzdN8QTYYXrL7g1xoPhBGw"
+ },
+ "timestamp": 0,
+ "transactions": [],
+ "metadata": {
+  "creator": "B62qiy32p8kAKnny8ZFwoMhYpBppM1DWVCqAPBYNcXnsAHhnfAAuXgg"
+ }
+}
+Balance Changes:
+Cummulative: 3NLH8GM4afTu4UdbE6nD5yELa5yV78PzdN8QTYYXrL7g1xoPhBGw
+
+Operation Groups:
 </code>
 </pre>
 
 <h2>mina_ledger_wallet CLI</h2>
+<p>Now for the reason we are all here, lets send some transactions. Now that we have a Rosetta API running, and port-forwarded (if you didn't do this, go do it now!), we can  now use the <code>mina_ledger_wallet</code> CLI to send a transaction. </p>
+<p>Lets look at the help output: </p>
+<pre class="line-numbers">
+<code class="language-shell">
+$ mina_ledger_wallet send-payment -h 
+usage: mina_ledger_wallet send-payment [-h] [--mina_url MINA_URL] [--network NETWORK] [--fee FEE] [--nonce NONCE] [--valid_until VALID_UNTIL] [--memo MEMO]
+                                       sender_bip44_account sender_address receiver amount
+
+positional arguments:
+  sender_bip44_account  BIP44 account to send from (e.g. 42)
+  sender_address        Mina address of sender
+  receiver              Mina address of recipient
+  amount                Payment amount you want to send
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --mina_url MINA_URL   Mina rosetta interface url (default http://localhost:3087)
+  --network NETWORK     Network override
+  --fee FEE             Fee override
+  --nonce NONCE         Nonce override
+  --valid_until VALID_UNTIL
+                        Valid until
+  --memo MEMO           Transaction memo (publicly visible)
+</code>
+</pre>
+
+<p>So, a properly formatted command sending <code>0.1</code> Mina from <code>&lt;SenderAddress&gt;</code> to <code>&lt;ReceiverAddress&gt;</code> would look something like: </p>
+<pre class="line-numbers">
+<code class="language-shell">
+mina_ledger_wallet \
+    send-payment \
+    --network testnet \
+    --mina_url http://localhost:3087 \
+    --fee .01 \
+    --nonce 2 \
+    42 \
+    <SenderAddress> \
+    <ReceiverAddress> \
+    0.1
+</code>
+</pre>
+
 <h2>Send a Transaction</h2>
+<p>Lets do it! </p>
+<p>Here's some example output from that command: </p>
+<pre class="line-numbers">
+<code class="language-shell">
+$ mina_ledger_wallet --verbose send-payment --network testnet --mina_url http://localhost:3087 --fee .01 --nonce 2 42 B62qqYpdvJ8oUF81gZL1WfLef1Ky8SsdvmUyfpr7YWb2m2rjRxaEcxq B62qmdut1usji2NFZSn9BrywhjHakYtAvL7Mdy7muyjcbrY3hKJ688Y .01
+Using rosetta override: http://localhost:3087
+Getting network identifier... debug
+Using network override: testnet
+Getting account nonce and suggested fee... done
+Using fee override: .01
+Using nonce override: 2
+Getting account balance... done
+
+Sign transaction:
+    Type:        Payment
+    Account:     42 (path 44'/12586'/42'/0/0)
+    Sender:      B62qqYpdvJ8oUF81gZL1WfLef1Ky8SsdvmUyfpr7YWb2m2rjRxaEcxq (balance 0.98)
+    Receiver:    B62qmdut1usji2NFZSn9BrywhjHakYtAvL7Mdy7muyjcbrY3hKJ688Y
+    Amount:      0.010000000
+    Fee:         0.010000000
+    Total:       0.020000000
+    Nonce:       2
+
+Continue? (y/N) y
+
+Constructing unsigned payment transaction... done
+
+UNSIGNED_TX = {"randomOracleInput": "0000000307CA9F7EDC5DADFD1F4C3D5673DB8A4908FEEA3BB00FA9BF630878243D1561A607CA9F7EDC5DADFD1F4C3D5673DB8A4908FEEA3BB00FA9BF630878243D1561A644E13E79A27347D407C33B2A8C2CDD8BAF4FA57FB76D8DB7FCDAA4C49ADDEABC0000025701691900000000008000000000000000A00000007FFFFFFFC00000000000000000000000000000000000000000000000000000000000000000000A000000000000000005A4640000000000", "payment": {"to": "B62qmdut1usji2NFZSn9BrywhjHakYtAvL7Mdy7muyjcbrY3hKJ688Y", "from": "B62qqYpdvJ8oUF81gZL1WfLef1Ky8SsdvmUyfpr7YWb2m2rjRxaEcxq", "fee": "10000000", "token": "1", "nonce": "2", "memo": null, "amount": "10000000", "valid_until": null}, "stakeDelegation": null, "createToken": null, "createTokenAccount": null, "mintTokens": null}
+
+Signing transaction (please confirm on Ledger device)... 
+apduMessage hex (346) = <HEX_OUTPUT>
+
+SIGNED_TX   = {"signature": "1f0f4ef044b259a1851cfffc98307beef4b388047dcf57de53debdce83fa2d661e1dc6db0b2c14aef2cd6227682ac5376f5561a741b7f6338ea55245e190eea8", "payment": {"to": "B62qmdut1usji2NFZSn9BrywhjHakYtAvL7Mdy7muyjcbrY3hKJ688Y", "from": "B62qqYpdvJ8oUF81gZL1WfLef1Ky8SsdvmUyfpr7YWb2m2rjRxaEcxq", "fee": "10000000", "token": "1", "nonce": "2", "memo": null, "amount": "10000000", "valid_until": "4294967295"}, "stake_delegation": null, "create_token": null, "create_token_account": null, "mint_tokens": null}
+
+
+Send transaction:
+    Type:        Payment
+    Account:     42 (path 44'/12586'/42'/0/0)
+    Sender:      B62qqYpdvJ8oUF81gZL1WfLef1Ky8SsdvmUyfpr7YWb2m2rjRxaEcxq (balance 0.98)
+    Receiver:    B62qmdut1usji2NFZSn9BrywhjHakYtAvL7Mdy7muyjcbrY3hKJ688Y
+    Amount:      0.010000000
+    Fee:         0.010000000
+    Total:       0.020000000
+    Nonce:       2
+    Signature:   1f0f4ef044b259a1851cfffc98307beef4b388047dcf57de53debdce83fa2d661e1dc6db0b...
+
+Continue? (y/N)
+</code>
+</pre>
+
+<p>I didn't actually send this test transaction, but you totally can and should!</p>
+<p>You can check your balance on MinaExplorer.com by plugging your sender or receiver address into the following URL and visiting it in your browser: </p>
+<p><code>https://minaexplorer.com/wallet/&lt;ADDRESS&gt;</code></p>
+<p>With any luck, you should see something like this: </p>
+<p><img alt="Mina Transaction" src="../../images/2021/ledger-transaction-screenshot.png"></p>
             </section>
 
             <section class="post-info">
