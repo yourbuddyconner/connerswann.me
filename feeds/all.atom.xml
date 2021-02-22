@@ -32,6 +32,7 @@ Getting network identifier... Error: HTTPConnectionPool&lt;span class="o"&gt;(&l
 &lt;blockquote&gt;
 &lt;p&gt;Rosetta is an open standard designed to simplify blockchain deployment and interaction. Spend less time on integration and more time on novel blockchain advancements.&lt;/p&gt;
 &lt;/blockquote&gt;
+&lt;p&gt;&lt;img alt="Mina Rosetta Diagram" src="../../images/2021/mina-rosetta-architecture.png"&gt;&lt;/p&gt;
 &lt;p&gt;Rosetta provides a nice standard API for every blockchain, which can be a pain from the perspective of one writing a blockchain, but it is &lt;em&gt;hugely&lt;/em&gt; useful when a big organization just forces everyone to adhere to the &lt;em&gt;same API&lt;/em&gt;. Rosetta runs as a sidecar to the Archive Node deployment, consuming the GraphQL Port on the Daemon as well as data from the Postgres Database directly. &lt;/p&gt;
 &lt;/hr&gt;
 &lt;p&gt;In order to facilitate the deployment of Rosetta, and add some more production-oriented features, we at the Sushi Validator forked the official chart and are hosting it on the official &lt;a href="https://minastakingpool.connerswann.me/"&gt;Sushi Validator&lt;/a&gt; helm repository &lt;a href="https://github.com/Sushi-Validator/helm-charts"&gt;here&lt;/a&gt;. &lt;/p&gt;
@@ -126,6 +127,8 @@ NOTES:
 &lt;/code&gt;
 &lt;/pre&gt;
 
+&lt;p&gt;Once installed, we'll get a deployment that looks like this: &lt;/p&gt;
+&lt;p&gt;&lt;img alt="Mina Rosetta Diagram" src="../../images/2021/mina-archive-diagram.png"&gt;&lt;/p&gt;
 &lt;p&gt;We can check the deployment by viewing the currently running pods: &lt;/p&gt;
 &lt;pre class="line-numbers"&gt;
 &lt;code class="language-shell"&gt;

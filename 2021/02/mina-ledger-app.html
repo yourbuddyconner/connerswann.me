@@ -176,6 +176,7 @@ Getting network identifier... Error: HTTPConnectionPool<span class="o">(</span><
 <blockquote>
 <p>Rosetta is an open standard designed to simplify blockchain deployment and interaction. Spend less time on integration and more time on novel blockchain advancements.</p>
 </blockquote>
+<p><img alt="Mina Rosetta Diagram" src="../../images/2021/mina-rosetta-architecture.png"></p>
 <p>Rosetta provides a nice standard API for every blockchain, which can be a pain from the perspective of one writing a blockchain, but it is <em>hugely</em> useful when a big organization just forces everyone to adhere to the <em>same API</em>. Rosetta runs as a sidecar to the Archive Node deployment, consuming the GraphQL Port on the Daemon as well as data from the Postgres Database directly. </p>
 </hr>
 <p>In order to facilitate the deployment of Rosetta, and add some more production-oriented features, we at the Sushi Validator forked the official chart and are hosting it on the official <a href="https://minastakingpool.connerswann.me/">Sushi Validator</a> helm repository <a href="https://github.com/Sushi-Validator/helm-charts">here</a>. </p>
@@ -270,6 +271,8 @@ NOTES:
 </code>
 </pre>
 
+<p>Once installed, we'll get a deployment that looks like this: </p>
+<p><img alt="Mina Rosetta Diagram" src="../../images/2021/mina-archive-diagram.png"></p>
 <p>We can check the deployment by viewing the currently running pods: </p>
 <pre class="line-numbers">
 <code class="language-shell">
