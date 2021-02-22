@@ -296,7 +296,7 @@ Continue? (y/N) y
 
 Constructing unsigned payment transaction... done
 
-UNSIGNED_TX = {"randomOracleInput": "0000000307CA9F7EDC5DADFD1F4C3D5673DB8A4908FEEA3BB00FA9BF630878243D1561A607CA9F7EDC5DADFD1F4C3D5673DB8A4908FEEA3BB00FA9BF630878243D1561A644E13E79A27347D407C33B2A8C2CDD8BAF4FA57FB76D8DB7FCDAA4C49ADDEABC0000025701691900000000008000000000000000A00000007FFFFFFFC00000000000000000000000000000000000000000000000000000000000000000000A000000000000000005A4640000000000", "payment": {"to": "B62qmdut1usji2NFZSn9BrywhjHakYtAvL7Mdy7muyjcbrY3hKJ688Y", "from": "B62qqYpdvJ8oUF81gZL1WfLef1Ky8SsdvmUyfpr7YWb2m2rjRxaEcxq", "fee": "10000000", "token": "1", "nonce": "2", "memo": null, "amount": "10000000", "valid_until": null}, "stakeDelegation": null, "createToken": null, "createTokenAccount": null, "mintTokens": null}
+UNSIGNED_TX = {"randomOracleInput": "", "payment": {"to": "B62qmdut1usji2NFZSn9BrywhjHakYtAvL7Mdy7muyjcbrY3hKJ688Y", "from": "B62qqYpdvJ8oUF81gZL1WfLef1Ky8SsdvmUyfpr7YWb2m2rjRxaEcxq", "fee": "10000000", "token": "1", "nonce": "2", "memo": null, "amount": "10000000", "valid_until": null}, "stakeDelegation": null, "createToken": null, "createTokenAccount": null, "mintTokens": null}
 
 Signing transaction (please confirm on Ledger device)... 
 apduMessage hex (346) = &lt;HEX_OUTPUT&gt;
