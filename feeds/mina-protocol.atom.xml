@@ -261,8 +261,8 @@ mina_ledger_wallet \
     --mina_url http://localhost:3087 \
     --fee .01 \
     42 \
-    &lt;SenderAddress&gt; \
-    &lt;ReceiverAddress&gt; \
+    SenderAddress \
+    ReceiverAddress \
     0.1
 &lt;/code&gt;
 &lt;/pre&gt;
