@@ -42,10 +42,11 @@
 
     <meta name="author" content="Conner Swann">
 
-    <meta name="tags" content="Python">
-    <meta name="tags" content="Coda">
-    <meta name="tags" content="Blockchain">
-    <meta name="tags" content="Discord Bot">
+    <meta name="tags" content="Celo">
+    <meta name="tags" content="Espero">
+    <meta name="tags" content="MPC">
+    <meta name="tags" content="SNARK">
+    <meta name="tags" content="Trusted Setup">
 
 
 
@@ -61,10 +62,11 @@
 <meta property="article:modified_time" content=""/>
 <meta property="article:author" content="https://connerswann.me/author/conner-swann">
 <meta property="article:section" content="Celo Protocol"/>
-<meta property="article:tag" content="Python"/>
-<meta property="article:tag" content="Coda"/>
-<meta property="article:tag" content="Blockchain"/>
-<meta property="article:tag" content="Discord Bot"/>
+<meta property="article:tag" content="Celo"/>
+<meta property="article:tag" content="Espero"/>
+<meta property="article:tag" content="MPC"/>
+<meta property="article:tag" content="SNARK"/>
+<meta property="article:tag" content="Trusted Setup"/>
 <meta property="og:image" content="https://connerswann.me/images/2021/celo.jpeg">
 
 <!-- Twitter Card -->
@@ -150,8 +152,8 @@
 <p>This article was designed for technical readers who are interested in doing any of the following: 
 - Someone who is going to fork Espero and run their own MPC Ceremony.
 - Someone who has participated in MPCs in the past and wants to know how Espero is <em>different</em>.
-- Someone who wants to use the outputs from Phase 1 of the Espero Ceremony and want to use it to do their own Phase 2 setup.</p>
-<p>This initial post is a general primer on Plumo and the Espero Ceremony, what they do and how it all works from both a high-level and the perspective of the Human operator of the ceremony.  Another will follow describing the strategy one must have when considering the prospect of their own Phase 2 ceremony. </p>
+- Someone who wants to use the outputs from Phase 1 of the Espero Ceremony and use it to do their own Phase 2 setup or directly use it with a universal SNARK such as PLONK and Marlin.</p>
+<p>This initial post is a general primer on Plumo and the Espero Ceremony, what they do, and how it all works — from both a high-level perspective and that of the Human operator of the ceremony.  Another post will follow describing the strategy one must have when considering the prospect of their own Phase 2 ceremony. </p>
 <h1>What is Celo?</h1>
 <p><a href="https://celo.org/">Celo</a> is a Cryptocurrency protocol that I contribute to as part of the cLabs team. cLabs's Mission is to ensure the conditions of "Financial Prosperity for all," which we are executing on by building the ecosystem's first mobile-first blockchain. For many people globally, banking and payments infrastructure is non-existent or hard to get access to -- Celo's goal is to fill that gap. </p>
 <p>In the words of <a href="https://www.coindesk.com/libra-minus-facebook-why-celo-is-2020s-buzzy-token-project">Polychain Capital President, Joe Eagan</a>, “The Celo mobile app, bringing stable payments and remittances to the unbanked, has a chance to bring broad swaths of people to the world of blockchain technology and crypto, but to also level up the economic well-being of those most in need across the globe."</p>
@@ -169,44 +171,49 @@
 <blockquote>
 <p>A Multi-Party-Computation (MPC) is a cryptographic mechanism for different parties to jointly perform a computation. SNARK circuits require a “trusted setup” where parties work together to generate shared parameters that can be used to prove and verify SNARKs. If one person ran this setup, then they could potentially prove incorrect things by exploiting a backdoor in the circuit. However, with an MPC, this setup process is split amongst tens or hundreds of contributors, and if even one of the participants is honest (keeps their inputs private), then the system will be secure.</p>
 <p>In the case of the Plumo Ceremony, this collective computation will be a series of joint actions done by a group of participants from within the Celo community and beyond. They will be working to perform an MPC that secures the SNARK proving the Plumo ultralight client protocol.</p>
+</blockquote>
+<p>Espero improves on top of the existing MPC implementations by introducing the option of optimistic parallel computation. This is possible since contributions are commutative. As in, it doesn’t matter in which order participants contribute. The elements being contributed to can also be worked on independently of each other. Utilizing these properties, Espero divides the contributions into smaller chunks on which participants work in parallel. That works well as long as all the participants contribute to all of the chunks. </p>
+<p>As usual, there’s no free lunch. If even one of the participants decides to stop contributing or maliciously makes a bad contribution, the whole group of people that contributed in parallel needs to be thrown away. There is no risk to security since everything is verifiable. This kind of trade off makes sense when the parameters size is large and you want to make quick progress, but willing to do more work as the coordinator of the setup to gain confidence that participants will complete their contribution across all the chunks.</p>
+<blockquote>
 <p>The ceremony will consist of rounds of about 6–10 participants each running the Plumo setup software for a certain period of time. Each round will last approximately 36 hours. While much of the activity is passive and involves simply running the computation on a desktop machine, for the Ceremony participants should feel confident with running commands in the terminal and destroying USB keys. This will allow participants to feel comfortable with the commitment so that the Ceremony can run smoothly.</p>
 <p>The SNARK being secured by the Plumo Ceremony is one of the most complex yet powerful SNARKs to ever be secured, and the outcome can be used not only by cLabs &amp; the Plumo construction, but also by any project that uses the BW6 curve with the Groth16 proving system or any other based on polynomial commitments. By participating in this Ceremony, participants can be part of something that is a public good, and will hopefully be used to power many more systems to come.</p>
 </blockquote>
 <h2>Architecture Diagram</h2>
-<p>Before getting in too deep, lets look at the system from a high level and identify all the major parts. Below is an architecture diagram outlining the system, including the Microsoft Azure services that were used. </p>
+<p>Before getting in too deep, let’s look at the system from a high level and identify all the major parts. Below is an architecture diagram outlining the system, including the Microsoft Azure services that were used. </p>
 <p><img alt="Espero Ceremony Architecture Diagram" src="../images/2021/espero-ceremony-architecture.png"></p>
 <p>Important Pieces: </p>
 <ul>
 <li><strong>Ceremony Coordinator:</strong> The brains of the whole ceremony, authenticates users via Public Key signatures and coordinates the metadata required to operate the ceremony efficiently. </li>
+<li><strong>Ceremony Participant:</strong> The brawn of the ceremony, it communicates via signed HTTP packets with the coordinator. It retrieves chunks to be processed and uploads them to Azure Block Storage when complete.</li>
 <li><strong>Ceremony Verifier:</strong> Communicates with the coordinator, waiting for new contributions and verifying them on the fly. </li>
 <li><strong>Ceremony Monitor:</strong> Observes changes in the Coordinator API, emitting logs that can be used for Alerting on important changes in ceremony state. </li>
 <li><strong>Azure Front Door:</strong> Used for DDoS mitigation, easy to set up. </li>
-<li><strong>Azure Storage Account:</strong> Used store and retrieve chunks, also easy to set up and use. </li>
+<li><strong>Azure Storage Account:</strong> Used to store and retrieve chunks, also easy to set up and use. </li>
 <li><strong>Kubernetes: and Helm</strong>: Used to deploy and manage the various processes that must run in order to facilitate the ceremony. </li>
-<li><strong>Terraform:</strong> Used to wire up and deploy all the various pieces of infradtructure, including Kubernetes Clusters, Load Balancers, and other cloud resources.</li>
+<li><strong>Terraform:</strong> Used to wire up and deploy all the various pieces of infrastructure, including Kubernetes Clusters, Load Balancers, and other cloud resources.</li>
 </ul>
 <h2>Okay, But How Does it <em>Work</em>?</h2>
-<p>At the end of the day, the Espero Ceremony is just a Typescript JSON API Server that responds to HTTP Requests from various other actors in the system, secured with the same public key cryptogrphy that is the basis for the Celo (and Ethereum) blockchain. Users who desire to contribute to the ceremony generate a keypair and share the public key with the Ceremony operator, then signing their HTTP requests for authentication. Optionally (but recommended), contributors may also publish an attestation to a public channel like Twitter (<a href="https://twitter.com/YourBuddyConner/status/1339663701498982400">here's mine!</a>) -- this is to ensure that all of the individuals participating are associated with unique real-world identities (or psuedo-identities) and not just one or more entities colluding. </p>
-<p>The Espero ceremony is particularly notable because it is split up into rounds, allowing a small number of participants to contribute their computations in parallel -- a novel innovation in the MPC ecosystem. Other MPC Ceremonies like the OG <a href="https://github.com/ebfull/powersoftau">Perpetual Powers of Tau</a> only allow for one participant at a time. While this architecture is not necessarily a limitation mathematically, parallelizing it does allow for larger groups to be involved at once.</p>
+<p>At the end of the day, the Espero Ceremony is a Typescript JSON API Server that responds to HTTP Requests from various other actors in the system, secured with the same public key cryptography that is the basis for the Celo (and Ethereum) blockchain. Users who desire to contribute to the ceremony generate a keypair and share the public key with the Ceremony operator, then signing their HTTP requests for authentication. Optionally (but recommended), contributors may also publish an attestation to a public channel like Twitter (<a href="https://twitter.com/YourBuddyConner/status/1339663701498982400">here's mine!</a>) -- this is to ensure that all of the individuals participating are associated with unique real-world identities (or psuedo-identities) and not just one or more entities colluding. </p>
+<p>The Espero ceremony is particularly notable because it is split up into rounds, allowing a small number of participants to contribute their computations in parallel -- a novel innovation in the MPC ecosystem. Other MPC Ceremonies like the OG <a href="https://github.com/ebfull/powersoftau">Perpetual Powers of Tau</a> only allow for one participant at a time. While this architecture is not necessarily a limitation based on pure math, parallelizing it does allow for larger groups to be involved at once.</p>
 <p>Without getting too deep into the crypto, the gist of an MPC is you download something called a "Structured Reference String," do some computation with it as input, and return the output for the next participant to operate against. It's like a giant game of <em>crypto telephone</em>, where each step along the way is 100% verifiable. The Structured Reference String consists of four vectors of varying size (see below diagram), each containing field elements from one of two Groups <code>G1</code> and <code>G2</code>. </p>
 <p>In order to facilitate multiple users in a round, the Structured Reference String is split up into many <em>chunks</em> which consist of slices of the field elements that are to be operated upon. Contributors acquire a "lock" on a chunk, download the chunk's contents, process the computation, and upload the results back to Azure to be verified. </p>
 <p>The below diagram describes logically how the chunks are split: </p>
 <p><img alt="Espero Ceremony Infographic" src="../images/2021/espero-ceremony-infographic.png"></p>
 <p>While it allows for parallelism in terms of how many users can participate, there is a major constraint to this architecture in that each chunk can only be operated upon by one participant at a time. This requires a high level of coordination by both the party operating the ceremony as well as the individual participating in the ceremony. </p>
-<p>Fortuntely, we at cLabs have provided a handy <a href="https://github.com/celo-org/snark-setup-operator">program, written in Rust</a> that can be used to contribute. Pre-compiled versions of the code are provided on Github, but it is entirely possible (and encouraged) to both read the source code and compile the binary yourself!</p>
-<p>Below, we have a sqeuence diagram that gives a high-level overview of what the contribution binary is doing when one is participating in the Plumo Setup.</p>
+<p>Fortunately, we at cLabs have provided a handy <a href="https://github.com/celo-org/snark-setup-operator">program, written in Rust</a> that can be used to contribute. Pre-compiled versions of the code are provided on Github, but it is entirely possible (and encouraged) to both read the source code and compile the binary yourself!</p>
+<p>Below, we have a sequence diagram that gives a high-level overview of what the contribution binary is doing when you participate in the Plumo Setup.</p>
 <script>window.addEventListener("message", function(e) {var i = e.data.split(":")[1];var h = e.data.split(":")[2];if (e.data.split(":")[0] == "swimlanes-io" && i && h) {document.getElementById("__sw-io-" + i).setAttribute("style","height:" + h + "px");}}, false);</script>
 <div id="__sw-io-lVHg"><iframe style="border:none; width:100%; height:100%" scrolling="no" src="https://cdn.swimlanes.io/dist/embeded.html#lVHLUoMwFN3zFecHhFofCxbOWGSYagccaPfEcC2Z0gSTsNCvN9CHdWqrLnPvedxzYoVtKERsWtIKkZJWi5fOCiVR0FtHkhMeBFtqtva8/VppXNw5tNKVkMw9Q1z6yHuCseB1J1cGZRLPEXDStFbyvfQO4Bv2XixEtEXhschSlOPRCNlTedZw7GOm+ApR77YzG5yDUFRB43a/eA7EXoOqk5b3H50mTHo1FG7Glq6tq6+skdPwfgCdcOtHJK05TnYAvfbxrBUnYzasszXc+MfZ+Q5Pf2ng26cv8tn/urj1sWgbxSpXiWmVNOR5Ulm3yaklZmFrYdBu87w6JWK8Rie3I9f9cHkfI5tnmMTJNE2naVJ+Ag==#lVHg"></iframe></div>
 
 <p>Since the ceremony coordinator is easily modelled as a traditional web service, it is trivial to then deploy it in containers to Kubernetes. For the remainder of this post, we're going to discuss the various parts of the deployment (included in the Open Source <a href="https://github.com/celo-org/snark-setup-coordinator">Espero Coordinator Repository</a>) in the hopes that it is both interesting and relevant to others who want to operate and/or extend the system. </p>
 <h2>Aside: Why Microsoft Azure?</h2>
-<p>Like any Cloud Platform, I see using Azure as a cost/benefit analysis for a given project. The major reason we at cLabs run workloads on Azure is because the Azure Hardware Security Module (HSM) supports the <code>secp256k1</code> curve that is the basis for the public key cryptography in Celo (and the Espero Ceremony!). We use this feature for transaction signing among other things, and Google Cloud Platfrom (my cloud of choice) doesn't currently support this curve in their solution (booo!). Fortunately, Azure provides a perfectly servicable (if incredibly opinionated/non-intuitive) Kubernetes environment for us to work with. </p>
-<p>Since we were already using Azure, we immediately took a couple tools off the shelf including Azure Block Storage for chunk storage, Azure Front Door for DDoS mitigation (that we haven't required thus far), and Azure Kubernetes Service for workload management. </p>
+<p>Like any Cloud Platform, I see using Azure as a cost/benefit analysis for a given project. The major reason we at cLabs run workloads on Azure is because the Azure Hardware Security Module (HSM) supports the <code>secp256k1</code> curve that is the basis for the public key cryptography in Celo (and the Espero Ceremony!). We use this feature for transaction signing among other things, and Google Cloud Platform (my cloud of choice) doesn't currently support this curve in their solution (booo!). Fortunately, Azure provides a perfectly serviceable (if incredibly opinionated/non-intuitive) Kubernetes environment for us to work with. </p>
+<p>Since we were already using Azure, we immediately took a couple tools off the shelf, including Azure Block Storage for chunk storage, Azure Front Door for DDoS mitigation (that we haven't required thus far), and Azure Kubernetes Service for workload management. </p>
 <h2>The Lifecycle of a Ceremony</h2>
-<p>Because there is some human intervention required in the Espero Ceremony, an additional actor is introduced called the <code>Operator</code>. This entity, like the other actors in the system, authenticate to the Coordinator via private key. The entire lifecycle of the ceremony is managed by the <code>Coordinator</code> and administered by the <code>Operator</code> including adding/removing participants, verifying each round, and transitioning between rounds.</p>
-<p>The operator commands are located in the control binary, lets walk through initialization and the first round: </p>
+<p>Because there is some human intervention required in the Espero Ceremony, an additional actor is introduced called the <code>Operator</code>. This entity, like the other actors in the system, authenticates to the Coordinator via private key. The entire lifecycle of the ceremony is managed by the <code>Coordinator</code> and administered by the <code>Operator</code>, including adding/removing participants, verifying each round, and transitioning between rounds.</p>
+<p>The operator commands are located in the control binary — so now let’s walk through initialization and the first round: </p>
 <h3>Ceremony Initialization</h3>
-<p>At the very beginninng of the ceremony, chunks must be created and uploaded to Azure Block Storage. These make up the initial challenges that each participant in Round 0 will download, compute against, and re-upload. </p>
+<p>At the very beginning of the ceremony, chunks must be created and uploaded to Azure Block Storage. These make up the initial challenges that each participant in Round 0 will download, compute against, and re-upload. </p>
 <h3>Contributor Enrollment</h3>
 <p>The first thing we need to do after initializing the ceremony is add participants. We can do this by using the <code>add-participant</code> method, passing an address generated via the <code>generate</code> binary as the <code>--participant-id</code> argument. </p>
 <pre class="line-numbers">
@@ -241,7 +248,7 @@ add-participant \
 </pre>
 
 <h3>Alerting on Ceremony State</h3>
-<p>The Ceremony is structured such that participants are capable of shipping errors to the Cooridinator, notifying the Ceremony organizers of potential issues. The most common problem that pops up is simple networking issues, like localized DNS inconsistencies or global network partitions. These error logs are shipped to the Coordinator and show up in its logs to be consumed by alerting tools like the Azure Log Analytics Workspace. </p>
+<p>The Ceremony is structured such that participants are capable of shipping errors to the Coordinator, thereby notifying the Ceremony organizers of potential issues. The most common problem that pops up is simple networking issues, like localized DNS inconsistencies or global network partitions. These error logs are shipped to the Coordinator and show up in its logs to be consumed by alerting tools like the Azure Log Analytics Workspace. </p>
             </section>
 
             <section class="post-info">
@@ -259,7 +266,7 @@ add-participant \
                 </div>
 
                 <aside class="post-tags">
-<a href="https://connerswann.me/tag/python">Python</a><a href="https://connerswann.me/tag/coda">Coda</a><a href="https://connerswann.me/tag/blockchain">Blockchain</a><a href="https://connerswann.me/tag/discord-bot">Discord Bot</a>                </aside>
+<a href="https://connerswann.me/tag/celo">Celo</a><a href="https://connerswann.me/tag/espero">Espero</a><a href="https://connerswann.me/tag/mpc">MPC</a><a href="https://connerswann.me/tag/snark">SNARK</a><a href="https://connerswann.me/tag/trusted-setup">Trusted Setup</a>                </aside>
 
                 <div class="clear"></div>
 
