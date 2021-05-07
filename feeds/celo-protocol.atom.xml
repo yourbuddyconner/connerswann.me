@@ -9,7 +9,7 @@
 &lt;li&gt;Someone who is going to fork Espero and run their own MPC Ceremony.&lt;/li&gt;
 &lt;li&gt;Someone who has participated in MPCs in the past and wants to know how Espero is &lt;em&gt;different&lt;/em&gt;.&lt;/li&gt;
 &lt;li&gt;Someone who wants to use the outputs from Phase 1 of the Espero Ceremony and use it to do their own Phase 2 setup &lt;/li&gt;
-&lt;li&gt;Someone who use the output of Phase 1 with a universal SNARK such as PLONK or Marlin.&lt;/li&gt;
+&lt;li&gt;Someone who wants to use the output of Phase 1 with a universal SNARK such as PLONK or Marlin.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;This initial post is a general primer on Plumo and the Espero Ceremony, what they do, and how it all works — from both a high-level perspective and that of the Human operator of the ceremony.  Another post will follow describing the strategy one must have when considering the prospect of their own Phase 2 ceremony. &lt;/p&gt;
 &lt;h2&gt;Want To Get Involved?&lt;/h2&gt;
