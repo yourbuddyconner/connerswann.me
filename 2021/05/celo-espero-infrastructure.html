@@ -188,7 +188,7 @@
 <p>Important Pieces: </p>
 <ul>
 <li><strong>Ceremony Coordinator:</strong> The brains of the whole ceremony, authenticates users via Public Key signatures and coordinates the metadata required to operate the ceremony efficiently. </li>
-<li><strong>Ceremony Participant:</strong> The brawn of the ceremony, it communicates via signed HTTP packets with the coordinator. It retrieves chunks to be processed and uploads them to Azure Block Storage when complete.</li>
+<li><strong>Ceremony Contributor:</strong> The brawn of the ceremony, it communicates via signed HTTP packets with the coordinator. It retrieves chunks to be processed and uploads them to Azure Block Storage when complete.</li>
 <li><strong>Ceremony Verifier:</strong> Communicates with the coordinator, waiting for new contributions and verifying them on the fly. </li>
 <li><strong>Ceremony Monitor:</strong> Observes changes in the Coordinator API, emitting logs that can be used for Alerting on important changes in ceremony state. </li>
 <li><strong>Azure Front Door:</strong> Used for DDoS mitigation, easy to set up. </li>
