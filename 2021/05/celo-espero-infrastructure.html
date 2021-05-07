@@ -181,7 +181,7 @@
 </blockquote>
 <h2>Architecture Diagram</h2>
 <p>Before getting in too deep, let’s look at the system from a high level and identify all the major parts. Below is an architecture diagram outlining the system, including the Microsoft Azure services that were used. </p>
-<p><img alt="Espero Ceremony Architecture Diagram" src="../images/2021/espero-ceremony-architecture.png"></p>
+<p><img alt="Espero Ceremony Architecture Diagram" src="../../images/2021/espero-ceremony-architecture.png"></p>
 <p>Important Pieces: </p>
 <ul>
 <li><strong>Ceremony Coordinator:</strong> The brains of the whole ceremony, authenticates users via Public Key signatures and coordinates the metadata required to operate the ceremony efficiently. </li>
@@ -199,7 +199,7 @@
 <p>Without getting too deep into the crypto, the gist of an MPC is you download something called a "Structured Reference String," do some computation with it as input, and return the output for the next participant to operate against. <strong>It's like a giant game of <em>crypto telephone</em>, where each step along the way is 100% verifiable.</strong> The Structured Reference String consists of four vectors of varying size (see below diagram), each containing field elements from one of two Groups <code>G1</code> and <code>G2</code>. </p>
 <p>In order to facilitate multiple users in a round, the Structured Reference String is split up into many <em>chunks</em> which consist of slices of the field elements that are to be operated upon. Contributors acquire a "lock" on a chunk, download the chunk's contents, process the computation, and upload the results back to Azure to be verified. </p>
 <p>The below diagram describes logically how the chunks are split: </p>
-<p><img alt="Espero Ceremony Infographic" src="../images/2021/espero-ceremony-infographic.png"></p>
+<p><img alt="Espero Ceremony Infographic" src="../../images/2021/espero-ceremony-infographic.png"></p>
 <p>While it allows for parallelism in terms of how many users can participate, there is a major constraint to this architecture in that each chunk can only be operated upon by one participant at a time. This requires a high level of coordination by both the party operating the ceremony as well as the individual participating in the ceremony. </p>
 <p>Fortunately, we at cLabs have provided a handy <a href="https://github.com/celo-org/snark-setup-operator">program, written in Rust</a> that can be used to contribute. Pre-compiled versions of the code are provided on Github, but it is entirely possible (and encouraged) to both read the source code and compile the binary yourself!</p>
 <p>Below, we have a sequence diagram that gives a high-level overview of what the contribution binary is doing when you participate in the Plumo Setup.</p>
