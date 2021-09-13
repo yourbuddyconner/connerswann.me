@@ -190,9 +190,11 @@
 <p>First, we need to authorize the Token Bridge to spend our tokens on our behalf. In order to do this, we need to let the Token Contract know via the <code>approve</code> method on the contract (a part of the ERC-20 standard). </p>
 <p>In order to view the implementation details of a contract, select the "Contract" tab. Note: The green checkmark indicates that the source code of the contract has been verified on Etherscan. </p>
 <p><img alt="Contract Details Button" src="../images/2021/how2ape/contract-details-button.png"></p>
-<p>The token addresses for my favorite ETH Tokens are below: 
-- <a href="https://etherscan.io/address/0xdac17f958d2ee523a2206206994597c13d831ec7">USDT</a>
-- <a href="https://etherscan.io/token/0x6b3595068778dd592e39a122f4f5a5cf09c90fe2">SUSHI</a></p>
+<p>The token addresses for my favorite ETH Tokens are below: </p>
+<ul>
+<li><a href="https://etherscan.io/address/0xdac17f958d2ee523a2206206994597c13d831ec7">USDT</a></li>
+<li><a href="https://etherscan.io/token/0x6b3595068778dd592e39a122f4f5a5cf09c90fe2">SUSHI</a></li>
+</ul>
 <p>For the purposes of this blog post we will be bridging USDT, however the process will be nearly identical for any ERC-20 token. </p>
 <h2>Step Two: Locate the Bridge Router Contract</h2>
 <p>As mentioned in the previous section, bridge contract addresses on each blockchain can be found <a href="https://github.com/celo-org/optics-monorepo/tree/main/rust/config/mainnet/bridge/1631143085018">here</a>. </p>
@@ -201,13 +203,17 @@
 <h1>Step Three: Understand the Token's Approve Method</h1>
 <p>Click around the Etherscan UI until you have the approve method expanded. </p>
 <p><img alt="Approve ERC-20 Transfer" src="../images/2021/how2ape/approve-erc-20.png"></p>
-<p>The ERC-20 <code>approve</code> method takes two arguments: 
-- <code>_spender</code> - The address which we want to grant the ability to spend our tokens
-- <code>_value</code> - The number of tokens we want to grant the ability to spend, denominated <strong>in that token's smallest unit</strong>. For most tokens this is 10^18, however for USDT it is 10^6! The <code>+</code> button will help you fill in the right number. </p>
+<p>The ERC-20 <code>approve</code> method takes two arguments:</p>
+<ul>
+<li><code>_spender</code> - The address which we want to grant the ability to spend our tokens</li>
+<li><code>_value</code> - The number of tokens we want to grant the ability to spend, denominated <strong>in that token's smallest unit</strong>. For most tokens this is 10^18, however for USDT it is 10^6! The <code>+</code> button will help you fill in the right number. </li>
+</ul>
 <p>Note: approving too much is usually ok, but not approving enough will cause the next transaction to fail. </p>
-<p>Example values we will use here are as follows: 
-- <code>_spender</code>: <code>0x6a39909e805A3eaDd2b61fFf61147796ca6aBB47</code>
-- <code>_amount</code>: <code>10000000</code></p>
+<p>Example values we will use here are as follows: </p>
+<ul>
+<li><code>_spender</code>: <code>0x6a39909e805A3eaDd2b61fFf61147796ca6aBB47</code></li>
+<li><code>_amount</code>: <code>10000000</code></li>
+</ul>
 <p>This will authorize the BridgeRouter to spend <code>10 USDT</code>. </p>
 <h2>Step Two: Locate the BridgeRouter's "Send" Method</h2>
 <p>As mentioned, the contract we're looking at is a proxy, so we want to write to it using the "Write as Proxy" feature.  </p>
@@ -258,14 +264,22 @@
 <h2>Step Five: APE!</h2>
 <p>Now, we can put it all together. </p>
 <ol>
-<li>Authorize BridgeRouter to spend your USDT via <a href="https://etherscan.io/address/0xdac17f958d2ee523a2206206994597c13d831ec7#writeContract">USDT Contract</a></li>
-<li><code>_spender</code>: <code>0x6a39909e805A3eaDd2b61fFf61147796ca6aBB47</code> // Ethereum BridgeRouter Address</li>
+<li>
+<p>Authorize BridgeRouter to spend your USDT via <a href="https://etherscan.io/address/0xdac17f958d2ee523a2206206994597c13d831ec7#writeContract">USDT Contract</a></p>
+</li>
+<li>
+<p><code>_spender</code>: <code>0x6a39909e805A3eaDd2b61fFf61147796ca6aBB47</code> // Ethereum BridgeRouter Address</p>
+</li>
 <li><code>_amount</code>: <code>10000000</code> // 10 USDT</li>
 </ol>
 <p><img alt="Authorize USDT" src="../images/2021/how2ape/authorize-usdt.png"></p>
 <ol>
-<li>Send Tokens via <a href="https://etherscan.io/address/0x6a39909e805A3eaDd2b61fFf61147796ca6aBB47#writeProxyContract">BridgeRouter Contract</a></li>
-<li><code>_token</code>: <code>0xdac17f958d2ee523a2206206994597c13d831ec7</code> // USDT Contract Address</li>
+<li>
+<p>Send Tokens via <a href="https://etherscan.io/address/0x6a39909e805A3eaDd2b61fFf61147796ca6aBB47#writeProxyContract">BridgeRouter Contract</a></p>
+</li>
+<li>
+<p><code>_token</code>: <code>0xdac17f958d2ee523a2206206994597c13d831ec7</code> // USDT Contract Address</p>
+</li>
 <li><code>_amount</code>: <code>10000000</code> // 10 USDT</li>
 <li><code>_destination</code>: <code>1667591279</code> // CELO Domain </li>
 <li><code>_recipient</code>: <code>0x0000000000000000000000006a39909e805A3eaDd2b61fFf61147796ca6aBB47</code> // <strong>Please for the love of Ape -- use your own address here</strong></li>
