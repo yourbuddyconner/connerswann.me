@@ -150,7 +150,7 @@
             <section class="post-content">
                 <h1>Optics is Here</h1>
 <p>Optics is a new optimistic multi-chain communication standard developed by the Optics Core team at cLabs. <a href="https://medium.com/celoorg/optics-is-here-42aa610675ce">Check out the release blog post on the Celo Medium blog here!</a> </p>
-<p>This release coincides with <a href="https://www.defiforthepeople.org/">Defi For the People</a>, a truly massive incentive campaign that aims to attract dApp developers to the Celo Ecosystem along with their killer dApps!</p>
+<p>This release coincides with <a href="https://www.defiforthepeople.org/">DeFi For the People</a>, a truly massive incentive campaign that aims to attract dApp developers to the Celo Ecosystem along with their killer dApps!</p>
 <p>Now that Optics has been deployed to Mainnet Ethereum, Celo, and Polygon, many are asking the obvious question: </p>
 <p><strong>"Brother, how do I Ape?"</strong></p>
 <p>Read on dear Primate Friend, for in this blog post we will go over how to send ERC-20 tokens over the Optics bridge <em>(and be ready to take advantage of the soon-to-be-announced liquidity incentives)</em> via Etherscan in lieu of a dedicated Optics GUI (which is actively in development!). </p>
@@ -175,7 +175,7 @@
 <p><img alt="Optics Architecture" src="../images/2021/Optics-Architecture.png"></p>
 <h2>The Home Contract</h2>
 <p>The Home contract is a hub of one-way communication between itself and replica contracts on an arbitrary number of remote blockchains. Messages are persisted to the Home blockchain by a "Cross-Chain App" (aka a xApp), and ferried to the replicas by a series of <em>off-chain agents</em>. It is important to note that message-passing <em>is not instantaneous</em>, as there is a ~3-hour dispute period, in addition to any confirmation time on the home chain, to see messages processed on a replica chain. </p>
-<p>Contract addresses for the mainnet Home and other core contracts can be found in the Optics Github Repository <a href="https://github.com/celo-org/optics-monorepo/tree/main/rust/config/mainnet">here</a></p>
+<p>Contract addresses for the mainnet Home and other core contracts can be found in the Optics Github Repository <a href="https://github.com/celo-org/optics-monorepo/tree/main/rust/config/mainnet">here</a>.</p>
 <h2>The Token Bridge</h2>
 <p>Now that we know roughly how an Optics channel works, we can go over the most important piece to a quickly evolving Bridge Ape -- The Token Bridge. </p>
 <p>The Token Bridge is a xApp, the first of its kind in the Optics Ecosystem, that facilitates token transfers between blockchains. If you know how to call its methods via Etherscan, you can send tokens across the bridge. </p>
