@@ -7,14 +7,14 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 
 
-  <title>Optics: How to Ape With Etherscan</title>
+  <title>Optics: How to Ape ERC-20 Tokens With Etherscan</title>
 
 
   <meta name="HandheldFriendly" content="True" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="referrer" content="origin" />
   <meta name="generator" content="Pelican" />
-<link href="https://connerswann.me/drafts/optics-ape-with-etherscan.html" rel="canonical" />
+<link href="https://connerswann.me/drafts/optics-ape-erc20-etherscan.html" rel="canonical" />
   <!-- Feed -->
         <link href="https://connerswann.me/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Conner Swann Full Atom Feed" />
           <link href="https://connerswann.me/feeds/{slug}.atom.xml" type="application/atom+xml" rel="alternate" title="Conner Swann Categories Atom Feed" />
@@ -46,16 +46,17 @@
     <meta name="tags" content="Celo">
     <meta name="tags" content="Etherscan">
     <meta name="tags" content="Apes Together Strong">
+    <meta name="tags" content="ERC-20">
 
 
 
 
 <!-- Open Graph -->
 <meta property="og:site_name" content="Conner Swann"/>
-<meta property="og:title" content="Optics: How to Ape With Etherscan"/>
+<meta property="og:title" content="Optics: How to Ape ERC-20 Tokens With Etherscan"/>
 <meta property="og:description" content="Optics is Here Optics is a new optimistic multi-chain communication standard developed by the Optics Core team at cLabs. Check out the..."/>
 <meta property="og:locale" content="en_US"/>
-<meta property="og:url" content="https://connerswann.me/drafts/optics-ape-with-etherscan.html"/>
+<meta property="og:url" content="https://connerswann.me/drafts/optics-ape-erc20-etherscan.html"/>
 <meta property="og:type" content="article"/>
 <meta property="article:published_time" content="2021-01-22 00:00:00-08:00"/>
 <meta property="article:modified_time" content=""/>
@@ -65,13 +66,14 @@
 <meta property="article:tag" content="Celo"/>
 <meta property="article:tag" content="Etherscan"/>
 <meta property="article:tag" content="Apes Together Strong"/>
+<meta property="article:tag" content="ERC-20"/>
 <meta property="og:image" content="https://connerswann.me/images/2021/optics-hero.jpeg">
 
 <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@yourbuddyconner">
-    <meta name="twitter:title" content="Optics: How to Ape With Etherscan">
-    <meta name="twitter:url" content="https://connerswann.me/drafts/optics-ape-with-etherscan.html">
+    <meta name="twitter:title" content="Optics: How to Ape ERC-20 Tokens With Etherscan">
+    <meta name="twitter:url" content="https://connerswann.me/drafts/optics-ape-erc20-etherscan.html">
 
         <meta name="twitter:image:src" content="https://connerswann.me/images/2021/optics-hero.jpeg">
 
@@ -81,8 +83,8 @@
 {
   "@context": "http://schema.org",
   "@type": "Article",
-  "name": "Optics: How to Ape With Etherscan",
-  "headline": "Optics: How to Ape With Etherscan",
+  "name": "Optics: How to Ape ERC-20 Tokens With Etherscan",
+  "headline": "Optics: How to Ape ERC-20 Tokens With Etherscan",
   "datePublished": "2021-01-22 00:00:00-08:00",
   "dateModified": "",
   "author": {
@@ -91,7 +93,7 @@
     "url": "https://connerswann.me/author/conner-swann"
   },
   "image": "https://connerswann.me/images/2021/optics-hero.jpeg",
-  "url": "https://connerswann.me/drafts/optics-ape-with-etherscan.html",
+  "url": "https://connerswann.me/drafts/optics-ape-erc20-etherscan.html",
   "description": "Optics is Here Optics is a new optimistic multi-chain communication standard developed by the Optics Core team at cLabs. Check out the..."
 }
 </script>
@@ -127,7 +129,7 @@
             <a class="menu-button"><i class="ic ic-menu"></i> Menu</a>
           </span>
         </nav>
-        <h1 class="post-title">Optics: How to Ape With Etherscan</h1>
+        <h1 class="post-title">Optics: How to Ape ERC-20 Tokens With Etherscan</h1>
         <!-- TODO : Proper class for headline -->
         <span class="post-meta">
                 <a href="https://connerswann.me/author/conner-swann">Conner Swann</a>
@@ -150,39 +152,64 @@
 <p>Optics is a new optimistic multi-chain communication standard developed by the Optics Core team at cLabs. <a href="https://medium.com/celoorg/optics-is-here-42aa610675ce">Check out the release blog post!</a> This release coincides with <a href="https://www.defiforthepeople.org/">Defi For the People</a>, a truly massive incentive campaign that aims to attract dApp developers to the Celo Ecosystem along with their killer dApps!</p>
 <p>Now that Optics has been deployed to Mainnet Ethereum, Celo, and Polygon, many are asking the obvious question: </p>
 <p><strong>"How do I Ape?"</strong></p>
-<p>Read on dear Ape, for in this blog post we will go over how to send tokens over the Optics bridge <em>(and be ready to take advantage of the soon-to-be-announced liquidity incentives)</em> via Etherscan in lieu of a dedicated Optics GUI (which is actively in development!). </p>
+<p>Read on dear Ape, for in this blog post we will go over how to send ERC-20 tokens over the Optics bridge <em>(and be ready to take advantage of the soon-to-be-announced liquidity incentives)</em> via Etherscan in lieu of a dedicated Optics GUI (which is actively in development!). </p>
+<p>Note: Bridging native assets (like ETH and MATIC) involves a slightly different (but very similar) process and will be discussed in a subsequent blog post.</p>
 <p><img alt="2001 Astronaut" src="../images/2021/2001-astronaut.png"></p>
 <p><strong>READ THIS NOTE:</strong>  ⚠️ <em>Optics is still an experimental technology. We are deploying it for the first time in mainnet environments, so it’s important to carefully evaluate the risks and only transact with funds you’re willing to play with!</em> ⚠️</p>
 <h1>What We Need To Know</h1>
-<p><em>Did you read the note in the previous section? Good.</em></p>
-<p>Optics is a highly complex mesh of inter-connected smart contracts, which we will mostly be glossing over in favor of aping tokens onto the bridge and reaching multi-chain enlightenment as fast as possible. If you are interested in learning more (and you <em>should be</em>), here are some links to the Optics documentation in the github repo: </p>
+<p><strong>NOTE:</strong> <em>Did you read the notes in the previous section? Good.</em></p>
+<p>Optics is a highly complex mesh of inter-connected smart contracts, which we will mostly be glossing over in favor of aping ERC-20 tokens onto the bridge and reaching multi-chain enlightenment as fast as possible. If you are interested in learning more (and you <em>should be</em>), here are some links to the Optics documentation in the github repo: </p>
 <ul>
 <li><a href="https://github.com/celo-org/optics-monorepo/tree/main/docs">Optics Overview</a></li>
 <li><a href="https://github.com/celo-org/optics-monorepo/blob/main/docs/architecture.md">Optics Channel Architecture</a></li>
 <li><a href="https://github.com/celo-org/optics-monorepo/blob/main/docs/xapps/token-bridge.md">Optics Token Bridge xApp</a></li>
 </ul>
-<p>Now, lets talk about the parts we need to know about. </p>
+<p>At a high-level we will need to do the following: 
+1. Authorize the Bridge to spend your tokens. 
+2. Call the bridge to send your tokens.
+3. Wait patiently! </p>
+<p>Now, lets get a little clarity about the parts we need to know about. </p>
 <p><img alt="Optics Architecture" src="../images/2021/Optics-Architecture.png"></p>
 <h2>The Home Contract</h2>
-<p>The Home contract is the hub of one-way communication between the blockchain it is deployed to, and replica contracts on an arbitrary number of remote blockchains. Messages are persisted to the Home blockchain by a "Cross-Chain App" (aka a xApp), and ferried to the replicas by a series of <em>off-chain agents</em>. It is important to note that message-passing <em>is not instantaneous</em>, as there is a ~3-hour dispute period in addition to any confirmation time on the home chain to see messages processed on a replica chain. </p>
-<p>Contract addresses for the mainnet Home and other core contracts can be found in the Optics Repository <a href="https://github.com/celo-org/optics-monorepo/tree/main/rust/config/mainnet">here</a></p>
+<p>The Home contract is the hub of one-way communication between the blockchain it is deployed to, and replica contracts on an arbitrary number of remote blockchains. Messages are persisted to the Home blockchain by a "Cross-Chain App" (aka a xApp), and ferried to the replicas by a series of <em>off-chain agents</em>. It is important to note that message-passing <em>is not instantaneous</em>, as there is a ~3-hour dispute period, in addition to any confirmation time on the home chain, to see messages processed on a replica chain. </p>
+<p>Contract addresses for the mainnet Home and other core contracts can be found in the Optics Github Repository <a href="https://github.com/celo-org/optics-monorepo/tree/main/rust/config/mainnet">here</a></p>
 <h2>The Token Bridge</h2>
 <p>Now that we know roughly how an Optics channel works, we can go over the most important piece to a quickly evolving Bridge Ape -- The Token Bridge. </p>
 <p>The Token Bridge is a xApp, the first of its kind in the Optics Ecosystem, that facilitates token transfers between blockchains. If you know how to call its methods via Etherscan, you can send tokens across the bridge. </p>
 <p>Contract addresses for the various components of the Token Bridge can be found <a href="https://github.com/celo-org/optics-monorepo/tree/main/rust/config/mainnet/bridge/1631143085018">here</a></p>
+<h2>The ERC-20 Token</h2>
+<p>The <a href="https://ethereum.org/en/developers/docs/standards/tokens/erc-20/">ERC-20 Token Standard</a> is an ingenious design that allows anyone to produce a fungible token that can fulfil a variety of functions. These tokens are programmable and composable, allowing for basic things like transfers between accounts and balance inquiries, but also complex functionality like the ability to approve that an amount can be spent on behalf of a holder by a third party account. </p>
+<p>The Optics Token Bridge facilitates the transfer of ERC-20 Tokens between blockchains. It does this by withdrawing the bridged token via the approval functionality (which we will discuss in detail in the next section), locking the token on the originating chain, and issuing an equivalent ERC-20 on the destination blockchain. </p>
 <h2>Etherscan</h2>
-<p>Etherscan is a <em>great tool</em> for the Ethereum ecosystem. One well-known feature to DeFi Apes is the ability to natively call smart contract methods for any <em>verified</em> smart contract via a Metamask integration. We can utilize this functionality to our benefit to send tokens from Ethereum to Celo. </p>
-<p>It is important to note that this functionality is available on any blockchain where Etherscan is deployed. Since Etherscan is not deployed to Celo, you will not be able to send your tokens back to the originating chain until the GUI is released. But, you didn't want to send them back anyways, right? </p>
+<p>Etherscan is a <em>great tool</em> for the Ethereum ecosystem. One feature that is well-known to DeFi Apes is the ability to natively call smart contract methods for any smart contract via a Metamask integration. We can utilize this functionality to our benefit to send tokens from Ethereum to Celo. </p>
+<p>It is important to note that this functionality is available on any blockchain where Etherscan is deployed. Since Etherscan is not deployed to Celo, you will not be able to send your tokens back to the originating chain via Metamask until the Optics GUI is released. But, <em>you didn't want to send them back anyways, right?</em> </p>
 <h1>I am Become Bridge Ape</h1>
-<p>We're almost to the point where we have enough information to become one with the bridge and achieve enlightenment. </p>
+<p>We're <em>almost</em> to the point where we have enough information to become one with the bridge and achieve enlightenment. </p>
 <p><img alt="Optics Obelisk" src="../images/2021/obelisk.png"></p>
-<h2>Step One: Locate the Bridge Router Contract</h2>
+<h2>Step One: Locate the Contract for the Token You're Bridging</h2>
+<p>First, we need to authorize the Token Bridge to spend our tokens on our behalf. In order to do this, we need to let the Token Contract know via the <code>approve</code> method on the contract (a part of the ERC-20 standard). </p>
+<p>In order to view the implementation details of a contract, select the "Contract" tab. Note: The green checkmark indicates that the source code of the contract has been verified on Etherscan. </p>
+<p><img alt="Contract Details Button" src="../images/2021/how2ape/contract-details-button.png"></p>
+<p>The token addresses for my favorite ETH Tokens are below: 
+- <a href="https://etherscan.io/address/0xdac17f958d2ee523a2206206994597c13d831ec7">USDT</a>
+- <a href="https://etherscan.io/token/0x6b3595068778dd592e39a122f4f5a5cf09c90fe2">SUSHI</a></p>
+<p>For the purposes of this blog post we will be bridging USDT, however the process will be nearly identical for any ERC-20 token. </p>
+<h2>Step Two: Locate the Bridge Router Contract</h2>
 <p>As mentioned in the previous section, bridge contract addresses on each blockchain can be found <a href="https://github.com/celo-org/optics-monorepo/tree/main/rust/config/mainnet/bridge/1631143085018">here</a>. </p>
 <p>Optics is deployed in an upgradeable configuration, with <em>implementation contracts</em> being pointed to by <em>proxy contracts</em>. This allows us to upgrade the contract implementation via governance without having to migrate contract state (which lives in the proxy). </p>
 <p>We want to interact with the BridgeRouter proxy contract which can be found on Etherscan <a href="https://etherscan.io/address/0x6a39909e805A3eaDd2b61fFf61147796ca6aBB47">here</a>. </p>
-<h2>Step Two: Locate the "Send" Method</h2>
-<p>In order to view the implementation details of a contract, select the "Contract" tab. Note: The green checkmark indicates that the source code of the contract has been verified on Etherscan. </p>
-<p><img alt="Contract Details Button" src="../images/2021/how2ape/contract-details-button.png"></p>
+<h1>Step Three: Understand the Token's Approve Method</h1>
+<p>Click around the Etherscan UI until you have the approve method expanded. </p>
+<p><img alt="Approve ERC-20 Transfer" src="../images/2021/how2ape/approve-erc-20.png"></p>
+<p>The ERC-20 <code>approve</code> method takes two arguments: 
+- <code>_spender</code> - The address which we want to grant the ability to spend our tokens
+- <code>_value</code> - The number of tokens we want to grant the ability to spend, denominated <strong>in that token's smallest unit</strong>. For most tokens this is 10^18, however for USDT it is 10^6! The <code>+</code> button will help you fill in the right number. </p>
+<p>Note: approving too much is usually ok, but not approving enough will cause the next transaction to fail. </p>
+<p>Example values we will use here are as follows: 
+- <code>_spender</code>: <code>0x6a39909e805A3eaDd2b61fFf61147796ca6aBB47</code>
+- <code>_amount</code>: <code>10000000</code></p>
+<p>This will authorize the BridgeRouter to spend <code>10 USDT</code>. </p>
+<h2>Step Two: Locate the BridgeRouter's "Send" Method</h2>
 <p>As mentioned, the contract we're looking at is a proxy, so we want to write to it using the "Write as Proxy" feature.  </p>
 <p><img alt="Write as Proxy" src="../images/2021/how2ape/write-as-proxy-button.png"></p>
 <p>There is a list of methods available to us, the important one to a Bridge Ape is the <code>send</code> method. </p>
@@ -192,31 +219,26 @@
 <p>There are a series of parameters for the send method which we will have to fill out in order to Ape tokens across the bridge. </p>
 <p><img alt="Send Method Details" src="../images/2021/how2ape/send-method-details.png"></p>
 <ul>
-<li><code>_token</code> - The Contract Address of the ERC-20 token which we will be bridging</li>
-<li><code>_amount</code> - The amount of the token to send in wei, 10^18</li>
-<li><code>_destination</code> - The domain of the destination chain, domains can be found in the <a href="https://github.com/celo-org/optics-monorepo/blob/main/rust/config/mainnet/ethereum_config.json#L21-L42">replica configuration on Github</a></li>
-<li><code>_recipient</code> - The address of the recipient on the remote chain, bridged tokens will be sent to this address</li>
+<li><code>_token</code> - The Contract Address of the ERC-20 token which we will be bridging.</li>
+<li><code>_amount</code> - The amount of the token to send, denominated <strong>in that token's smallest unit</strong>.</li>
+<li><code>_destination</code> - The domain of the destination chain. Domain IDs are like phone numbers, they are unique to each chain. </li>
+<li>A list of domains IDs can be found in the <a href="https://github.com/celo-org/optics-monorepo/blob/main/rust/config/mainnet/ethereum_config.json#L21-L42">Ethereum replica configuration on Github</a>. </li>
+<li>After examining that, we know that Celo's domain ID is <code>1667591279</code>. </li>
+<li><code>_recipient</code> - The address of the recipient on the remote chain, bridged tokens will be sent to this address. </li>
+<li>To help support future chains with longer addresses, Optics uses 32-byte addresses. </li>
+<li>To convert an Ethereum, Celo, or Polygon address to bytes32 you can add 24 0's after the 0x Prefix. <ul>
+<li><code>0x6a39909e805A3eaDd2b61fFf61147796ca6aBB47</code> would become</li>
+<li><code>0x0000000000000000000000006a39909e805A3eaDd2b61fFf61147796ca6aBB47</code></li>
 </ul>
-<p>Example Parameters for Bridging ETH from Ethereum to Celo are as follows: </p>
-<ul>
-<li><code>_token</code>: </li>
-<li><code>_amount</code>: </li>
-<li><code>_destination</code>: <code>1667591279</code></li>
-<li><code>_recipient</code>: </li>
+</li>
 </ul>
-<p>Example Parameters for Bridging SUSHI from Ethereum to Celo are as follows: </p>
-<ul>
-<li><code>_token</code>: </li>
-<li><code>_amount</code>: </li>
-<li><code>_destination</code>: <code>1667591279</code></li>
-<li><code>_recipient</code>: </li>
-</ul>
+<p><em>NOTE: Do not use the example recipient address in the following examples, make sure to use an address you control or else you will lose access to yor bridged tokens.</em></p>
 <p>Example Parameters for Bridging USDT from Ethereum to Celo are as follows: </p>
 <ul>
-<li><code>_token</code>: </li>
-<li><code>_amount</code>: </li>
+<li><code>_token</code>: <code>0xdac17f958d2ee523a2206206994597c13d831ec7</code></li>
+<li><code>_amount</code>: <code>10000000</code> // 10 USDT</li>
 <li><code>_destination</code>: <code>1667591279</code></li>
-<li><code>_recipient</code>: </li>
+<li><code>_recipient</code>: <code>0x0000000000000000000000006a39909e805A3eaDd2b61fFf61147796ca6aBB47</code></li>
 </ul>
 <h2>Step Four: Connect Metamask</h2>
 <p>Using the Metamask integration within Etherscan, we can use the parameters above to submit a transaction that sends bridged tokens. </p>
@@ -235,25 +257,43 @@
 <p>If all of this was successful, <em>you are ready for true Enlightenment</em>.</p>
 <h2>Step Five: APE!</h2>
 <p>Now, we can put it all together. </p>
-<p>// TODO </p>
+<ol>
+<li>Authorize BridgeRouter to spend your USDT via <a href="https://etherscan.io/address/0xdac17f958d2ee523a2206206994597c13d831ec7#writeContract">USDT Contract</a></li>
+<li><code>_spender</code>: <code>0x6a39909e805A3eaDd2b61fFf61147796ca6aBB47</code> // Ethereum BridgeRouter Address</li>
+<li><code>_amount</code>: <code>10000000</code> // 10 USDT</li>
+</ol>
+<p><img alt="Authorize USDT" src="../images/2021/how2ape/authorize-usdt.png"></p>
+<ol>
+<li>Send Tokens via <a href="https://etherscan.io/address/0x6a39909e805A3eaDd2b61fFf61147796ca6aBB47#writeProxyContract">BridgeRouter Contract</a></li>
+<li><code>_token</code>: <code>0xdac17f958d2ee523a2206206994597c13d831ec7</code> // USDT Contract Address</li>
+<li><code>_amount</code>: <code>10000000</code> // 10 USDT</li>
+<li><code>_destination</code>: <code>1667591279</code> // CELO Domain </li>
+<li><code>_recipient</code>: <code>0x0000000000000000000000006a39909e805A3eaDd2b61fFf61147796ca6aBB47</code> // <strong>Please for the love of Ape -- use your own address here</strong></li>
+</ol>
+<p><img alt="Send USDT" src="../images/2021/how2ape/send-usdt.png"></p>
+<h2>Step Six: Wait Patiently</h2>
+<p>Through your hard work and understanding the heavens have aligned  -- You see Bridge Nirvana. You are now one with The Bridge. Your universal consciousness has become untethered from the worldly shackles of one particular blockchain and you can now be <em>truly free.</em></p>
+<p><img alt="2001 Optics Baby" src="../images/2021/2001-baby.png"></p>
+<p>You have achieved true Bridge Ape Enlightenment.</p>
+<p>Make yourself a coffee, in about 3 hours your bridged tokens will arrive in your wallet, ready for providing liquidity or swapping, or whatever purpose your galaxy brain can come up with. </p>
             </section>
 
             <section class="post-info">
                 <div class="post-share">
-                    <a class="twitter" href="https://twitter.com/share?text=Optics: How to Ape With Etherscan&amp;url=https://connerswann.me/drafts/optics-ape-with-etherscan.html" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <a class="twitter" href="https://twitter.com/share?text=Optics: How to Ape ERC-20 Tokens With Etherscan&amp;url=https://connerswann.me/drafts/optics-ape-erc20-etherscan.html" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
                     <i class="ic ic-twitter"></i><span class="hidden">Twitter</span>
                     </a>
-                    <a class="facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://connerswann.me/drafts/optics-ape-with-etherscan.html" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <a class="facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://connerswann.me/drafts/optics-ape-erc20-etherscan.html" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
                     <i class="ic ic-facebook"></i><span class="hidden">Facebook</span>
                     </a>
-                    <a class="googleplus" href="https://plus.google.com/share?url=https://connerswann.me/drafts/optics-ape-with-etherscan.html" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <a class="googleplus" href="https://plus.google.com/share?url=https://connerswann.me/drafts/optics-ape-erc20-etherscan.html" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
                     <i class="ic ic-googleplus"></i><span class="hidden">Google+</span>
                     </a>
                     <div class="clear"></div>
                 </div>
 
                 <aside class="post-tags">
-<a href="https://connerswann.me/tag/optics">Optics</a><a href="https://connerswann.me/tag/celo">Celo</a><a href="https://connerswann.me/tag/etherscan">Etherscan</a><a href="https://connerswann.me/tag/apes-together-strong">Apes Together Strong</a>                </aside>
+<a href="https://connerswann.me/tag/optics">Optics</a><a href="https://connerswann.me/tag/celo">Celo</a><a href="https://connerswann.me/tag/etherscan">Etherscan</a><a href="https://connerswann.me/tag/apes-together-strong">Apes Together Strong</a><a href="https://connerswann.me/tag/erc-20">ERC-20</a>                </aside>
 
                 <div class="clear"></div>
 
