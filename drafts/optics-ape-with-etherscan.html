@@ -173,9 +173,69 @@
 <h2>Etherscan</h2>
 <p>Etherscan is a <em>great tool</em> for the Ethereum ecosystem. One well-known feature to DeFi Apes is the ability to natively call smart contract methods for any <em>verified</em> smart contract via a Metamask integration. We can utilize this functionality to our benefit to send tokens from Ethereum to Celo. </p>
 <p>It is important to note that this functionality is available on any blockchain where Etherscan is deployed. Since Etherscan is not deployed to Celo, you will not be able to send your tokens back to the originating chain until the GUI is released. But, you didn't want to send them back anyways, right? </p>
-<h1>Achieving Bridge Enlightenment</h1>
-<p>We're almost to the point where we have enough information to become one with the bridge. </p>
+<h1>I am Become Bridge Ape</h1>
+<p>We're almost to the point where we have enough information to become one with the bridge and achieve enlightenment. </p>
 <p><img alt="Optics Obelisk" src="../images/2021/obelisk.png"></p>
+<h2>Step One: Locate the Bridge Router Contract</h2>
+<p>As mentioned in the previous section, bridge contract addresses on each blockchain can be found <a href="https://github.com/celo-org/optics-monorepo/tree/main/rust/config/mainnet/bridge/1631143085018">here</a>. </p>
+<p>Optics is deployed in an upgradeable configuration, with <em>implementation contracts</em> being pointed to by <em>proxy contracts</em>. This allows us to upgrade the contract implementation via governance without having to migrate contract state (which lives in the proxy). </p>
+<p>We want to interact with the BridgeRouter proxy contract which can be found on Etherscan <a href="https://etherscan.io/address/0x6a39909e805A3eaDd2b61fFf61147796ca6aBB47">here</a>. </p>
+<h2>Step Two: Locate the "Send" Method</h2>
+<p>In order to view the implementation details of a contract, select the "Contract" tab. Note: The green checkmark indicates that the source code of the contract has been verified on Etherscan. </p>
+<p><img alt="Contract Details Button" src="../images/2021/how2ape/contract-details-button.png"></p>
+<p>As mentioned, the contract we're looking at is a proxy, so we want to write to it using the "Write as Proxy" feature.  </p>
+<p><img alt="Write as Proxy" src="../images/2021/how2ape/write-as-proxy-button.png"></p>
+<p>There is a list of methods available to us, the important one to a Bridge Ape is the <code>send</code> method. </p>
+<p><img alt="Send Method" src="../images/2021/how2ape/send-method.png"></p>
+<p>Selecting the <code>send</code> method expands the list of parameters which we will have to accurately fill in order to successfully send tokens across the bridge. </p>
+<h2>Step Three: Understand the Send Method</h2>
+<p>There are a series of parameters for the send method which we will have to fill out in order to Ape tokens across the bridge. </p>
+<p><img alt="Send Method Details" src="../images/2021/how2ape/send-method-details.png"></p>
+<ul>
+<li><code>_token</code> - The Contract Address of the ERC-20 token which we will be bridging</li>
+<li><code>_amount</code> - The amount of the token to send in wei, 10^18</li>
+<li><code>_destination</code> - The domain of the destination chain, domains can be found in the <a href="https://github.com/celo-org/optics-monorepo/blob/main/rust/config/mainnet/ethereum_config.json#L21-L42">replica configuration on Github</a></li>
+<li><code>_recipient</code> - The address of the recipient on the remote chain, bridged tokens will be sent to this address</li>
+</ul>
+<p>Example Parameters for Bridging ETH from Ethereum to Celo are as follows: </p>
+<ul>
+<li><code>_token</code>: </li>
+<li><code>_amount</code>: </li>
+<li><code>_destination</code>: <code>1667591279</code></li>
+<li><code>_recipient</code>: </li>
+</ul>
+<p>Example Parameters for Bridging SUSHI from Ethereum to Celo are as follows: </p>
+<ul>
+<li><code>_token</code>: </li>
+<li><code>_amount</code>: </li>
+<li><code>_destination</code>: <code>1667591279</code></li>
+<li><code>_recipient</code>: </li>
+</ul>
+<p>Example Parameters for Bridging USDT from Ethereum to Celo are as follows: </p>
+<ul>
+<li><code>_token</code>: </li>
+<li><code>_amount</code>: </li>
+<li><code>_destination</code>: <code>1667591279</code></li>
+<li><code>_recipient</code>: </li>
+</ul>
+<h2>Step Four: Connect Metamask</h2>
+<p>Using the Metamask integration within Etherscan, we can use the parameters above to submit a transaction that sends bridged tokens. </p>
+<p>First, select the "Connect to Web3" button on the contract UI. </p>
+<p><img alt="Connect to Web3" src="../images/2021/how2ape/connect-to-web3.png"></p>
+<p>Select Metamask</p>
+<p><img alt="Connect Metamask" src="../images/2021/how2ape/connect-metamask.png"></p>
+<p>Then, walk through the Metamask connector flow by selecting an address. </p>
+<p><img alt="Select Address" src="../images/2021/how2ape/select-wallet.png"></p>
+<p>Confirm the selection and connect.</p>
+<p><img alt="Confirm and Connect" src="../images/2021/how2ape/confirm-and-connect.png"></p>
+<p>You should see that metamask is now reporting it is connected with the current website. </p>
+<p><img alt="Metamask Connected" src="../images/2021/how2ape/metamask-connected.png"></p>
+<p>You can verify this in Etherscan as well, you might have to click the "Connect to Web3" button again in order to get it to pick up the change.</p>
+<p><img alt="Etherscan Connected" src="../images/2021/how2ape/etherscan-connected.png"></p>
+<p>If all of this was successful, <em>you are ready for true Enlightenment</em>.</p>
+<h2>Step Five: APE!</h2>
+<p>Now, we can put it all together. </p>
+<p>// TODO </p>
             </section>
 
             <section class="post-info">
