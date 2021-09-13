@@ -23,7 +23,7 @@ Read on dear Ape, for in this blog post we will go over how to send tokens over 
 
 # What We Need To Know 
 
-*Did you read the note in the previous section? Good.*
+**NOTE:** *Did you read the note in the previous section? Good.*
 
 Optics is a highly complex mesh of inter-connected smart contracts, which we will mostly be glossing over in favor of aping tokens onto the bridge and reaching multi-chain enlightenment as fast as possible. If you are interested in learning more (and you *should be*), here are some links to the Optics documentation in the github repo: 
 
@@ -31,7 +31,12 @@ Optics is a highly complex mesh of inter-connected smart contracts, which we wil
 - [Optics Channel Architecture](https://github.com/celo-org/optics-monorepo/blob/main/docs/architecture.md)
 - [Optics Token Bridge xApp](https://github.com/celo-org/optics-monorepo/blob/main/docs/xapps/token-bridge.md)
 
-Now, lets talk about the parts we need to know about. 
+At a high-level we will need to do the following: 
+1. Authorize the Bridge to spend your tokens. 
+2. Call the bridge to send tokens
+3. Wait patiently! 
+
+Now, lets get a little clarity about the parts we need to know about. 
 
 ![Optics Architecture](../images/2021/Optics-Architecture.png)
 
@@ -39,7 +44,7 @@ Now, lets talk about the parts we need to know about.
 
 The Home contract is the hub of one-way communication between the blockchain it is deployed to, and replica contracts on an arbitrary number of remote blockchains. Messages are persisted to the Home blockchain by a "Cross-Chain App" (aka a xApp), and ferried to the replicas by a series of *off-chain agents*. It is important to note that message-passing *is not instantaneous*, as there is a ~3-hour dispute period in addition to any confirmation time on the home chain to see messages processed on a replica chain. 
 
-Contract addresses for the mainnet Home and other core contracts can be found in the Optics Repository [here](https://github.com/celo-org/optics-monorepo/tree/main/rust/config/mainnet)
+Contract addresses for the mainnet Home and other core contracts can be found in the Optics Github Repository [here](https://github.com/celo-org/optics-monorepo/tree/main/rust/config/mainnet)
 
 ## The Token Bridge
 
@@ -53,13 +58,23 @@ Contract addresses for the various components of the Token Bridge can be found [
 
 Etherscan is a *great tool* for the Ethereum ecosystem. One well-known feature to DeFi Apes is the ability to natively call smart contract methods for any *verified* smart contract via a Metamask integration. We can utilize this functionality to our benefit to send tokens from Ethereum to Celo. 
 
-It is important to note that this functionality is available on any blockchain where Etherscan is deployed. Since Etherscan is not deployed to Celo, you will not be able to send your tokens back to the originating chain until the GUI is released. But, you didn't want to send them back anyways, right? 
+It is important to note that this functionality is available on any blockchain where Etherscan is deployed. Since Etherscan is not deployed to Celo, you will not be able to send your tokens back to the originating chain until the GUI is released. But, *you didn't want to send them back anyways, right?* 
 
 # I am Become Bridge Ape
 
-We're almost to the point where we have enough information to become one with the bridge and achieve enlightenment. 
+We're *almost* to the point where we have enough information to become one with the bridge and achieve enlightenment. 
 
 ![Optics Obelisk](../images/2021/obelisk.png)
+
+## Step One: Locate the Contract for the Token You're Bridging
+
+First, we need to authorize the Token Bridge to spend our tokens on our behalf. In order to do this, we need to let the Token Contract know via the `approve` method on the contract which is a part of the ERC-20 standard. 
+
+The token addresses for my favorite ETH Tokens are below: 
+- [WETH](https://etherscan.io/token/0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2)
+- [SUSHI](https://etherscan.io/token/0x6b3595068778dd592e39a122f4f5a5cf09c90fe2)
+- [USDT](https://etherscan.io/address/0xdac17f958d2ee523a2206206994597c13d831ec7)
+
 
 ## Step One: Locate the Bridge Router Contract
 
@@ -68,7 +83,6 @@ As mentioned in the previous section, bridge contract addresses on each blockcha
 Optics is deployed in an upgradeable configuration, with *implementation contracts* being pointed to by *proxy contracts*. This allows us to upgrade the contract implementation via governance without having to migrate contract state (which lives in the proxy). 
 
 We want to interact with the BridgeRouter proxy contract which can be found on Etherscan [here](https://etherscan.io/address/0x6a39909e805A3eaDd2b61fFf61147796ca6aBB47). 
-
 
 ## Step Two: Locate the "Send" Method
 
