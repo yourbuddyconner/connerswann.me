@@ -227,14 +227,18 @@
 <ul>
 <li><code>_token</code> - The Contract Address of the ERC-20 token which we will be bridging.</li>
 <li><code>_amount</code> - The amount of the token to send, denominated <strong>in that token's smallest unit</strong>.</li>
-<li><code>_destination</code> - The domain of the destination chain. Domain IDs are like phone numbers, they are unique to each chain. </li>
+<li><code>_destination</code> - The domain of the destination chain. Domain IDs are like phone numbers, they are unique to each chain. <ul>
 <li>A list of domains IDs can be found in the <a href="https://github.com/celo-org/optics-monorepo/blob/main/rust/config/mainnet/ethereum_config.json#L21-L42">Ethereum replica configuration on Github</a>. </li>
 <li>After examining that, we know that Celo's domain ID is <code>1667591279</code>. </li>
-<li><code>_recipient</code> - The address of the recipient on the remote chain, bridged tokens will be sent to this address. </li>
+</ul>
+</li>
+<li><code>_recipient</code> - The address of the recipient on the remote chain, bridged tokens will be sent to this address. <ul>
 <li>To help support future chains with longer addresses, Optics uses 32-byte addresses. </li>
 <li>To convert an Ethereum, Celo, or Polygon address to bytes32 you can add 24 0's after the 0x Prefix. <ul>
 <li><code>0x6a39909e805A3eaDd2b61fFf61147796ca6aBB47</code> would become</li>
 <li><code>0x0000000000000000000000006a39909e805A3eaDd2b61fFf61147796ca6aBB47</code></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
