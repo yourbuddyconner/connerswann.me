@@ -31,7 +31,7 @@
 &lt;p&gt;It is important to note that message-passing &lt;em&gt;is not instantaneous&lt;/em&gt;, as there is a ~3-hour dispute period that must elapse, in addition to any confirmation time on the home chain, to see messages processed on a replica chain. &lt;/p&gt;
 &lt;p&gt;Contract addresses for the mainnet Home and other core contracts can be found in the Optics Github Repository &lt;a href="https://github.com/celo-org/optics-monorepo/tree/main/rust/config/mainnet"&gt;here&lt;/a&gt;.&lt;/p&gt;
 &lt;h2&gt;The Token Bridge&lt;/h2&gt;
-&lt;p&gt;Now that we know roughly how an Optics channel works, we can go over the most important piece to a quickly evolving Bridge Ape -- The Token Bridge. &lt;/p&gt;
+&lt;p&gt;Now that we know roughly how an Optics channel works, we can discuss the most important component to a quickly evolving Bridge Ape -- The Token Bridge. &lt;/p&gt;
 &lt;p&gt;The Token Bridge is a xApp, the first of its kind in the Optics Ecosystem, that facilitates token transfers between blockchains. If you know how to call its methods via Etherscan, you can send tokens across the bridge. &lt;/p&gt;
 &lt;p&gt;Contract addresses for the various components of the Token Bridge can be found &lt;a href="https://github.com/celo-org/optics-monorepo/tree/main/rust/config/mainnet/bridge/1631143085018"&gt;here&lt;/a&gt;.&lt;/p&gt;
 &lt;h2&gt;The ERC-20 Token&lt;/h2&gt;
