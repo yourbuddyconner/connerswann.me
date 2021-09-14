@@ -28,7 +28,7 @@
 &lt;p&gt;&lt;img alt="Optics Architecture" src="../../images/2021/Optics-Architecture.png"&gt;&lt;/p&gt;
 &lt;h2&gt;The Home Contract&lt;/h2&gt;
 &lt;p&gt;The Home contract is a hub of one-way communication between itself and replica contracts on an arbitrary number of remote blockchains. Messages are persisted to the Home blockchain by a "Cross-Chain App" (aka a xApp), and ferried to the replicas by a series of &lt;em&gt;off-chain agents&lt;/em&gt;. &lt;/p&gt;
-&lt;p&gt;It is important to note that message-passing &lt;em&gt;is not instantaneous&lt;/em&gt;, as there is a ~3-hour dispute period, in addition to any confirmation time on the home chain, to see messages processed on a replica chain. &lt;/p&gt;
+&lt;p&gt;It is important to note that message-passing &lt;em&gt;is not instantaneous&lt;/em&gt;, as there is a ~3-hour dispute period that must elapse, in addition to any confirmation time on the home chain, to see messages processed on a replica chain. &lt;/p&gt;
 &lt;p&gt;Contract addresses for the mainnet Home and other core contracts can be found in the Optics Github Repository &lt;a href="https://github.com/celo-org/optics-monorepo/tree/main/rust/config/mainnet"&gt;here&lt;/a&gt;.&lt;/p&gt;
 &lt;h2&gt;The Token Bridge&lt;/h2&gt;
 &lt;p&gt;Now that we know roughly how an Optics channel works, we can go over the most important piece to a quickly evolving Bridge Ape -- The Token Bridge. &lt;/p&gt;
