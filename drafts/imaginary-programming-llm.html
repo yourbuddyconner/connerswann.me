@@ -414,7 +414,7 @@ JSON Response:
 <span class="w">  </span><span class="p">}</span><span class="o">&gt;</span><span class="p">;</span>
 </code></pre></div>
 
-<p>Now that the prompt, OpenAI code, input types, and output parsing are all abstracted away by the compile-time transformation, it's <em>much easier</em> to reason about the prompts in a functional way. The glue code ends up being much simpler, the compiler and linter catch most simple mistakes, and all the prompts are type-safe and documented. </p>
+<p>Now that the prompt, OpenAI code, input types, and output parsing are all abstracted away by the compile-time transformation, it's <em>much easier</em> to reason about the prompts in a functional way. The glue code ends up being much simpler, the compiler and linter catch most simple mistakes, and all the LLM code is type-safe and documented. </p>
 <div class="highlight"><pre><span></span><code><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">imaginary</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">story</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">writeAFunnyStory</span><span class="p">(</span><span class="mf">300</span><span class="p">);</span>
 <span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">story</span><span class="p">);</span>
