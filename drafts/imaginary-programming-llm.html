@@ -165,7 +165,7 @@
 <p>LLMs such as GPT-3 are trained on simple tasks, which means that they can perform well when given clear and simple instructions. As we mentioned previously, asking them to perform complex tasks results in inconsistent and undesired behavior. Instead, prompt engineers must break down complex tasks into simpler units and then chain them together to achieve the desired outcome.</p>
 <p>A common operation in LLM-land is to use the latent knowledge of the model to make up text that fits a particular use-case. More often than not, we'd like to have this text returned to us in a structured format that is compatible with the programming language we're using to wire the prompts together. </p>
 <p><img alt="ChatGPT Limerick" src="../images/2023/chatgpt-limerick.png"></p>
-<h2>We need some new words</h2>
+<h2>New Vocabulary Needed</h2>
 <p>As we mentioned previously, expecting the model to both <em>be creative</em> and produce <em>structured output</em> is at odds with its training. To help programmers think about prompts in this way, we can use the terms "generator" and "extractor" to describe simple atomic units of this larger task. </p>
 <h3>Generators</h3>
 <p>A generator creates unstructured information, such as writing a story. Increasing input <em>temperature</em> allows the model to produce less-probable output, which to humans is roughly analagous to <em>creativity</em>. </p>
