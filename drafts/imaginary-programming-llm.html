@@ -312,10 +312,10 @@ JSON Response:
 </blockquote>
 <p>The Imaginary Programming library consists of two parts:</p>
 <ol>
-<li>A compiler plugin, which allows developers to write a function signature and a doc string that describes their desired functionality which is transformed at compile-time to code which manipulates the companion runtime library </li>
+<li>A Typescript compiler plugin, which allows developers to simply write a function signature and a doc string that describes their desired functionality which is transformed at compile-time to code which manipulates the companion runtime library </li>
 <li>A runtime library, which implements OpenAI API calls and permissive fuzzy JSON-parsing logic</li>
 </ol>
-<p>The plugin, when combined with the Imaginary runtime library, leverages the native compilation step in Typescript to take care of writing the OpenAI generation boilerplate, parsing, and type-checking of inputs and outputs. This makes it <em>incredibly</em> easy to create prompts that can be composed together functionally and reduce the likelihood of runtime errors in glue-code.</p>
+<p>The plugin, when combined with the Imaginary runtime library, leverages the native compilation step in Typescript to take care of writing the OpenAI generation boilerplate, parsing, and type-checking of inputs and outputs. This makes it <em>incredibly</em> easy to create prompts that can be composed together functionally and reduces the likelihood of runtime errors in glue-code.</p>
 <p>One of the benefits of imaginary programming is that it allows developers to quickly build out the core business logic for their products, and worry less about the weird edge cases of prompt engineering as it currently stands. <strong>However</strong>, it's important to remember that the <em>quality of the output</em> is still dependent on the <em>quality of the prompt</em>. Developers must still exercise creativity and a deep understanding of the task at hand in order to create effective prompts.</p>
 <p>With imaginary programming and libraries like Imaginary.dev, developers can more easily harness the power of LLMs and create innovative and powerful applications with minimal effort.</p>
 <h1>Try it for yourself!</h1>
