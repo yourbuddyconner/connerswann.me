@@ -285,8 +285,10 @@ JSON Response:
 <p>By making some slight modifications to our original prompt, we now can tune the length of the generation programmatically -- this is great! Now users have the ability to take user input and produce text that fits a wider variety of situations with a single prompt. </p>
 <div class="highlight"><pre><span></span><code><span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">generatorPromptTpl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Prompt</span><span class="p">(</span>
 <span class="w">    </span><span class="sb">`</span>
-<span class="sb">    Generate a conversation between a software engineer with an anxiety about artificial general intelligence and a therapist.</span>
-<span class="sb">    The therapist is secretly an AGI and is trying to downplay the engineer&#39;s concerns.</span>
+<span class="sb">    Generate a conversation between a software engineer with an anxiety </span>
+<span class="sb">    about artificial general intelligence and a therapist.</span>
+<span class="sb">    The therapist is secretly an AGI and is trying to downplay the </span>
+<span class="sb">    engineer&#39;s concerns.</span>
 <span class="sb">    The software engineer begins to suspect the therapist is a robot.</span>
 <span class="sb">    Ensure your output is no more than {{length}} words.</span>
 
@@ -371,8 +373,10 @@ JSON Response:
 <p>To illustrate how the Imaginary.dev system works, let's re-write the previous prompts again:</p>
 <h2>Generator</h2>
 <div class="highlight"><pre><span></span><code><span class="cm">/**</span>
-<span class="cm">    Generate a conversation between a software engineer with an anxiety about artificial general intelligence and a therapist.</span>
-<span class="cm">    The therapist is secretly an AGI and is trying to downplay the engineer&#39;s concerns.</span>
+<span class="cm">    Generate a conversation between a software engineer with an anxiety </span>
+<span class="cm">    about artificial general intelligence and a therapist.</span>
+<span class="cm">    The therapist is secretly an AGI and is trying to downplay the </span>
+<span class="cm">    engineer&#39;s concerns.</span>
 <span class="cm">    The software engineer begins to suspect the therapist is a robot.</span>
 <span class="cm">    Ensure your output is no more than {{length}} words.</span>
 
@@ -400,7 +404,8 @@ JSON Response:
 
 <span class="cm">    JSON Response:</span>
 <span class="cm"> *  @param transcript - the transcript to extract dialogue from</span>
-<span class="cm"> *  @returns an object keyed by speaker name with the value being a list of the snippets of dialogue that they said</span>
+<span class="cm"> *  @returns an object keyed by speaker name with the value being a list of </span>
+<span class="cm"> *  the snippets of dialogue that they said</span>
 <span class="cm"> *  @imaginary</span>
 <span class="cm"> */</span>
 <span class="k">export</span><span class="w"> </span><span class="kr">declare</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">extractDialogueFromTranscript</span><span class="p">(</span><span class="nx">transcript</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="p">{</span>
