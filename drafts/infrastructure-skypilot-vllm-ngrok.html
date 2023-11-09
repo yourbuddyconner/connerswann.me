@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+
+  <title>Exploring Advancements in Large Language Model Infrastructure: Skypilot, vLLM and Ngrok</title>
+
+
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="referrer" content="origin" />
+  <meta name="generator" content="Pelican" />
+<link href="https://connerswann.me/drafts/infrastructure-skypilot-vllm-ngrok.html" rel="canonical" />
+  <!-- Feed -->
+        <link href="https://connerswann.me/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Conner Swann Full Atom Feed" />
+          <link href="https://connerswann.me/feeds/{slug}.atom.xml" type="application/atom+xml" rel="alternate" title="Conner Swann Categories Atom Feed" />
+
+  <link href="https://connerswann.me/theme/css/style.css" type="text/css" rel="stylesheet" />
+
+  <!-- Code highlight color scheme -->
+      <link href="https://connerswann.me/theme/css/code_blocks/monokai.css" rel="stylesheet">
+
+
+  <!-- Custom fonts -->
+  <link href='https://fonts.googleapis.com/css?family=Montserrat:400,300' rel='stylesheet' type='text/css' />
+  <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css" />
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+
+
+
+    <meta name="description" content="Exploring Advancements in Large Language Model deployment: Skypilot, vLLM and Ngrok Introduction In the ever-evolving landscape of...">
+
+    <meta name="author" content="Conner Swann">
+
+    <meta name="tags" content="Large Language Models">
+    <meta name="tags" content="Cloud Infrastructure">
+    <meta name="tags" content="Inference">
+    <meta name="tags" content="Networking">
+
+
+
+
+<!-- Open Graph -->
+<meta property="og:site_name" content="Conner Swann"/>
+<meta property="og:title" content="Exploring Advancements in Large Language Model Infrastructure: Skypilot, vLLM and Ngrok"/>
+<meta property="og:description" content="Exploring Advancements in Large Language Model deployment: Skypilot, vLLM and Ngrok Introduction In the ever-evolving landscape of..."/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:url" content="https://connerswann.me/drafts/infrastructure-skypilot-vllm-ngrok.html"/>
+<meta property="og:type" content="article"/>
+<meta property="article:published_time" content="2023-11-08 00:00:00-08:00"/>
+<meta property="article:modified_time" content=""/>
+<meta property="article:author" content="https://connerswann.me/author/conner-swann">
+<meta property="article:section" content="Infrastructure"/>
+<meta property="article:tag" content="Large Language Models"/>
+<meta property="article:tag" content="Cloud Infrastructure"/>
+<meta property="article:tag" content="Inference"/>
+<meta property="article:tag" content="Networking"/>
+<meta property="og:image" content="https://connerswann.me/images/2023/cover-skypilot.png">
+
+<!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@yourbuddyconner">
+    <meta name="twitter:title" content="Exploring Advancements in Large Language Model Infrastructure: Skypilot, vLLM and Ngrok">
+    <meta name="twitter:url" content="https://connerswann.me/drafts/infrastructure-skypilot-vllm-ngrok.html">
+
+        <meta name="twitter:image:src" content="https://connerswann.me/images/2023/cover-skypilot.png">
+
+      <meta name="twitter:description" content="Exploring Advancements in Large Language Model deployment: Skypilot, vLLM and Ngrok Introduction In the ever-evolving landscape of...">
+
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Article",
+  "name": "Exploring Advancements in Large Language Model Infrastructure: Skypilot, vLLM and Ngrok",
+  "headline": "Exploring Advancements in Large Language Model Infrastructure: Skypilot, vLLM and Ngrok",
+  "datePublished": "2023-11-08 00:00:00-08:00",
+  "dateModified": "",
+  "author": {
+    "@type": "Person",
+    "name": "Conner Swann",
+    "url": "https://connerswann.me/author/conner-swann"
+  },
+  "image": "https://connerswann.me/images/2023/cover-skypilot.png",
+  "url": "https://connerswann.me/drafts/infrastructure-skypilot-vllm-ngrok.html",
+  "description": "Exploring Advancements in Large Language Model deployment: Skypilot, vLLM and Ngrok Introduction In the ever-evolving landscape of..."
+}
+</script>
+</head>
+<!-- TODO : Body class -->
+<body class="home-template">
+
+<nav id="menu">
+  <a class="close-button">Close</a>
+  <div class="nav-wrapper">
+    <p class="nav-label">Menu</p>
+    <ul>
+
+              <li role="presentation"><a href="https://connerswann.me/pages/about-me/">About Me</a></li>
+
+    </ul>
+  </div>
+</nav>
+    <!-- Progressbar -->
+    <div class="progress-container">
+        <span class="progress-bar"></span>
+    </div>
+
+    <!-- Page Header -->
+    <!-- Set your background image for this header on the line below. -->
+    <header id="post-header" class="has-cover">
+      <div class="inner">
+        <nav id="navigation">
+            <span id="home-button" class="nav-button">
+                <a class="home-button" href="https://connerswann.me/" title="Home"><i class="ic ic-arrow-left"></i> Home</a>
+            </span>
+          <span id="menu-button" class="nav-button">
+            <a class="menu-button"><i class="ic ic-menu"></i> Menu</a>
+          </span>
+        </nav>
+        <h1 class="post-title">Exploring Advancements in Large Language Model Infrastructure: Skypilot, vLLM and Ngrok</h1>
+        <!-- TODO : Proper class for headline -->
+        <span class="post-meta">
+                <a href="https://connerswann.me/author/conner-swann">Conner Swann</a>
+            | <time datetime="Wed 08 November 2023">Wed 08 November 2023</time>
+        </span>
+        <!-- TODO : Modified check -->
+            <div class="post-cover cover" style="background-image: url('https://connerswann.me/images/2023/cover-skypilot.png')">
+      </div>
+    </header>
+
+  <section id="wrapper">
+    <a class="hidden-close"></a>
+
+    <!-- Post content -->
+    <main class="content" role="main">
+        <article class="post">
+        <div class="inner">
+            <section class="post-content">
+                <h1>Exploring Advancements in Large Language Model deployment: Skypilot, vLLM and Ngrok</h1>
+<h2>Introduction</h2>
+<p>In the ever-evolving landscape of artificial intelligence, deploying Large Language Models (LLMs) effectively is a challenge that organizations can't afford to overlook. This post serves a dual purpose: to help you understand the unique challenges involved in LLM deployment and to explore cutting-edge tools like SkyPilot, Ray, and vLLM that can dramatically simplify this complex task.</p>
+<hr>
+<h2>Part 1: LLM Deployment: The Startup's Quandary and the Enterprise's Conundrum</h2>
+<h3>The Importance of LLM Ops</h3>
+<p>The buzz in the AI world may often be about new algorithms and fascinating use-cases, but the reality of turning that algorithmic promise into functional applications lies in operations — specifically Large Language Model Operations (LLM Ops). For startups, this means not just cracking the AI code but also delivering it in a scalable, efficient manner. The stakes are just as high for enterprises but scaled up manifold. Each inefficiency is amplified, and each operational hurdle could translate into significant financial implications.</p>
+<h3>Challenges in Deploying LLMs: A Startup Perspective</h3>
+<p>Deploying LLMs is a venture rife with challenges, more so for startups that are already juggling resources and timelines. Some of the hurdles that must be overcome include:</p>
+<ul>
+<li>
+<p><strong>Massive Checkpoint Size</strong>: Storing and managing the large checkpoints of these models require a robust storage solution. This can mean higher costs and more complex infrastructure pipelines.</p>
+</li>
+<li>
+<p><strong>GPU Cost and Availability</strong>: The hardware demands of LLMs often require top-of-the-line GPUs. For a team with limited funds, this becomes a significant barrier to entry. Even for those who can afford it, GPU availability can be a logistical nightmare.</p>
+</li>
+<li>
+<p><strong>Complexity in Underlying Libraries</strong>: Startups usually don't have the luxury of dedicated teams to manage the intricacies of libraries like PyTorch and Transformers. A single misconfiguration can result in days of debugging, affecting the company's agility.</p>
+</li>
+</ul>
+<h3>The Enterprise Parallel</h3>
+<p>Enterprises face these challenges too, but on an expenontially larger scale. Let’s take GPU costs as an example. An enterprise deployment might require a data center full of GPUs, with the costs scaling up proportionally. The complexity of underlying libraries? Imagine coordinating across multiple departments and perhaps even geographical locations to troubleshoot issues.</p>
+<h3>The Common Ground</h3>
+<p>Whether you're a startup aiming to break into the market or an enterprise looking to scale up, the challenges of LLM deployment are largely similar but differ in scale. In both scenarios, addressing these challenges requires deep knowledge of both the AI models involved and the operational complexities.</p>
+<h3>Mapping LLMs to Traditional and Cutting-Edge Infrastructures</h3>
+<p>While the challenges of LLM deployment may appear daunting, there's an encouraging silver lining. Traditional cloud infrastructure can often provide a foundation upon which these complex models can be deployed. Technologies like Docker have played a significant role in this, acting as a bridge between the intricate realm of machine learning and the more universally understood sphere of cloud computing.</p>
+<p>Yet, the field is far from static. Groundbreaking work is being done to make these deployments even more accessible and efficient. Programs like UC Berkeley’s Sky Computing Lab are at the forefront of these advancements, pushing the boundaries of what's possible in machine learning operations and cloud-based AI workloads. It's no longer just about fitting machine learning into existing paradigms; it's about creating new paradigms altogether to make AI and machine learning more accessible, scalable, and efficient.</p>
+<hr>
+<h2>Part 2: Fast-Tracking LLM Deployment with SkyPilot and Ray</h2>
+<p>The fast-paced evolution of deploying large language models (LLMs) and AI workloads can be challenging to navigate. SkyPilot and Ray serve as guiding stars in this transformative journey, working together to simplify the complexities of cloud-based deployment.</p>
+<h3>SkyPilot: Your All-In-One Hub for Cloud-Optimized AI Deployment</h3>
+<p><a href="https://skypilot.readthedocs.io/en/latest/index.html">SkyPilot</a> isn't just another tool—it's an entire ecosystem built to democratize the deployment of LLMs and various AI workloads. With compatibility across a vast array of cloud providers, SkyPilot ensures that you're never locked into a single service.</p>
+<p><strong>Why Choose SkyPilot?</strong></p>
+<ul>
+<li>
+<p><strong>Simplified Cloud Management</strong>: Forget the intricate details of cloud architecture. SkyPilot's cloud abstraction feature allows you to launch jobs and clusters on any provider with ease.</p>
+</li>
+<li>
+<p><strong>Automated Task Handling</strong>: Queuing multiple jobs or tasks? SkyPilot takes care of that, leaving you free to focus on fine-tuning your AI models.</p>
+</li>
+<li>
+<p><strong>Cost-Effectiveness</strong>: Get the most out of your investment with features like Managed Spot and an Optimizer, both designed to reduce your operational costs.</p>
+</li>
+<li>
+<p><strong>Versatile Workload Integration</strong>: SkyPilot integrates effortlessly with your existing computational workloads, streamlining migration and reducing friction.</p>
+</li>
+</ul>
+<h3>Ray: The Bedrock of SkyPilot</h3>
+<p>Underpinning SkyPilot's capabilities is <a href="https://www.ray.io/">Ray</a>, an open-source framework that specializes in scalable computing. Ray is designed to be the backbone for a diverse range of AI and Python applications.</p>
+<p><strong>Why Ray Stands Out:</strong></p>
+<ul>
+<li>
+<p><strong>Efficient Distributed Computing</strong>: Accelerate your deep learning tasks with Ray's robust execution framework, compatible with PyTorch and TensorFlow.</p>
+</li>
+<li>
+<p><strong>Optimized Hyperparameter Tuning</strong>: Ray Tune employs state-of-the-art optimization techniques, speeding up your search for the best model parameters.</p>
+</li>
+<li>
+<p><strong>Streamlined Model Serving</strong>: Ray Serve makes deploying ML models at scale easy and hassle-free, serving as a Python-first and framework-agnostic option.</p>
+</li>
+<li>
+<p><strong>Reinforcement Learning at Scale</strong>: Utilize Ray's RLlib to scale your reinforcement learning workloads, with support for a multitude of leading-edge algorithms.</p>
+</li>
+</ul>
+<p>SkyPilot and Ray jointly serve as the vanguards in the changing landscape of LLM and AI deployment, making it easier, more cost-effective, and agile.</p>
+<hr>
+<h2>Part 3: Speeding Up Inference with vLLM</h2>
+<p>As we resolve the challenges of infrastructure orchestration, the focus shifts to enhancing inference speed. Enter vLLM, an open-source library that sets new benchmarks for LLM throughput, developed by a team at UC Berkeley and already deployed in platforms like Chatbot Arena and Vicuna Demo.</p>
+<h3>vLLM: The New Standard in LLM Serving</h3>
+<p><a href="https://vllm.ai/">vLLM</a> aims to overcome the conventional bottlenecks in LLM inference, namely limited speed and resource constraints. It introduces an innovative attention algorithm called PagedAttention, capable of dramatically boosting throughput without altering existing model architectures.</p>
+<p><strong>Why vLLM Changes the Game:</strong></p>
+<ul>
+<li>
+<p><strong>Peerless Throughput</strong>: vLLM shatters previous records, outperforming even the popular HuggingFace Transformers library by up to 24x in throughput metrics.</p>
+</li>
+<li>
+<p><strong>Resource Conservation</strong>: With vLLM, even smaller teams with constrained resources can perform LLM serving efficiently.</p>
+</li>
+</ul>
+<h3>PagedAttention: The Catalyst Behind vLLM</h3>
+<p>The ingenuity of vLLM rests in its groundbreaking PagedAttention algorithm, designed to optimize memory management and performance.</p>
+<p><strong>What Makes PagedAttention Unique:</strong></p>
+<ul>
+<li>
+<p><strong>Memory Efficiency</strong>: PagedAttention subdivides the memory cache into blocks, dramatically cutting down memory waste and improving hardware utilization.</p>
+</li>
+<li>
+<p><strong>High Throughput</strong>: Better memory management enables greater sequence batching, thus enhancing GPU utilization and overall throughput.</p>
+</li>
+<li>
+<p><strong>Adaptive Scalability</strong>: PagedAttention adjusts its performance based on variable sequence lengths, ensuring optimal resource utilization.</p>
+</li>
+</ul>
+<h3>The Road Ahead</h3>
+<p>vLLM and PagedAttention signify a monumental shift towards faster, more efficient LLM serving. The open-source nature and ease of deployment make vLLM an indispensable tool for anyone looking to optimize their LLM operations. For a deep dive into the technology, check out vLLM's <a href="https://github.com/vllm-project/vllm">GitHub repository</a>, with a comprehensive academic paper coming soon.</p>
+<hr>
+<h3>Part 4: Running vLLM on Spot Instances with SkyPilot</h3>
+<h4>Introduction</h4>
+<p>Running machine learning models like vLLM on spot instances can significantly cut costs, but poses unique challenges in terms of request routing and instance management. SkyPilot and ngrok compose together nicely to make this process seamless. In this section, we'll explore how SkyPilot manages your spot instances and how ngrok solves the complexities of routing requests to a fluid set of servers located across the globe.</p>
+<h4>The Constraints of Using SkyPilot Spot</h4>
+<p>While SkyPilot excels at managing spot instances, it's worth noting that it doesn't (yet) handle the complexities of routing requests to these ephemeral APIs. Initialization and termination latencies can be a bottleneck, particularly for time-sensitive workloads. </p>
+<h4>Why ngrok Edge Rocks</h4>
+<p>When you're dealing with distributed sets of inference servers, ngrok's Cloud Edge is your secret weapon. It simplifies the request-routing puzzle by directing traffic to the most appropriate server based on geography, load, and availability. The best part? You get this robust, secure, and scalable routing without changing a single line of code.</p>
+<h4>ngrok Features Simplified</h4>
+<ol>
+<li>
+<p><strong>Custom Subdomains</strong>: Make your service easily identifiable without buying a new domain.</p>
+</li>
+<li>
+<p><strong>Access Control</strong>: Implement robust security with OAuth 2.0 and Single Sign-On options.</p>
+</li>
+<li>
+<p><strong>Encryption</strong>: Benefit from best-in-class HTTPS/TLS Certificates for secure connections.</p>
+</li>
+<li>
+<p><strong>Observability</strong>: Get real-time insights with integrated traffic logging.</p>
+</li>
+</ol>
+<p>Pairing SkyPilot and ngrok brings you the best of both worlds. While SkyPilot manages the ever-changing landscape of your spot instances, ngrok ensures your requests are securely and efficiently routed. In the next section, we'll delve into the step-by-step setup of this cost-efficient and streamlined architecture.</p>
+<hr>
+<h2>Part 5: Step-by-Step Implementation Guide</h2>
+<p>In this section, we'll walk through the process of setting up and deploying your SkyPilot job using vLLM and Ngrok. We will also touch on how to use the inference endpoint.</p>
+<p>Our goal is to get something deployed that ultimately looks like this:</p>
+<p><img alt="Inference API Architecture Diagram" src="../../images/2023/skypilot-inference-endpoints.png"></p>
+<p><strong>Special Note:</strong><br>
+In this guide, we are using 2x T4 GPUs because vLLM doesn't support model quantization. We set <code>--tensor-parallelism</code> to 2, enabled by the underlying ray runtime.</p>
+<h3>1. Installing SkyPilot and Dependencies</h3>
+<h4>System Requirements</h4>
+<ul>
+<li>Python &gt;= 3.7 (&gt;= 3.8 for Apple Silicon)</li>
+<li>macOS &gt;= 10.15 for Mac users</li>
+</ul>
+<h4>Step-by-Step Installation</h4>
+<ol>
+<li>
+<p><strong>Create a new conda environment:</strong><br>
+<code>bash
+    conda create -y -n sky python=3.8
+    conda activate sky</code>
+    &gt; This creates and activates a new conda environment named <code>sky</code>.</p>
+</li>
+<li>
+<p><strong>Install SkyPilot:</strong><br>
+<code>bash
+    pip install skypilot</code>
+    &gt; We install SkyPilot from pip. You can choose other options based on the cloud service you are using.</p>
+</li>
+<li>
+<p><strong>Install Optional Packages: (Optional)</strong><br>
+<code>bash
+    # For AWS
+    pip install "skypilot[aws]"
+    # For Google Cloud
+    pip install "skypilot[gcp]"</code>
+    &gt; These are optional installations depending on the cloud provider you are using.</p>
+</li>
+<li>
+<p><strong>Cloud Account Setup:</strong><br>
+    For AWS:
+    <code>bash
+    pip install boto3
+    aws configure</code>
+    For Google Cloud:
+    <code>bash
+    pip install google-api-python-client
+    conda install -c conda-forge google-cloud-sdk
+    gcloud init</code>
+    &gt; Configure your cloud account credentials. This guide assumes you already have the appropriate permissions set up in your cloud account.</p>
+</li>
+</ol>
+<h4>Troubleshooting and Notes</h4>
+<ul>
+<li>For Mac users with Apple Silicon, run <code>pip uninstall grpcio; conda install -c conda-forge grpcio=1.43.0</code> prior to installing SkyPilot.</li>
+</ul>
+<h4>2: Configure ngrok</h4>
+<p>Before deploying our model inference API server, we need to configure Ngrok so our endpoint will be accessible from the web. ngrok is a tool that creates a secure tunnel from the public internet to your local machine. But ngrok isn't just for simple tunneling; it also provides options for load balancing across multiple instances of your service. Here's how you can configure ngrok, get your Edge ID, and find your public URL:</p>
+<h4>From the Ngrok Docs on Load-Balancing:</h4>
+<p>Check out the <a href="https://ngrok.com/docs/guides/how-to-round-robin-load-balance-with-ngrok-cloud-edges/">Ngrok Guide</a> for more detailed information!</p>
+<h5>Load Balancing with ngrok Cloud Edges</h5>
+<p>In the context of ngrok, 'edges' refer to the endpoints responsible for handling your incoming web traffic. If you plan on deploying your service across multiple servers, you'll benefit from setting up load balancing.</p>
+<h5>Setting up an HTTPS Edge</h5>
+<ol>
+<li><strong>Create an ngrok Account</strong>: If you haven't done this already, create an account on the ngrok website.</li>
+<li><strong>Navigate to the Dashboard</strong>: Once logged in, go to the Cloud Edges page.</li>
+<li><strong>Create a New Edge</strong>: Click the "+ New Edge" button and select "HTTPS Edge."</li>
+</ol>
+<p>Upon completing these steps, you'll receive an HTTPS edge for serving web traffic and a public URL for accessing that traffic which will end up being your inference endpoint post-deployment. </p>
+<h3>3. SkyPilot Configuration YAML Explained</h3>
+<p>In your SkyPilot YAML, various configurations are set up to control the environment and execution of the model. Here is an explanation for each:</p>
+<ul>
+<li><code>envs</code>: Environment variables including the model name, Huggingface token, and ngrok settings.</li>
+<li><code>num_nodes</code>: The number of nodes to deploy in the cluster.</li>
+<li><code>resources</code>: Specifies the types of GPUs to use.</li>
+<li><code>setup</code>: A series of commands to set up the environment. This includes activating the conda environment, installing required packages, and setting up ngrok.</li>
+<li><code>run</code>: Commands that are run once the cluster is up. This starts the ngrok tunnel and the vLLM OpenAI API server.</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="nt">envs</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">MODEL_NAME</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">meta-llama/Llama-2-7b-chat-hf</span>
+<span class="w">  </span><span class="nt">HF_TOKEN</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;Huggingface Token&gt;</span>
+<span class="w">  </span><span class="nt">NGROK_TOKEN</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;Ngrok Token&gt;</span>
+<span class="w">  </span><span class="nt">NGROK_EDGE</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;Ngrok Edge ID&gt;</span>
+
+<span class="nt">num_nodes</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+
+<span class="nt">resources</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">accelerators</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">T4:2</span>
+
+<span class="nt">setup</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">  </span><span class="no">conda activate vllm</span>
+<span class="w">  </span><span class="no">if [ $? -ne 0 ]; then</span>
+<span class="w">    </span><span class="no">conda create -n vllm python=3.9 -y</span>
+<span class="w">    </span><span class="no">conda activate vllm</span>
+<span class="w">  </span><span class="no">fi</span>
+
+<span class="w">  </span><span class="no">git clone https://github.com/vllm-project/vllm.git || true</span>
+<span class="w">  </span><span class="no"># Install fschat and accelerate for chat completion</span>
+<span class="w">  </span><span class="no">pip install fschat</span>
+<span class="w">  </span><span class="no">pip install accelerate</span>
+
+<span class="w">  </span><span class="no">cd vllm</span>
+<span class="w">  </span><span class="no">pip list | grep vllm || pip install .</span>
+<span class="w">  </span><span class="no">python -c &quot;import huggingface_hub; huggingface_hub.login(&#39;${HF_TOKEN}&#39;)&quot;</span>
+
+<span class="w">  </span><span class="no">curl -s https://ngrok-agent.s3.amazonaws.com/ngrok.asc | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc &gt;/dev/null &amp;&amp; echo &quot;deb https://ngrok-agent.s3.amazonaws.com buster main&quot; | sudo tee /etc/apt/sources.list.d/ngrok.list &amp;&amp; sudo apt update &amp;&amp; sudo apt install ngrok</span>
+<span class="w">  </span><span class="no">ngrok config add-authtoken $NGROK_TOKEN</span>
+
+<span class="w">  </span><span class="no">pip install ray pandas pyarrow</span>
+
+<span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">  </span><span class="no">conda activate vllm</span>
+
+<span class="w">  </span><span class="no">echo &#39;Starting ngrok...&#39;</span>
+<span class="w">  </span><span class="no">ngrok tunnel --label edge=$NGROK_EDGE http://localhost:8000 --log stdout &gt; ngrok.log &amp;</span>
+
+<span class="w">  </span><span class="no">echo &#39;Starting vllm openai api server...&#39;</span>
+<span class="w">  </span><span class="no">python -m vllm.entrypoints.openai.api_server \</span>
+<span class="w">    </span><span class="no">--model $MODEL_NAME --tokenizer hf-internal-testing/llama-tokenizer \</span>
+<span class="w">    </span><span class="no">--host 0.0.0.0 \</span>
+<span class="w">    </span><span class="no">--served-model-name llama-2-7b \</span>
+<span class="w">    </span><span class="no">--tensor-parallel-size 2</span>
+</code></pre></div>
+
+<h3>4. Deploying Your SkyPilot Job</h3>
+<p>After writing your YAML configuration file, save it and run the following command to launch your job.</p>
+<div class="highlight"><pre><span></span><code>sky<span class="w"> </span>spot<span class="w"> </span>launch<span class="w"> </span>-n<span class="w"> </span>vllm<span class="w"> </span>vllm-api.yaml<span class="w"> </span>
+</code></pre></div>
+
+<p>Go have a ☕️, this might take a while!</p>
+<p>In the background, SkyPilot will handle the heavy lifting. It will provision a relatively inexpensive CPU instance to manage spot jobs from and from there it will provision and set up your spot instance workload. </p>
+<h4>Expected Output</h4>
+<p>Upon successful deployment, you should see something like the following log messages:</p>
+<div class="highlight"><pre><span></span><code><span class="ss">(</span><span class="nv">vllm</span>,<span class="w"> </span><span class="nv">pid</span><span class="o">=</span><span class="mi">14335</span><span class="ss">)</span><span class="w"> </span><span class="nv">INFO</span>:<span class="w">     </span><span class="nv">Started</span><span class="w"> </span><span class="nv">server</span><span class="w"> </span><span class="nv">process</span><span class="w"> </span>[<span class="mi">19915</span>]
+<span class="ss">(</span><span class="nv">vllm</span>,<span class="w"> </span><span class="nv">pid</span><span class="o">=</span><span class="mi">14335</span><span class="ss">)</span><span class="w"> </span><span class="nv">INFO</span>:<span class="w">     </span><span class="nv">Waiting</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nv">application</span><span class="w"> </span><span class="nv">startup</span>.
+<span class="ss">(</span><span class="nv">vllm</span>,<span class="w"> </span><span class="nv">pid</span><span class="o">=</span><span class="mi">14335</span><span class="ss">)</span><span class="w"> </span><span class="nv">INFO</span>:<span class="w">     </span><span class="nv">Application</span><span class="w"> </span><span class="nv">startup</span><span class="w"> </span><span class="nv">complete</span>.
+<span class="ss">(</span><span class="nv">vllm</span>,<span class="w"> </span><span class="nv">pid</span><span class="o">=</span><span class="mi">14335</span><span class="ss">)</span><span class="w"> </span><span class="nv">INFO</span>:<span class="w">     </span><span class="nv">Uvicorn</span><span class="w"> </span><span class="nv">running</span><span class="w"> </span><span class="nv">on</span><span class="w"> </span><span class="nv">http</span>:<span class="o">//</span><span class="mi">0</span>.<span class="mi">0</span>.<span class="mi">0</span>.<span class="mi">0</span>:<span class="mi">8000</span><span class="w"> </span><span class="ss">(</span><span class="nv">Press</span><span class="w"> </span><span class="nv">CTRL</span><span class="o">+</span><span class="nv">C</span><span class="w"> </span><span class="nv">to</span><span class="w"> </span><span class="nv">quit</span><span class="ss">)</span>
+</code></pre></div>
+
+<h4>Troubleshooting</h4>
+<p>This is actually a little trickier to get right than we make it seem. In order to get things properly deployed, you will need to apply for quota increases in at least CPU and GPU allocation. The default nodes that are deployed in GCP require 8 CPUs and we'll need allocation for at least 2 Nvidia T4 GPUs (and more if you want to scale!). </p>
+<p>Configuring your cloud accounts is out of scope of this post, but if you run into issues <a href="https://intuitivesystems.xyz">Intuitive Systems</a> would love to help you out!</p>
+<h3>5. Using the Inference Endpoint</h3>
+<p>You can use the inference endpoint by replacing the <code>openai.base_url</code> in the OpenAI Python library. Here's how:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">openai</span>
+
+<span class="c1"># Normally, you would initialize the OpenAI API client like this:</span>
+<span class="c1"># openai.api_key = &quot;your-api-key-here&quot;</span>
+
+<span class="c1"># To point to another endpoint, set the `api_base` parameter:</span>
+<span class="n">openai</span><span class="o">.</span><span class="n">api_base</span> <span class="o">=</span> <span class="s2">&quot;https://your-new-ngrok-edge-url.com&quot;</span>
+
+<span class="c1"># Now, when you make API calls, they will be directed to the new base URL</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">openai</span><span class="o">.</span><span class="n">Completion</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+  <span class="n">engine</span><span class="o">=</span><span class="s2">&quot;llama-2-7b&quot;</span><span class="p">,</span>
+  <span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;Translate the following English text to French: &#39;I love Large Language Models!&#39;&quot;</span><span class="p">,</span>
+  <span class="n">max_tokens</span><span class="o">=</span><span class="mi">60</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+</code></pre></div>
+
+<h3>5. Additional Resources and Next Steps</h3>
+<ul>
+<li>To further explore, you should definitely check out the docs for each of the projects we talked about: </li>
+<li><a href="https://skypilot.readthedocs.io/en/latest/getting-started/quickstart.html">SkyPilot</a></li>
+<li><a href="https://vllm.readthedocs.io/en/latest/getting_started/quickstart.html">vLLM</a></li>
+<li><a href="https://docs.ray.io/en/latest/ray-overview/getting-started.html">Ray</a></li>
+<li>For more detailed commands and usage information, you should refer to the <a href="https://skypilot.readthedocs.io/en/latest/reference/cli.html">SkyPilot CLI reference</a>.</li>
+</ul>
+<p>By now, you should have a working setup for running your SkyPilot job with vLLM. Happy coding!</p>
+<hr>
+<h2>Conclusion</h2>
+<p>We've journeyed through the intricate landscape of Large Language Models, exploring the incredible advancements in technologies like SkyPilot, Ray, and vLLM that are changing the way we deploy, manage, and optimize these models. The leaps in scalability, cost-efficiency, and performance are revolutionary, but this is just the tip of the iceberg. The real power lies in applying these technologies to solve real-world problems, to streamline tedious tasks, and to amplify human capabilities.</p>
+<p>Yet, even with all these advancements, navigating the complexities of LLMs can be daunting. This is where Intuitive Systems comes into play. As experts in the field of AI and ML, we are uniquely positioned to bring these technologies into your business processes. We don't just implement solutions; we customize them to fit your specific needs, ensuring that you get the most out of your investment.</p>
+<h3>Why Choose Intuitive Systems?</h3>
+<ul>
+<li>
+<p><strong>Expertise</strong>: With a deep understanding of technologies like SkyPilot, Ray, and vLLM, we are well-equipped to integrate advanced LLMs seamlessly into your existing infrastructure.</p>
+</li>
+<li>
+<p><strong>Customization</strong>: Every business is different, and we excel at tailoring our solutions to meet your unique requirements.</p>
+</li>
+<li>
+<p><strong>Scalability</strong>: Our solutions are built to scale, ensuring that as your business grows, your technology grows with it.</p>
+</li>
+<li>
+<p><strong>Cost-Efficiency</strong>: Through intelligent use of technologies like SkyPilot's cost-cutting features and vLLM's resource-efficient PagedAttention algorithm, we help you maximize ROI.</p>
+</li>
+</ul>
+<h3>Your Next Steps</h3>
+<p>Imagine liberating your team from the tedious, time-consuming tasks that keep them from focusing on what truly matters. Consider the enormous potential of automating these processes with the power of cutting-edge LLMs. Now, realize that this future is just one call away.</p>
+<p>Don't let the intricacies of these technologies deter you from revolutionizing your business processes. Allow us to handle the complexity so your human resources can get back to the work that truly matters.</p>
+<p><strong>Contact Intuitive Systems today, and let's build a smarter, more efficient future together.</strong></p>
+            </section>
+
+            <section class="post-info">
+                <div class="post-share">
+                    <a class="twitter" href="https://twitter.com/share?text=Exploring Advancements in Large Language Model Infrastructure: Skypilot, vLLM and Ngrok&amp;url=https://connerswann.me/drafts/infrastructure-skypilot-vllm-ngrok.html" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <i class="ic ic-twitter"></i><span class="hidden">Twitter</span>
+                    </a>
+                    <a class="facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://connerswann.me/drafts/infrastructure-skypilot-vllm-ngrok.html" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <i class="ic ic-facebook"></i><span class="hidden">Facebook</span>
+                    </a>
+                    <a class="googleplus" href="https://plus.google.com/share?url=https://connerswann.me/drafts/infrastructure-skypilot-vllm-ngrok.html" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <i class="ic ic-googleplus"></i><span class="hidden">Google+</span>
+                    </a>
+                    <div class="clear"></div>
+                </div>
+
+                <aside class="post-tags">
+<a href="https://connerswann.me/tag/large-language-models">Large Language Models</a><a href="https://connerswann.me/tag/cloud-infrastructure">Cloud Infrastructure</a><a href="https://connerswann.me/tag/inference">Inference</a><a href="https://connerswann.me/tag/networking">Networking</a>                </aside>
+
+                <div class="clear"></div>
+
+                <aside class="post-author">
+
+
+                        <figure class="post-author-avatar">
+                            <img src="https://connerswann.me/images/conner-profile-picture.png" alt="Conner Swann" />
+                        </figure>
+                    <div class="post-author-bio">
+                        <h4 class="post-author-name"><a href="https://connerswann.me/author/conner-swann">Conner Swann</a></h4>
+                            <p class="post-author-about">Software Engineer, Infrastructure Specialist, Architecture Nerd </br> Teaching Robots About Insurance</p>
+                            <span class="post-author-location"><i class="ic ic-location"></i> San Francisco</span>
+                            <span class="post-author-website"><a href="https://connerswann.me"><i class="ic ic-link"></i> Website</a></span>
+                        <!-- Social linkes in alphabet order. -->
+                            <span class="post-author-github"><a target="_blank" href="https://github.com/yourbuddyconner"><i class="ic ic-link"></i> GitHub</a></span>
+                            <span class="post-author-linkedin"><a target="_blank" href="https://www.linkedin.com/in/connerswann"><i class="ic ic-link"></i> LinkedIn</a></span>
+                            <span class="post-author-twitter"><a target="_blank" href="https://twitter.com/yourbuddyconner"><i class="ic ic-twitter"></i> Twitter</a></span>
+                    </div>
+                    <div class="clear"></div>
+                </aside>
+
+                </section>
+
+
+                <aside class="post-nav">
+                    <div class="clear"></div>
+                </aside>
+
+            </div>
+        </article>
+    </main>
+      <!-- TODO : Body class -->
+    <div id="body-class" style="display: none;" class=""></div>
+
+    <footer id="footer">
+      <div class="inner">
+        <section class="credits">
+
+
+          <span class="credits-theme">Theme <a href="https://github.com/arulrajnet/attila" rel="nofollow">Attila</a></span>
+          <span class="credits-software">Published with <a href="https://github.com/getpelican/pelican" rel="nofollow">Pelican</a></span>
+        </section>
+      </div>
+    </footer>
+  </section>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script type="text/javascript" src="https://connerswann.me/theme/js/script.js"></script>
+
+    <!-- Global Site Tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-24471866-2"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-24471866-2', { 'anonymize_ip': true });
+    </script>
+</body>
+</html>
