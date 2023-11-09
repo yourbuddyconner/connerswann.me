@@ -328,7 +328,8 @@ gcloud<span class="w"> </span>init
 <p>Configure your cloud account credentials. This guide assumes you already have the appropriate permissions set up in your cloud account.</p>
 </blockquote>
 <h4>Troubleshooting and Notes</h4>
-<p>For Mac users with Apple Silicon, run <code>pip uninstall grpcio; conda install -c conda-forge grpcio=1.43.0</code> prior to installing SkyPilot.</p>
+<p>For Mac users with Apple Silicon, run the following command before installing SkyPilot: </p>
+<p><code>pip uninstall grpcio; conda install -c conda-forge grpcio=1.43.0</code></p>
 <h4>2: Configure ngrok</h4>
 <p>Before deploying our model inference API server, we need to configure Ngrok so our endpoint will be accessible from the web. ngrok is a tool that creates a secure tunnel from the public internet to your local machine. But ngrok isn't just for simple tunneling; it also provides options for load balancing across multiple instances of your service. Here's how you can configure ngrok, get your Edge ID, and find your public URL:</p>
 <h4>From the Ngrok Docs on Load-Balancing:</h4>
