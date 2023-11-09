@@ -280,42 +280,53 @@ In this guide, we are using 2x T4 GPUs because vLLM doesn't support model quanti
 </ul>
 <h4>Step-by-Step Installation</h4>
 <ol>
-<li>
-<p><strong>Create a new conda environment:</strong><br>
-<code>bash
-    conda create -y -n sky python=3.8
-    conda activate sky</code>
-    &gt; This creates and activates a new conda environment named <code>sky</code>.</p>
-</li>
-<li>
-<p><strong>Install SkyPilot:</strong><br>
-<code>bash
-    pip install skypilot</code>
-    &gt; We install SkyPilot from pip. You can choose other options based on the cloud service you are using.</p>
-</li>
-<li>
-<p><strong>Install Optional Packages: (Optional)</strong><br>
-<code>bash
-    # For AWS
-    pip install "skypilot[aws]"
-    # For Google Cloud
-    pip install "skypilot[gcp]"</code>
-    &gt; These are optional installations depending on the cloud provider you are using.</p>
-</li>
-<li>
-<p><strong>Cloud Account Setup:</strong><br>
-    For AWS:
-    <code>bash
-    pip install boto3
-    aws configure</code>
-    For Google Cloud:
-    <code>bash
-    pip install google-api-python-client
-    conda install -c conda-forge google-cloud-sdk
-    gcloud init</code>
-    &gt; Configure your cloud account credentials. This guide assumes you already have the appropriate permissions set up in your cloud account.</p>
-</li>
+<li><strong>Create a new conda environment:</strong>  </li>
 </ol>
+<div class="highlight"><pre><span></span><code>conda<span class="w"> </span>create<span class="w"> </span>-y<span class="w"> </span>-n<span class="w"> </span>sky<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.8
+conda<span class="w"> </span>activate<span class="w"> </span>sky
+</code></pre></div>
+
+<blockquote>
+<p>This creates and activates a new conda environment named <code>sky</code>.</p>
+</blockquote>
+<ol>
+<li><strong>Install SkyPilot:</strong>  </li>
+</ol>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>skypilot
+</code></pre></div>
+
+<blockquote>
+<p>We install SkyPilot from pip. You can choose other options based on the cloud service you are using.</p>
+</blockquote>
+<ol>
+<li><strong>Install Optional Packages: (Optional)</strong>  </li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="c1"># For AWS</span>
+pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;skypilot[aws]&quot;</span>
+<span class="c1"># For Google Cloud</span>
+pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;skypilot[gcp]&quot;</span>
+</code></pre></div>
+
+<blockquote>
+<p>These are optional installations depending on the cloud provider you are using.</p>
+</blockquote>
+<ol>
+<li><strong>Cloud Account Setup:</strong><br>
+For AWS:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>boto3
+aws<span class="w"> </span>configure
+</code></pre></div>
+
+<p>For Google Cloud:</p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>google-api-python-client
+conda<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> </span>conda-forge<span class="w"> </span>google-cloud-sdk
+gcloud<span class="w"> </span>init
+</code></pre></div>
+
+<blockquote>
+<p>Configure your cloud account credentials. This guide assumes you already have the appropriate permissions set up in your cloud account.</p>
+</blockquote>
 <h4>Troubleshooting and Notes</h4>
 <ul>
 <li>For Mac users with Apple Silicon, run <code>pip uninstall grpcio; conda install -c conda-forge grpcio=1.43.0</code> prior to installing SkyPilot.</li>
